@@ -17,7 +17,7 @@
   --ff-serif:'Noto Serif KR',serif;--ff-sans:'Noto Sans KR',sans-serif;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-html{scroll-behavior:smooth;}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;}
 body{font-family:var(--ff-sans);background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;}
 .rv{opacity:0;transform:translateY(18px);transition:opacity .6s cubic-bezier(.22,1,.36,1),transform .6s cubic-bezier(.22,1,.36,1);}
 .rv.in{opacity:1;transform:none;}
@@ -254,6 +254,135 @@ body{font-family:var(--ff-sans);background:var(--bg);color:var(--text);-webkit-f
   color:#7FD8D8;font-family:inherit;font-size:13px;font-weight:700;
   text-decoration:none;transition:all .18s;}
 .bnav-btn:hover{background:rgba(127,216,216,.18);color:#fff;}
+
+/* ═══════════════════════════════════════════════════
+   GLOBAL OVERRIDES: 텍스트 크기 업 + 모바일 성능
+═══════════════════════════════════════════════════ */
+
+/* ── 1. 모바일 GPU 가속 / 성능 ── */
+.sticky-stage, .jcurve-sticky, .dual-sticky,
+.summary-sticky, .sum-panel {
+  will-change: transform;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+/* 스크롤텔링 높이 모바일 감소 */
+@media (max-width: 768px) {
+  .scrolly-section { min-height: 700vh !important; }
+  .jcurve-scroll-wrap { height: 250vh !important; }
+  .dual-scroll-wrap { height: 260vh !important; }
+  .summary-scroll { height: 320vh !important; }
+}
+
+/* ── 2. 전역 본문 텍스트 크기 업 ── */
+/* 기본 본문 */
+.lead, .sec-lead {
+  font-size: clamp(16px, 2.2vw, 19px) !important;
+  line-height: 1.9 !important;
+}
+/* 카드/패널 본문 */
+.card-body, .card-desc, .flip-desc,
+.t-msg, .drug-text, .info-note,
+.hdesc-body, .ct-desc, .dnd-reason {
+  font-size: clamp(14px, 1.8vw, 16px) !important;
+  line-height: 1.75 !important;
+}
+/* 카드 타이틀 */
+.card-title, .flip-title, .jex-title,
+.hdesc-title, .ct-title, .dnd-label,
+.t-title, .compl-title, .rec-label {
+  font-size: clamp(16px, 2.2vw, 20px) !important;
+}
+/* 섹션 헤드라인 */
+.headline, .sec-headline {
+  font-size: clamp(28px, 5.5vw, 48px) !important;
+}
+/* 토픽 배너 */
+.topic-title {
+  font-size: clamp(28px, 6vw, 52px) !important;
+}
+.topic-desc {
+  font-size: clamp(15px, 2vw, 18px) !important;
+}
+
+/* ── 3. Q&A 대폭 개선 ── */
+/* 앞면 질문 번호 */
+.qa-f .q-num, .qa-f .qn {
+  font-size: 13px !important;
+  font-weight: 900 !important;
+  letter-spacing: .12em !important;
+}
+/* 앞면 질문 텍스트 — 핵심 */
+.qa-f .q-text, .qa-f .qt {
+  font-size: clamp(14px, 2vw, 16px) !important;
+  font-weight: 700 !important;
+  line-height: 1.5 !important;
+  color: var(--text) !important;
+}
+/* 뒷면 정답 라벨 */
+.qa-b .ans-label, .qa-b .al {
+  font-size: clamp(16px, 2.2vw, 18px) !important;
+  font-weight: 900 !important;
+  letter-spacing: .04em !important;
+}
+/* 뒷면 정답 아이콘 */
+.qa-b .ans-icon, .qa-b .ai {
+  font-size: 28px !important;
+}
+/* 뒷면 설명 — 가장 중요한 수정 */
+.qa-b .ans-reason, .qa-b .ar {
+  font-size: clamp(13px, 1.7vw, 15px) !important;
+  font-weight: 500 !important;
+  line-height: 1.65 !important;
+  color: #2a2825 !important;
+}
+/* Q&A 카드 높이 — 텍스트 증가에 맞게 */
+.qa-flip {
+  height: clamp(170px, 20vw, 200px) !important;
+}
+/* Q&A 그리드 간격 */
+.qa-grid {
+  gap: clamp(12px, 2vw, 18px) !important;
+}
+/* 뒷면 패딩 더 확보 */
+.qa-f, .qa-b {
+  padding: clamp(14px, 2.2vw, 22px) !important;
+}
+
+/* ── 4. 모바일 추가 폰트 업 ── */
+@media (max-width: 768px) {
+  .lead, .sec-lead          { font-size: clamp(15px, 4vw, 18px) !important; }
+  .headline, .sec-headline  { font-size: clamp(24px, 7vw, 36px) !important; }
+  .topic-title              { font-size: clamp(24px, 7.5vw, 36px) !important; }
+  .topic-desc               { font-size: clamp(14px, 4vw, 17px) !important; }
+  .card-title, .flip-title  { font-size: clamp(15px, 4.5vw, 19px) !important; }
+  .card-body, .card-desc,
+  .flip-desc, .info-note    { font-size: clamp(13.5px, 3.8vw, 16px) !important; }
+  .qa-f .qt, .qa-f .q-text  { font-size: clamp(14px, 3.8vw, 16px) !important; }
+  .qa-b .ar, .qa-b .ans-reason { font-size: clamp(13px, 3.5vw, 15px) !important; }
+  .qa-b .al, .qa-b .ans-label  { font-size: clamp(15px, 4.5vw, 18px) !important; }
+  .qa-flip                  { height: clamp(168px, 46vw, 200px) !important; }
+  /* 위젯 컨트롤 */
+  .w-btn                    { font-size: 14px !important; padding: 11px 14px !important; }
+  .ctrl-title               { font-size: 12px !important; }
+  .diff-name                { font-size: 17px !important; }
+  /* 타임라인/배지 */
+  .t-title                  { font-size: clamp(16px, 5vw, 20px) !important; }
+  .t-msg                    { font-size: clamp(13px, 3.5vw, 15px) !important; }
+  .hdesc-title              { font-size: clamp(17px, 5vw, 22px) !important; }
+  .hdesc-body               { font-size: clamp(13.5px, 3.8vw, 16px) !important; }
+  /* 회복 요약 sticky */
+  .sum-headline             { font-size: clamp(28px, 8vw, 48px) !important; }
+  .sum-body                 { font-size: clamp(15px, 4vw, 18px) !important; }
+}
+@media (max-width: 420px) {
+  .qa-grid { grid-template-columns: 1fr !important; }
+  .qa-flip { height: auto !important; min-height: 160px !important; }
+  .qa-f, .qa-b { padding: 16px !important; }
+}
+
 </style>
 <body style="padding-top:var(--nav-h,52px);">
 <nav class="snav" id="siteNav">
