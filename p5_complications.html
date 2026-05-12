@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>합병증 | 사랑니 Q&A — 전북대병원</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700;900&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+<!--
+  ════════════════════════════════════════
+  image/ 폴더 파일 매핑
+  image/ian_sign.png       ← IAN_Sign.png
+  image/lingual_nerve.png  ← Lingual_n_위치관계.png
+  image/seddon1.png        ← seddon_1단계.png
+  image/seddon2.png        ← seddon_2단계.png
+  image/seddon3.png        ← seddon_3단계.png
+  image/sinus_normal.png   ← 상악동_발치전.png
+  image/sinus_oaf.png      ← OAF 일러스트 (나중에 업로드)
+  ════════════════════════════════════════
+-->
+
+<style>
+:root {
+  --teal:#006B6B; --teal-l:#E0F0F0; --teal-d:#004F4F; --teal-vl:#7FD8D8;
+  --green:#1D8A62; --green-l:#D1FAE5;
+  --danger:#C84040; --danger-l:#FDE8E8;
+  --warn:#B45309; --warn-l:#FEF3C7;
+  --blue:#2D5FA6; --blue-l:#DBEAFE;
+  --bg:#F5F3EE; --card:#fff; --text:#1A1916; --text2:#5C5A54; --text3:#9A9890;
+  --dark:#0a1e1e;
+  --ff-serif:'Noto Serif KR',serif;
+  --ff-sans:'Noto Sans KR',sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:var(--ff-sans);background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;}
+
+/* ─── 공통 reveal ─── */
+.rv{opacity:0;transform:translateY(20px);transition:opacity .65s cubic-bezier(.22,1,.36,1),transform .65s cubic-bezier(.22,1,.36,1);}
+.rv.in{opacity:1;transform:none;}
+.rv-l{opacity:0;transform:translateX(-22px);transition:opacity .6s cubic-bezier(.22,1,.36,1),transform .6s cubic-bezier(.22,1,.36,1);}
+.rv-l.in{opacity:1;transform:none;}
+.rv-r{opacity:0;transform:translateX(22px);transition:opacity .6s cubic-bezier(.22,1,.36,1),transform .6s cubic-bezier(.22,1,.36,1);}
+.rv-r.in{opacity:1;transform:none;}
+.d1{transition-delay:.07s;}.d2{transition-delay:.14s;}.d3{transition-delay:.21s;}
+.d4{transition-delay:.28s;}.d5{transition-delay:.36s;}
+
+/* ─── 레이아웃 ─── */
+.sec{padding:clamp(72px,11vh,116px) clamp(20px,5vw,72px);}
+.sec.bg-white{background:#fff;}
+.sec.bg-grey{background:var(--bg);}
+.sec.bg-dark{background:var(--dark);color:#fff;}
+.inner{max-width:900px;margin:0 auto;}
+
+.eyebrow{font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--teal);margin-bottom:12px;}
+.eyebrow.lt{color:var(--teal-vl);}
+.headline{font-family:var(--ff-serif);font-size:clamp(24px,5vw,42px);font-weight:900;line-height:1.22;margin-bottom:12px;word-break:keep-all;}
+.lead{font-size:clamp(14px,1.9vw,16px);color:var(--text2);line-height:1.85;max-width:660px;margin-bottom:28px;word-break:keep-all;}
+.lead.lt{color:rgba(255,255,255,.5);}
+.divider{width:40px;height:3px;background:var(--teal);border-radius:2px;margin:0 0 24px;}
+.divider.lt{background:var(--teal-vl);}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:clamp(14px,2.5vw,26px);}
+.card{background:var(--card);border-radius:16px;padding:clamp(16px,2.5vw,24px);box-shadow:0 3px 18px rgba(0,0,0,.07);}
+
+/* ════════════════════════════════════════
+   섹션 도입 배너
+════════════════════════════════════════ */
+.topic-banner{
+  background:linear-gradient(135deg,#0c1c1c 0%,var(--dark) 50%,#071414 100%);
+  padding:clamp(52px,9vh,96px) clamp(20px,5vw,72px);
+  position:relative;overflow:hidden;
+}
+.topic-banner::after{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at 75% 40%,rgba(200,64,64,.12) 0%,transparent 55%),
+             radial-gradient(ellipse at 20% 70%,rgba(0,107,107,.12) 0%,transparent 50%);
+  pointer-events:none;
+}
+.topic-banner-inner{max-width:900px;margin:0 auto;position:relative;z-index:1;}
+.topic-tag{
+  display:inline-flex;align-items:center;gap:7px;
+  background:rgba(200,64,64,.15);border:1px solid rgba(200,64,64,.3);
+  color:rgba(255,140,140,.9);font-size:11px;font-weight:800;
+  letter-spacing:.1em;text-transform:uppercase;
+  padding:5px 15px;border-radius:20px;margin-bottom:16px;
+}
+
+/* ════════════════════════════════════════
+   1. IAN 위험 사인 — 4-panel 그리드
+════════════════════════════════════════ */
+.ian-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(14px,2.5vw,24px);}
+.ian-item{
+  border-radius:14px;overflow:hidden;
+  box-shadow:0 3px 18px rgba(0,0,0,.09);
+  background:var(--card);
+  transition:transform .22s ease,box-shadow .22s ease;
+}
+.ian-item:hover{transform:translateY(-4px);box-shadow:0 8px 32px rgba(0,0,0,.14);}
+.ian-img-zone{
+  width:100%;aspect-ratio:1;
+  overflow:hidden;background:#e8e4dc;
+  position:relative;
+}
+/* IAN_Sign.png는 2×2 그리드 한 장 — crop으로 각 패널 보여줌 */
+.ian-img-zone img{
+  position:absolute;
+  width:200%;height:200%;
+  object-fit:cover;
+}
+/* 각 항목별 크롭 offset */
+.ian-item:nth-child(1) .ian-img-zone img{top:0;left:0;}
+.ian-item:nth-child(2) .ian-img-zone img{top:0;left:-100%;}
+.ian-item:nth-child(3) .ian-img-zone img{top:-100%;left:0;}
+.ian-item:nth-child(4) .ian-img-zone img{top:-100%;left:-100%;}
+.ian-body{padding:14px 16px;}
+.ian-num{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:22px;height:22px;border-radius:50%;
+  font-size:11px;font-weight:800;color:#fff;
+  flex-shrink:0;margin-bottom:6px;
+}
+.ian-item:nth-child(1) .ian-num,.ian-item:nth-child(2) .ian-num{background:var(--danger);}
+.ian-item:nth-child(3) .ian-num,.ian-item:nth-child(4) .ian-num{background:var(--warn);}
+.ian-title{font-size:clamp(13px,1.8vw,15px);font-weight:800;margin-bottom:4px;}
+.ian-item:nth-child(1) .ian-title,.ian-item:nth-child(2) .ian-title{color:var(--danger);}
+.ian-item:nth-child(3) .ian-title,.ian-item:nth-child(4) .ian-title{color:var(--warn);}
+.ian-desc{font-size:clamp(11px,1.3vw,13px);color:var(--text2);line-height:1.6;}
+
+/* ════════════════════════════════════════
+   2. 설신경 (Lingual Nerve)
+════════════════════════════════════════ */
+.lingual-wrap{
+  border-radius:18px;overflow:hidden;
+  box-shadow:0 4px 24px rgba(0,0,0,.1);
+  background:var(--card);
+}
+.lingual-img{width:100%;display:block;max-height:320px;object-fit:contain;background:#f5f2ed;padding:12px 0;}
+.lingual-body{padding:clamp(18px,3vw,28px);}
+.lingual-title{font-family:var(--ff-serif);font-size:clamp(17px,2.5vw,22px);font-weight:900;color:var(--teal-d);margin-bottom:12px;}
+.lingual-points{display:flex;flex-direction:column;gap:8px;}
+.lpoint{
+  display:flex;gap:10px;align-items:flex-start;
+  padding:10px 14px;border-radius:10px;
+  font-size:clamp(12px,1.5vw,14px);line-height:1.6;
+}
+.lpoint.warn-pt{background:var(--danger-l);border-left:3px solid var(--danger);}
+.lpoint.info-pt{background:var(--blue-l);border-left:3px solid var(--blue);}
+.lpoint.note-pt{background:var(--warn-l);border-left:3px solid var(--warn);}
+.lpoint .lp-icon{font-size:16px;flex-shrink:0;margin-top:1px;}
+.lpoint p{color:var(--text2);}
+.lpoint strong{color:var(--text);}
+
+/* ════════════════════════════════════════
+   3-5. Seddon 탭 분류
+════════════════════════════════════════ */
+.seddon-tabs{
+  display:flex;border-radius:12px;overflow:hidden;
+  box-shadow:0 2px 12px rgba(0,0,0,.08);
+  margin-bottom:18px;
+}
+.sed-tab{
+  flex:1;padding:14px 8px;text-align:center;
+  cursor:pointer;border:none;font-family:var(--ff-sans);
+  font-size:clamp(12px,1.6vw,14px);font-weight:700;
+  line-height:1.35;transition:filter .2s;
+}
+.sed-tab.s1{background:var(--green-l);color:var(--green);}
+.sed-tab.s2{background:var(--warn-l); color:var(--warn);}
+.sed-tab.s3{background:var(--danger-l);color:var(--danger);}
+.sed-tab.active{filter:brightness(.87);box-shadow:inset 0 -3px 0 currentColor;}
+.sed-tab small{display:block;font-size:10px;font-weight:400;opacity:.7;margin-top:2px;}
+
+.seddon-panel{display:none;animation:panelIn .35s ease;}
+.seddon-panel.active{
+  display:flex;
+  flex-direction:column;
+  gap:clamp(14px,2.5vw,20px);
+}
+@keyframes panelIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+
+/* 이미지 + 설명 상단 2열, 예후 하단 풀 폭 */
+.sed-top{display:grid;grid-template-columns:1fr 1fr;gap:clamp(14px,2.5vw,24px);align-items:start;}
+.sed-prognosis-bar{
+  display:flex;align-items:center;gap:12px;
+  padding:14px 20px;border-radius:10px;
+  font-size:clamp(13px,1.6vw,15px);font-weight:700;
+  white-space:normal;  /* 내용이 길어도 허용 */
+  line-height:1.6;
+}
+.sed-prognosis-bar.s1{background:var(--green-l);color:var(--green);}
+.sed-prognosis-bar.s2{background:var(--warn-l);color:var(--warn);}
+.sed-prognosis-bar.s3{background:var(--danger-l);color:var(--danger);}
+.sed-prognosis-bar .prog-icon{font-size:22px;flex-shrink:0;}
+
+@media(max-width:600px){.sed-top{grid-template-columns:1fr;}}
+
+.sed-img-wrap{border-radius:14px;overflow:hidden;background:#f0ece4;box-shadow:0 3px 16px rgba(0,0,0,.1);}
+.sed-img-wrap img{width:100%;display:block;object-fit:cover;}
+
+.sed-content{}
+.sed-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:6px 14px;border-radius:20px;
+  font-size:12px;font-weight:800;
+  margin-bottom:14px;
+}
+.sed-badge.s1{background:var(--green-l);color:var(--green);}
+.sed-badge.s2{background:var(--warn-l);color:var(--warn);}
+.sed-badge.s3{background:var(--danger-l);color:var(--danger);}
+.sed-title{font-family:var(--ff-serif);font-size:clamp(17px,2.5vw,22px);font-weight:900;margin-bottom:10px;line-height:1.25;}
+.sed-title.s1{color:var(--green);}
+.sed-title.s2{color:var(--warn);}
+.sed-title.s3{color:var(--danger);}
+.sed-desc{font-size:clamp(13px,1.6vw,14px);color:var(--text2);line-height:1.7;margin-bottom:14px;}
+.sed-points{list-style:none;display:flex;flex-direction:column;gap:7px;margin-bottom:14px;}
+.sed-points li{display:flex;gap:8px;align-items:flex-start;font-size:clamp(12px,1.4vw,13px);color:var(--text2);line-height:1.55;}
+.sed-points li::before{content:'→';font-weight:800;flex-shrink:0;}
+.sed-points.s1 li::before{color:var(--green);}
+.sed-points.s2 li::before{color:var(--warn);}
+.sed-points.s3 li::before{color:var(--danger);}
+.seddon-note{
+  margin-top:16px;padding:14px 18px;
+  background:var(--teal-l);border-radius:12px;
+  font-size:clamp(12px,1.5vw,14px);color:var(--teal-d);line-height:1.65;
+}
+
+/* ════════════════════════════════════════
+   6-7. OAF — 클릭 전환 애니메이션
+════════════════════════════════════════ */
+.oaf-section{background:var(--bg);}
+
+.oaf-layout{display:grid;grid-template-columns:1fr 1fr;gap:clamp(16px,3vw,32px);align-items:start;}
+
+/* 이미지 전환 박스 */
+.oaf-img-box{position:relative;border-radius:18px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,.12);cursor:pointer;background:#f5f2ed;}
+.oaf-img-wrap{position:relative;width:100%;aspect-ratio:1;}
+.oaf-img{
+  position:absolute;inset:0;width:100%;height:100%;
+  object-fit:contain;background:#f5f2ed;padding:8px;
+  transition:opacity .55s ease,transform .55s ease;
+}
+.oaf-img.hidden{opacity:0;transform:scale(.96);}
+.oaf-img-label{
+  position:absolute;bottom:12px;left:50%;transform:translateX(-50%);
+  background:rgba(0,0,0,.58);color:#fff;
+  font-size:11px;font-weight:700;
+  padding:4px 14px;border-radius:20px;
+  white-space:nowrap;pointer-events:none;
+  transition:opacity .4s ease;
+  backdrop-filter:blur(4px);
+}
+.oaf-click-hint{
+  position:absolute;top:12px;right:12px;
+  background:rgba(0,107,107,.85);color:#fff;
+  font-size:11px;font-weight:700;
+  padding:5px 11px;border-radius:20px;
+  display:flex;align-items:center;gap:5px;
+  transition:opacity .3s;
+  backdrop-filter:blur(4px);
+}
+.oaf-img-box:hover .oaf-click-hint{opacity:.7;}
+
+/* 텍스트 패널 전환 */
+.oaf-text-wrap{position:relative;min-height:280px;}
+.oaf-panel{
+  position:absolute;inset:0;
+  opacity:0;transform:translateY(8px);
+  transition:opacity .48s ease,transform .48s ease;
+  pointer-events:none;
+}
+.oaf-panel.active{
+  opacity:1;transform:none;
+  position:relative;pointer-events:auto;
+}
+
+/* OAF 내용 카드들 */
+.oaf-warning{
+  background:var(--warn-l);border-left:4px solid var(--warn);
+  border-radius:0 12px 12px 0;padding:14px 16px;
+  font-size:clamp(12px,1.5vw,13px);color:var(--warn);font-weight:600;
+  line-height:1.65;margin-bottom:14px;font-style:italic;
+}
+.oaf-flow{display:flex;flex-direction:column;gap:8px;}
+.oaf-step{
+  display:flex;align-items:flex-start;gap:12px;
+  padding:12px 14px;border-radius:10px;
+  font-size:clamp(12px,1.5vw,13px);
+  background:var(--card);box-shadow:0 1px 8px rgba(0,0,0,.06);
+  border-left:4px solid;
+}
+.oaf-step.s-teal{border-color:var(--teal);}
+.oaf-step.s-blue{border-color:var(--blue);}
+.oaf-step.s-green{border-color:var(--green);}
+.oaf-step.s-danger{border-color:var(--danger);}
+.oaf-step .step-icon{font-size:18px;flex-shrink:0;margin-top:1px;}
+.oaf-step h5{font-size:clamp(13px,1.6vw,14px);font-weight:800;margin-bottom:3px;}
+.oaf-step.s-teal  h5{color:var(--teal);}
+.oaf-step.s-blue  h5{color:var(--blue);}
+.oaf-step.s-green h5{color:var(--green);}
+.oaf-step.s-danger h5{color:var(--danger);}
+.oaf-step p{color:var(--text2);line-height:1.55;}
+
+.oaf-symptoms{
+  margin-top:14px;background:var(--card);
+  border-radius:12px;padding:14px 16px;
+  box-shadow:0 1px 8px rgba(0,0,0,.06);
+}
+.oaf-sym-title{font-size:12px;font-weight:800;color:var(--text2);margin-bottom:8px;letter-spacing:.05em;}
+.oaf-sym-list{display:flex;flex-wrap:wrap;gap:7px;}
+.oaf-sym-tag{
+  display:inline-flex;align-items:center;gap:5px;
+  padding:4px 11px;border-radius:10px;font-size:12px;font-weight:700;
+}
+.oaf-sym-tag.alert{background:var(--danger-l);color:var(--danger);}
+.oaf-sym-tag.note{background:var(--blue-l);color:var(--blue);}
+
+/* ════════════════════════════════════════
+   Q&A 카드
+════════════════════════════════════════ */
+.qa-section{background:var(--bg);padding:clamp(50px,8vh,80px) clamp(20px,5vw,72px);}
+.qa-inner{max-width:900px;margin:0 auto;}
+.qa-hr{display:flex;align-items:center;gap:12px;margin-bottom:clamp(20px,3.5vh,32px);}
+.qa-hr-line{flex:1;height:1px;background:rgba(0,0,0,.08);}
+.qa-hr-text{font-size:clamp(13px,1.8vw,15px);font-weight:700;color:var(--text2);white-space:nowrap;}
+.qa-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(10px,1.8vw,16px);}
+.qa-flip{perspective:900px;height:clamp(148px,18vw,178px);cursor:pointer;}
+.qa-fi{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .52s cubic-bezier(.77,0,.175,1);}
+.qa-flip.flipped .qa-fi{transform:rotateY(180deg);}
+.qa-f,.qa-b{position:absolute;inset:0;backface-visibility:hidden;border-radius:12px;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:clamp(12px,2vw,18px);text-align:center;}
+.qa-f{background:var(--card);box-shadow:0 2px 12px rgba(0,0,0,.07);border:2px solid transparent;transition:border-color .2s;}
+.qa-flip:hover .qa-f{border-color:var(--teal-l);}
+.qa-f .qn{font-size:11px;font-weight:800;color:var(--teal);letter-spacing:.1em;margin-bottom:7px;}
+.qa-f .qt{font-size:clamp(12px,1.6vw,14px);font-weight:600;color:var(--text);line-height:1.4;}
+.qa-f .qh{margin-top:9px;font-size:10px;color:var(--text3);}
+.qa-b{transform:rotateY(180deg);}
+.qa-b.correct{background:var(--green-l);border:2px solid var(--green);}
+.qa-b.wrong  {background:var(--danger-l);border:2px solid var(--danger);}
+.qa-b.info   {background:var(--teal-l);  border:2px solid var(--teal);}
+.qa-b .ai{font-size:24px;margin-bottom:6px;}
+.qa-b .al{font-size:clamp(13px,1.8vw,15px);font-weight:800;margin-bottom:5px;}
+.qa-b.correct .al{color:var(--green);}
+.qa-b.wrong   .al{color:var(--danger);}
+.qa-b.info    .al{color:var(--teal-d);}
+.qa-b .ar{font-size:clamp(10px,1.3vw,12px);color:var(--text2);line-height:1.45;}
+
+/* 반응형 */
+@media(max-width:680px){
+  .ian-grid{grid-template-columns:1fr 1fr;}/* 2열 유지 */
+  .grid2,.oaf-layout{grid-template-columns:1fr;}
+  .oaf-text-wrap{min-height:0;}
+  .oaf-panel{position:relative;inset:auto;}
+  .seddon-panel.active{grid-template-columns:1fr;}
+  .qa-grid{grid-template-columns:1fr 1fr;}
+}
+@media(max-width:420px){.qa-grid{grid-template-columns:1fr;}}
+
+/* ════ SHARED NAV ════ */
+:root{--nav-h:52px;}
+.snav{position:fixed;top:0;left:0;right:0;z-index:9999;height:var(--nav-h);
+  background:rgba(10,30,30,.96);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  border-bottom:1px solid rgba(127,216,216,.1);}
+.snav-inner{max-width:1280px;margin:0 auto;display:flex;align-items:center;
+  height:100%;padding:0 clamp(10px,2vw,20px);gap:8px;}
+.snav-logo{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:700;
+  color:rgba(255,255,255,.5);white-space:nowrap;flex-shrink:0;text-decoration:none;}
+.snav-dot{width:6px;height:6px;border-radius:50%;background:#7FD8D8;
+  box-shadow:0 0 6px #7FD8D8;animation:sdot 2s ease-in-out infinite;flex-shrink:0;}
+@keyframes sdot{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.4;transform:scale(.75);}}
+.snav-tabs{display:flex;align-items:center;gap:1px;flex:1;overflow-x:auto;
+  scrollbar-width:none;-webkit-overflow-scrolling:touch;}
+.snav-tabs::-webkit-scrollbar{display:none;}
+.stab{display:inline-flex;align-items:center;padding:5px 11px;border-radius:18px;
+  font-size:11.5px;font-weight:600;color:rgba(255,255,255,.38);
+  text-decoration:none;white-space:nowrap;transition:all .18s;flex-shrink:0;}
+.stab:hover{color:rgba(255,255,255,.75);background:rgba(255,255,255,.07);}
+.stab.active{color:#7FD8D8;background:rgba(127,216,216,.13);font-weight:700;}
+.snav-progress{position:absolute;bottom:0;left:0;height:2px;background:#7FD8D8;
+  transition:width .15s;box-shadow:0 0 5px #7FD8D8;}
+@media(max-width:520px){
+  .snav-logo .logo-text{display:none;}
+  .snav-logo::after{content:'JBUH';font-size:11px;font-weight:800;
+    color:rgba(127,216,216,.7);letter-spacing:.06em;}
+  .stab{font-size:11px;padding:4px 8px;}
+}
+
+/* ── 하단 prev/next 내비게이션 ── */
+.bottom-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: clamp(20px, 4vh, 36px) clamp(20px, 5vw, 60px);
+  background: var(--dark, #0a1e1e);
+  border-top: 1px solid rgba(127,216,216,.1);
+}
+
+.bnav-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 22px;
+  border-radius: 24px;
+  background: rgba(127,216,216,.08);
+  border: 1px solid rgba(127,216,216,.2);
+  color: #7FD8D8;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: all .18s;
+}
+
+.bnav-btn:hover {
+  background: rgba(127,216,216,.18);
+  color: #fff;
+}
+
+</style>
+<script src="https://cdn.jsdelivr.net/npm/twemoji@14.0.2/dist/twemoji.min.js" crossorigin="anonymous"></script>
+</head>
+<body style="padding-top:var(--nav-h,52px);">
+<nav class="snav" id="siteNav">
+  <div class="snav-inner">
+    <a class="snav-logo" href="p0_opening.html">
+      <span class="snav-dot"></span>
+      <span class="logo-text">전북대병원 · 구강악안면외과</span>
+    </a>
+    <div class="snav-tabs">
+      <a class="stab" href="p0_opening.html">오프닝</a>
+      <a class="stab" href="p1_class.html">매복 분류</a>
+      <a class="stab" href="p2_timing.html">발치 시기</a>
+      <a class="stab" href="p3_anesthesia.html">마취·통증</a>
+      <a class="stab" href="p4_special.html">특수 환자</a>
+      <a class="stab active" href="p5_complications.html">합병증</a>
+      <a class="stab" href="p6_recovery.html">회복</a>
+    </div>
+  </div>
+  <div class="snav-progress" id="snavProg"></div>
+</nav>
+<script>
+(function(){
+  var p=document.getElementById('snavProg');
+  window.addEventListener('scroll',function(){
+    if(p)p.style.width=(window.scrollY/(document.body.scrollHeight-window.innerHeight)*100)+'%';
+  },{passive:true});
+})();
+</script>
+
+<!-- ════════════════════════════════════════
+     도입 배너
+════════════════════════════════════════ -->
+<div class="topic-banner">
+  <div class="topic-banner-inner">
+    <div class="topic-tag rv">합병증의 진실</div>
+    <h2 class="headline rv d1" style="color:#fff;">신경 손상과 상악동 천공<br>두려움의 실체를 정확히 알기</h2>
+    <p class="lead lt rv d2">
+      합병증을 무서워하기 전에, 어떤 경우에 어떻게 발생하는지 정확히 이해해야 합니다.
+      알고 나면 두려움이 아닌 준비가 됩니다.
+    </p>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════
+     1. IAN 위험 사인 4가지
+════════════════════════════════════════ -->
+<section class="sec bg-white">
+  <div class="inner">
+    <div class="eyebrow rv">파노라마 위험 소견</div>
+    <h3 class="headline rv d1">수술 전 반드시 확인해야 할 IAN 위험 사인</h3>
+    <p class="lead rv d2">
+      파노라마 X-ray에서 이 네 가지 소견이 보이면 하치조신경(IAN)과 치근이 매우 가깝거나
+      접촉하고 있을 가능성이 높습니다. CBCT 정밀 분석이 필요합니다.
+    </p>
+    <div class="divider rv d3"></div>
+
+    <div class="ian-grid rv d3">
+      <div class="ian-item">
+        <div class="ian-img-zone">
+          <img src="image/ian_sign.png" alt="Darkening sign">
+        </div>
+        <div class="ian-body">
+          <div class="ian-num">1</div>
+          <div class="ian-title">Darkening Sign</div>
+          <div class="ian-desc">치근이 IAN 내부를 관통 — 치근 내 신경관이 비쳐 어둡게 보임. 가장 위험한 소견.</div>
+        </div>
+      </div>
+      <div class="ian-item">
+        <div class="ian-img-zone">
+          <img src="image/ian_sign.png" alt="Deflection">
+        </div>
+        <div class="ian-body">
+          <div class="ian-num">2</div>
+          <div class="ian-title">Deflection</div>
+          <div class="ian-desc">IAN의 압박으로 치근이 굴절·편위. 신경과 치근의 긴밀한 접촉을 의미.</div>
+        </div>
+      </div>
+      <div class="ian-item">
+        <div class="ian-img-zone">
+          <img src="image/ian_sign.png" alt="Narrowing">
+        </div>
+        <div class="ian-body">
+          <div class="ian-num">3</div>
+          <div class="ian-title">Narrowing</div>
+          <div class="ian-desc">치근이 IAN 통과 부위에서 좁아짐. 치근과 하악관 사이에 여유 없음.</div>
+        </div>
+      </div>
+      <div class="ian-item">
+        <div class="ian-img-zone">
+          <img src="image/ian_sign.png" alt="Interruption">
+        </div>
+        <div class="ian-body">
+          <div class="ian-num">4</div>
+          <div class="ian-title">Interruption</div>
+          <div class="ian-desc">하악관을 나타내는 백색선(cortication)이 단절 — 직접 접촉 가능성.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="rv d4" style="margin-top:16px;padding:14px 18px;background:var(--danger-l);border-left:4px solid var(--danger);border-radius:0 12px 12px 0;font-size:clamp(12px,1.5vw,14px);color:var(--danger);font-weight:600;line-height:1.65;">
+      ⚠ 위험 소견이 확인되면 매복 제3대구치와 하치조신경의 정확한 위치관계 확인을 위해
+      <strong>치과 Cone-beam CT(CBCT)</strong>를 촬영하여 치료계획을 세웁니다.
+      파노라마만으로는 정확한 3차원 위치 관계 파악이 불가능합니다.
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════════
+     2. 설신경 위치관계
+════════════════════════════════════════ -->
+<section class="sec bg-grey">
+  <div class="inner">
+    <div class="eyebrow rv">설신경 (Lingual Nerve)</div>
+    <h3 class="headline rv d1">파노라마에 보이지 않는 신경</h3>
+    <div class="divider rv d2"></div>
+
+    <div class="lingual-wrap rv d2">
+      <img class="lingual-img" src="image/lingual_nerve.png" alt="설신경 위치관계">
+      <div class="lingual-body">
+        <div class="lingual-title">설신경 — 연조직으로 주행, 변이 큼</div>
+        <div class="lingual-points">
+          <div class="lpoint warn-pt">
+            <span class="lp-icon">👁</span>
+            <p><strong>파노라마에서 보이지 않습니다.</strong> 연조직으로 주행하기 때문에 방사선 검사로 위치 확인이 불가능합니다.</p>
+          </div>
+          <div class="lpoint info-pt">
+            <span class="lp-icon">📐</span>
+            <p>설측 피질골(lingual cortex)과의 거리: <strong>0~3.45 mm</strong> 범위로 개인차가 매우 큽니다. 골막에 직접 접촉하는 케이스(약 17%)도 보고됩니다.</p>
+          </div>
+          <div class="lpoint warn-pt">
+            <span class="lp-icon">⚠️</span>
+            <p><strong>손상 시 예후 불량.</strong> IAN 손상보다 회복이 느리고 영구적 감각 이상이 남는 경우가 더 많습니다. 혀의 감각과 미각이 영향을 받습니다.</p>
+          </div>
+          <div class="lpoint note-pt">
+            <span class="lp-icon">💡</span>
+            <p>설신경 보호를 위해 설측 견인을 최소화하고, 하악 사랑니 발치 시 설측 접근을 피합니다. 원심경사 매복의 경우 각별히 주의합니다.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════════
+     3-5. Seddon 신경 손상 분류
+════════════════════════════════════════ -->
+<section class="sec bg-white">
+  <div class="inner">
+    <div class="eyebrow rv">Seddon 분류</div>
+    <h3 class="headline rv d1">신경 손상 — 3단계로 이해하기</h3>
+    <p class="lead rv d2">
+      Seddon 분류는 손상 정도에 따라 신경 손상을 3단계로 구분합니다.
+      각 단계별 구조적 손상 범위와 재생 가능성이 다르며, 이에 따라 예후와 치료 방향이 결정됩니다.
+    </p>
+    <div class="divider rv d3"></div>
+
+    <div class="rv d3">
+      <div class="seddon-tabs">
+        <button class="sed-tab s1 active" onclick="showSeddon(0,this)">
+          Neuropraxia<br><small>1단계 · 전도 차단</small>
+        </button>
+        <button class="sed-tab s2" onclick="showSeddon(1,this)">
+          Axonotmesis<br><small>2단계 · 축삭 손상</small>
+        </button>
+        <button class="sed-tab s3" onclick="showSeddon(2,this)">
+          Neurotmesis<br><small>3단계 · 전층 절단</small>
+        </button>
+      </div>
+
+      <!-- 1단계 -->
+      <div class="seddon-panel active" id="sed0">
+        <div class="sed-top">
+          <div class="sed-img-wrap">
+            <img src="image/seddon1.png" alt="Neuropraxia">
+          </div>
+          <div class="sed-content">
+            <div class="sed-badge s1">✅ 1단계 — Neuropraxia</div>
+            <div class="sed-title s1">신경 전도 차단, 구조적 연속성 보존</div>
+            <div class="sed-desc">신경 섬유의 국소적 탈수초화(demyelination)로 전도 차단이 발생하지만, 축삭(axon)과 신경 내막(endoneurium)은 손상되지 않습니다. 수술 중 과도한 압박·견인 시 주로 발생합니다.</div>
+            <ul class="sed-points s1">
+              <li>축삭과 결합조직 피막 모두 온전히 보존</li>
+              <li>국소 탈수초화 → 재수초화(remyelination)로 회복</li>
+              <li>일시적 감각 둔화·이상감각이 주증상</li>
+            </ul>
+          </div>
+        </div>
+        <div class="sed-prognosis-bar s1">
+          <span class="prog-icon">✅</span>
+          예후: 수주~수개월 내 <strong>완전 회복</strong>. 임상적으로 가장 흔한 단계이며, 대부분의 일시적 감각 이상이 여기에 해당합니다.
+        </div>
+      </div>
+
+      <!-- 2단계 -->
+      <div class="seddon-panel" id="sed1">
+        <div class="sed-top">
+          <div class="sed-img-wrap">
+            <img src="image/seddon2.png" alt="Axonotmesis">
+          </div>
+          <div class="sed-content">
+            <div class="sed-badge s2">⚠ 2단계 — Axonotmesis</div>
+            <div class="sed-title s2">축삭 손상, 결합조직 피막 보존</div>
+            <div class="sed-desc">축삭(axon)이 손상·변성되었지만 신경 내막(endoneurium), 신경 속막(perineurium), 신경 외막(epineurium)의 결합조직 구조는 보존된 상태입니다. 원위부에서 Wallerian degeneration이 발생하지만, 보존된 내막관(endoneurial tube)을 따라 축삭 재생이 유도됩니다.</div>
+            <ul class="sed-points s2">
+              <li>내막관(endoneurial tube) 보존 → 축삭 재생 경로 유지</li>
+              <li>원위부 Wallerian degeneration 발생</li>
+              <li>재생 속도: 약 1 mm/day</li>
+            </ul>
+          </div>
+        </div>
+        <div class="sed-prognosis-bar s2">
+          <span class="prog-icon">⚠</span>
+          예후: 수개월~1년, <strong>부분~완전 회복 가능</strong>. 손상 범위와 위치에 따라 다르며, 정기적인 감각 검사로 회복 경과를 관찰합니다.
+        </div>
+      </div>
+
+      <!-- 3단계 -->
+      <div class="seddon-panel" id="sed2">
+        <div class="sed-top">
+          <div class="sed-img-wrap">
+            <img src="image/seddon3.png" alt="Neurotmesis">
+          </div>
+          <div class="sed-content">
+            <div class="sed-badge s3">🔴 3단계 — Neurotmesis</div>
+            <div class="sed-title s3">신경 전층 손상·절단</div>
+            <div class="sed-desc">축삭(axon)과 모든 결합조직 피막(내막·속막·외막)이 완전히 손상·절단된 상태입니다. 내막관(endoneurial tube)이 소실되어 자발 재생이 유도될 경로가 없습니다. 절단 근위부에 외상성 신경종(traumatic neuroma)이 형성될 수 있습니다.</div>
+            <ul class="sed-points s3">
+              <li>내막관 완전 소실 → 자발 축삭 재생 불가</li>
+              <li>외상성 신경종(traumatic neuroma) 형성 가능</li>
+              <li>수술적 신경봉합(neurorrhaphy) 또는 신경이식(grafting) 고려</li>
+            </ul>
+          </div>
+        </div>
+        <div class="sed-prognosis-bar s3">
+          <span class="prog-icon">🔴</span>
+          예후: <strong>영구적 감각 이상 가능</strong>. IAN 완전 절단 발생률 &lt;0.1%. 조기 발견 시 즉시 관련 전문의 협진이 필요합니다.
+        </div>
+      </div>
+
+      <div class="seddon-note">
+        💡 <strong>임상 현실:</strong> 감각 이상의 대부분은 1~2단계입니다. "시간이 약" — 6개월 이상 경과 관찰 후 판단합니다.
+        CBCT로 3D 위치 관계 확인 후 Coronectomy로 위험을 줄이는 방법도 선택지입니다.
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════════
+     6-7. 상악동 천공 (OAF)
+════════════════════════════════════════ -->
+<section class="sec bg-grey oaf-section">
+  <div class="inner">
+    <div class="eyebrow rv">상악동 천공 · OAF</div>
+    <h3 class="headline rv d1">상악치아와 상악동과의 관계</h3>
+    <p class="lead rv d2">
+      상악 사랑니 치근과 상악동은 매우 가깝습니다. 발치 시 천공이 발생할 수 있지만,
+      이는 해부학적으로 불가피한 경우입니다.
+    </p>
+    <div class="divider rv d3"></div>
+
+    <div class="oaf-layout rv d3">
+
+      <!-- 이미지 전환 -->
+      <div class="oaf-img-box" id="oafImgBox" onclick="toggleOAF()">
+        <div class="oaf-img-wrap">
+          <!-- 발치 전: 정상 상악동 -->
+          <img class="oaf-img" id="oafImgNormal"
+               src="image/sinus_normal.png" alt="발치 전 상악동">
+          <!-- 발치 후: OAF (나중에 업로드) -->
+          <img class="oaf-img hidden" id="oafImgOAF"
+               src="image/sinus_oaf.png" alt="OAF 발생"
+               onerror="this.src='';this.style.display='none';document.getElementById('oafPh').style.display='flex';">
+          <!-- placeholder (OAF 이미지 미업로드 시) -->
+          <div id="oafPh" style="display:none;position:absolute;inset:0;background:#1a3333;align-items:center;justify-content:center;flex-direction:column;gap:10px;color:rgba(255,255,255,.38);font-size:13px;text-align:center;padding:20px;">
+            <span style="font-size:32px;">🔬</span>
+            OAF 일러스트<br>image/sinus_oaf.png<br>업로드 예정
+          </div>
+        </div>
+        <div class="oaf-img-label" id="oafLabel">발치 전 — 상악동 정상 해부학</div>
+        <div class="oaf-click-hint">👆 클릭</div>
+      </div>
+
+      <!-- 텍스트 패널 -->
+      <div class="oaf-text-wrap">
+
+        <!-- 패널 A: 발치 전 — 해부학 설명 -->
+        <div class="oaf-panel active" id="oafPanelA">
+          <div style="font-family:var(--ff-serif);font-size:clamp(16px,2.5vw,20px);font-weight:900;color:var(--teal-d);margin-bottom:14px;">상악동과 치근의 위치 관계</div>
+          <div class="oaf-flow">
+            <div class="oaf-step s-teal">
+              <span class="step-icon">🦷</span>
+              <div><h5>상악 대구치 치근이 상악동 하벽 바로 아래</h5><p>상악동 함기화(pneumatization)가 진행될수록 치근과 상악동저 사이 골이 얇아집니다.</p></div>
+            </div>
+            <div class="oaf-step s-blue">
+              <span class="step-icon">📏</span>
+              <div><h5>치근-상악동 거리: 0~수 mm</h5><p>일부에서는 치근이 상악동 점막과 직접 접하거나 상악동 내로 돌출되기도 합니다.</p></div>
+            </div>
+            <div class="oaf-step s-danger">
+              <span class="step-icon">⚠️</span>
+              <div><h5>만성 근단 병소 → 골 파괴</h5><p>치근단 농양이 있으면 이미 상악동저 골이 용해된 경우가 많아 발치 시 천공이 불가피합니다.</p></div>
+            </div>
+          </div>
+          <div style="margin-top:12px;font-size:12px;color:var(--text3);font-style:italic;">
+            👆 이미지를 클릭하면 발치 후 OAF 상태를 확인할 수 있습니다
+          </div>
+        </div>
+
+        <!-- 패널 B: 발치 후 — OAF 처치 설명 -->
+        <div class="oaf-panel" id="oafPanelB">
+          <div class="oaf-flow">
+            <div class="oaf-step s-teal">
+              <span class="step-icon">🔍</span>
+              <div><h5>천공 확인 — Valsalva test</h5><p>코 막고 코로 내쉬기. 탐침·강한 세척은 절대 금기.</p></div>
+            </div>
+            <div class="oaf-step s-blue">
+              <span class="step-icon">🧩</span>
+              <div><h5>즉각 처치</h5><p>콜라겐 플러그 삽입 + 봉합. 항생제 + 대증요법 유지.</p></div>
+            </div>
+            <div class="oaf-step s-green">
+              <span class="step-icon">🌿</span>
+              <div><h5>급성기 &lt;1개월</h5><p>보존적 치료로 자연 폐쇄 기대 (결손 &lt;5mm).</p></div>
+            </div>
+            <div class="oaf-step s-danger">
+              <span class="step-icon">🏥</span>
+              <div><h5>지속성 OAF &gt;1개월</h5><p>Buccal fat pad flap으로 외과적 폐쇄.</p></div>
+            </div>
+          </div>
+          <div class="oaf-symptoms">
+            <div class="oaf-sym-title">집에서 알 수 있는 증상</div>
+            <div class="oaf-sym-list">
+              <span class="oaf-sym-tag alert">💧 물이 코로 나옴</span>
+              <span class="oaf-sym-tag alert">💨 바람 소리</span>
+              <span class="oaf-sym-tag alert">🩸 코피 동반</span>
+              <span class="oaf-sym-tag note">→ 즉시 내원</span>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /oaf-text-wrap -->
+    </div><!-- /oaf-layout -->
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════════
+     8. Q&A 카드
+════════════════════════════════════════ -->
+<section class="qa-section">
+  <div class="qa-inner">
+    <div class="qa-hr rv">
+      <div class="qa-hr-text">클릭해서 정답 확인</div>
+      <div class="qa-hr-line"></div>
+    </div>
+    <div class="qa-grid">
+
+      <div class="qa-flip" onclick="this.classList.toggle('flipped')">
+        <div class="qa-fi">
+          <div class="qa-f"><div class="qn">Q16</div><div class="qt">아래 사랑니가 위보다 훨씬 위험하다</div><div class="qh">👆 클릭</div></div>
+          <div class="qa-b correct"><div class="ai">⭕</div><div class="al">참</div><div class="ar">IAN·설신경 인접. 상악은 신경 손상 드물지만 상악동 천공 주의</div></div>
+        </div>
+      </div>
+
+      <div class="qa-flip" onclick="this.classList.toggle('flipped')">
+        <div class="qa-fi">
+          <div class="qa-f"><div class="qn">Q17</div><div class="qt">신경 손상이면 평생 감각이 못 돌아온다</div><div class="qh">👆 클릭</div></div>
+          <div class="qa-b wrong"><div class="ai">✕</div><div class="al">거짓</div><div class="ar">대부분 Neuropraxia(1단계) → 수개월 내 회복. 영구 손상(3단계)은 극히 드뭅니다</div></div>
+        </div>
+      </div>
+
+      <div class="qa-flip" onclick="this.classList.toggle('flipped')">
+        <div class="qa-fi">
+          <div class="qa-f"><div class="qn">Q18</div><div class="qt">파노라마에서 IAN 위험 소견이 있으면 무조건 안 뽑나요?</div><div class="qh">👆 클릭</div></div>
+          <div class="qa-b info"><div class="ai">🔬</div><div class="al">CBCT 후 결정</div><div class="ar">CBCT 3D 분석 후 완전 발치 vs Coronectomy 중 선택. 위험 소견 = 뽑으면 안 된다가 아닙니다</div></div>
+        </div>
+      </div>
+
+      <div class="qa-flip" onclick="this.classList.toggle('flipped')">
+        <div class="qa-fi">
+          <div class="qa-f"><div class="qn">Q19</div><div class="qt">위 사랑니 뽑고 코로 물이 나와요 — 정상인가요?</div><div class="qh">👆 클릭</div></div>
+          <div class="qa-b wrong"><div class="ai">✕</div><div class="al">거짓</div><div class="ar">상악동-구강 누공(OAF) 의심 → 즉시 내원. 절대 자연 폐쇄 기다리지 마세요</div></div>
+        </div>
+      </div>
+
+      <div class="qa-flip" onclick="this.classList.toggle('flipped')">
+        <div class="qa-fi">
+          <div class="qa-f"><div class="qn">Q20</div><div class="qt">OAF 수술은 크고 복잡한 수술인가요?</div><div class="qh">👆 클릭</div></div>
+          <div class="qa-b info"><div class="ai">🏥</div><div class="al">크기와 시기 따라 달라요</div><div class="ar">작고 초기라면 콜라겐 플러그로 자연 폐쇄 가능. 1개월 이상 지속 시 Buccal fat pad flap 수술</div></div>
+        </div>
+      </div>
+
+      <div class="qa-flip" onclick="this.classList.toggle('flipped')">
+        <div class="qa-fi">
+          <div class="qa-f" style="background:var(--teal-l);border-color:var(--teal);">
+            <div class="qn" style="color:var(--teal);">핵심</div>
+            <div class="qt" style="color:var(--teal-d);">합병증 예방의 가장 중요한 것은?</div>
+            <div class="qh" style="color:var(--teal);">👆 클릭</div>
+          </div>
+          <div class="qa-b info"><div class="ai">💡</div><div class="al">수술 전 파노라마 + CBCT</div><div class="ar">IAN 소견 확인 → CBCT 분석 → 수술 계획. 합병증의 대부분은 사전에 예측 가능합니다</div></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<script>
+/* ════════════════════════════════════════
+   Seddon 탭 전환
+════════════════════════════════════════ */
+function showSeddon(idx, btn) {
+  document.querySelectorAll('.sed-tab').forEach((t, i) => t.classList.toggle('active', i === idx));
+  document.querySelectorAll('.seddon-panel').forEach((p, i) => p.classList.toggle('active', i === idx));
+}
+
+/* ════════════════════════════════════════
+   OAF 이미지·텍스트 전환
+════════════════════════════════════════ */
+let oafState = false; // false = 발치 전, true = OAF
+
+function toggleOAF() {
+  oafState = !oafState;
+
+  const imgNormal = document.getElementById('oafImgNormal');
+  const imgOAF    = document.getElementById('oafImgOAF');
+  const label     = document.getElementById('oafLabel');
+  const panelA    = document.getElementById('oafPanelA');
+  const panelB    = document.getElementById('oafPanelB');
+
+  if (oafState) {
+    /* → OAF 상태 */
+    imgNormal.classList.add('hidden');
+    imgOAF.classList.remove('hidden');
+    label.textContent = '발치 후 OAF — 상악동-구강 교통';
+    label.style.background = 'rgba(200,64,64,.65)';
+    panelA.classList.remove('active');
+    panelB.classList.add('active');
+  } else {
+    /* → 정상 상태 */
+    imgNormal.classList.remove('hidden');
+    imgOAF.classList.add('hidden');
+    label.textContent = '발치 전 — 상악동 정상 해부학';
+    label.style.background = 'rgba(0,0,0,.58)';
+    panelA.classList.add('active');
+    panelB.classList.remove('active');
+  }
+}
+
+/* ════════════════════════════════════════
+   Scroll Reveal
+════════════════════════════════════════ */
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('in'); obs.unobserve(e.target); }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -32px 0px' });
+document.querySelectorAll('.rv,.rv-l,.rv-r').forEach(el => obs.observe(el));
+</script>
+
+<div class="bottom-nav">
+  <a class="bnav-btn prev" href="p4_special.html">← 특수 환자</a>
+  <a class="bnav-btn next" href="p6_recovery.html">회복 →</a>
+</div>
+</body>
+</html>

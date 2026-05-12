@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>회복 | 사랑니 Q&A — 전북대병원</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700;900&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --teal:#006B6B;--teal-l:#E0F0F0;--teal-d:#004F4F;--teal-vl:#7FD8D8;
+  --green:#1D8A62;--green-l:#D1FAE5;
+  --danger:#C84040;--danger-l:#FDE8E8;
+  --warn:#B45309;--warn-l:#FEF3C7;
+  --blue:#2D5FA6;--blue-l:#DBEAFE;
+  --bg:#F5F3EE;--card:#fff;--text:#1A1916;--text2:#5C5A54;--text3:#9A9890;
+  --dark:#0a1e1e;
+  --ff-serif:'Noto Serif KR',serif;--ff-sans:'Noto Sans KR',sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:var(--ff-sans);background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;}
+.rv{opacity:0;transform:translateY(18px);transition:opacity .6s cubic-bezier(.22,1,.36,1),transform .6s cubic-bezier(.22,1,.36,1);}
+.rv.in{opacity:1;transform:none;}
+.d1{transition-delay:.07s;}.d2{transition-delay:.14s;}.d3{transition-delay:.21s;}.d4{transition-delay:.28s;}
+.sec{padding:clamp(72px,11vh,116px) clamp(20px,5vw,72px);}
+.sec.white{background:#fff;}.sec.grey{background:var(--bg);}
+.inner{max-width:900px;margin:0 auto;}
+.eyebrow{font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--teal);margin-bottom:12px;}
+.headline{font-family:var(--ff-serif);font-size:clamp(24px,5vw,40px);font-weight:900;line-height:1.22;margin-bottom:12px;word-break:keep-all;}
+.lead{font-size:clamp(14px,1.9vw,16px);color:var(--text2);line-height:1.85;max-width:660px;margin-bottom:28px;word-break:keep-all;}
+.divider{width:40px;height:3px;background:var(--teal);border-radius:2px;margin:0 0 24px;}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:clamp(14px,2.5vw,24px);}
+
+/* === 1. HEALING TABS === */
+.healing-tabs{display:flex;border-radius:14px;overflow:hidden;box-shadow:0 2px 14px rgba(0,0,0,.09);}
+.htab{flex:1;padding:clamp(12px,2vw,18px) 6px;text-align:center;cursor:pointer;border:none;font-family:var(--ff-sans);font-size:clamp(12px,1.5vw,14px);font-weight:700;background:#F3F4F6;color:var(--text2);border-right:1px solid rgba(0,0,0,.06);line-height:1.35;transition:background .2s,color .2s;}
+.htab:last-child{border-right:none;}
+.htab small{display:block;font-size:10px;font-weight:400;opacity:.6;margin-top:3px;}
+.htab.active{background:var(--teal);color:#fff;}
+.htab.active small{opacity:.8;}
+.healing-viewer{margin-top:14px;border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,.12);background:#e8e4dc;}
+.healing-viewer-img{position:relative;width:100%;overflow:hidden;}
+.healing-viewer-img img{position:absolute;width:200%;height:200%;object-fit:fill;transition:top .55s cubic-bezier(.22,1,.36,1),left .55s cubic-bezier(.22,1,.36,1);}
+.healing-desc{padding:clamp(18px,3vw,28px);background:var(--card);border-top:3px solid var(--teal);transition:opacity .25s ease;}
+.hdesc-day{font-size:11px;font-weight:800;color:var(--teal);letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px;}
+.hdesc-title{font-family:var(--ff-serif);font-size:clamp(16px,2.5vw,22px);font-weight:900;color:var(--teal-d);margin-bottom:10px;}
+.hdesc-body{font-size:clamp(13px,1.6vw,15px);color:var(--text2);line-height:1.8;}
+
+/* === 2. DUAL STICKY === */
+.dual-scroll-wrap{position:relative;height:350vh;}
+.dual-sticky{position:sticky;top:0;height:100vh;overflow:hidden;display:flex;align-items:center;justify-content:center;background:#0a1010;}
+.dual-img{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:clamp(16px,3vw,48px);transition:opacity .6s ease;}
+.dual-img img{max-width:100%;max-height:100%;object-fit:contain;border-radius:14px;box-shadow:0 8px 48px rgba(0,0,0,.5);}
+.dual-img.hidden{opacity:0;pointer-events:none;}
+.dual-caption{position:absolute;bottom:32px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.62);backdrop-filter:blur(8px);color:rgba(255,255,255,.88);font-size:clamp(12px,1.5vw,14px);font-weight:600;padding:8px 20px;border-radius:20px;white-space:nowrap;pointer-events:none;text-align:center;transition:opacity .4s;}
+.dual-caption.hidden{opacity:0;}
+.smoker-stat{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  text-align:center;opacity:0;transition:opacity .5s ease;pointer-events:none;z-index:10;
+  width:90%;max-width:720px;
+  background:rgba(0,0,0,.80);
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+  border-radius:24px;
+  padding:clamp(20px,4vw,40px) clamp(24px,5vw,56px);
+  border:1px solid rgba(200,64,64,.25);
+  box-shadow:0 8px 48px rgba(0,0,0,.6);
+}
+.smoker-stat.show{opacity:1;}
+.stat-pill{display:inline-block;padding:6px 20px;border-radius:30px;background:rgba(200,64,64,.15);border:1px solid rgba(200,64,64,.35);font-size:12px;font-weight:700;color:rgba(255,150,150,.9);letter-spacing:.06em;text-transform:uppercase;margin-bottom:20px;}
+.stat-numbers{display:flex;align-items:flex-end;justify-content:center;gap:clamp(24px,5vw,60px);margin-bottom:18px;}
+.stat-col{text-align:center;}
+.stat-label{font-size:clamp(12px,1.5vw,14px);color:rgba(255,255,255,.5);margin-bottom:8px;font-weight:600;}
+.stat-num{font-family:var(--ff-serif);font-size:clamp(52px,14vw,130px);font-weight:900;line-height:1;}
+.stat-col.general .stat-num{color:rgba(255,255,255,.75);}
+.stat-col.smoker  .stat-num{color:var(--danger);text-shadow:0 0 40px rgba(200,64,64,.6);}
+.stat-vs{font-family:var(--ff-serif);font-size:clamp(48px,10vw,100px);color:rgba(200,64,64,.3);line-height:1;align-self:flex-end;padding-bottom:6px;}
+.stat-unit{font-size:clamp(16px,2.5vw,24px);font-weight:700;margin-top:4px;}
+.stat-col.general .stat-unit{color:rgba(255,255,255,.45);}
+.stat-col.smoker  .stat-unit{color:rgba(200,64,64,.85);}
+.stat-source{font-size:11px;color:rgba(255,255,255,.28);font-style:italic;}
+
+/* === 3. SYMPTOM GRID === */
+.sym-grid{display:grid;grid-template-columns:repeat(5,1fr);grid-template-rows:repeat(2,auto);gap:clamp(8px,1.5vw,14px);margin-bottom:20px;}
+.sym-card{border-radius:12px;padding:clamp(12px,2vw,18px) clamp(10px,1.5vw,14px);background:var(--card);box-shadow:0 2px 10px rgba(0,0,0,.07);cursor:pointer;border:2.5px solid transparent;transition:all .18s;user-select:none;display:flex;flex-direction:column;align-items:flex-start;gap:8px;min-height:clamp(90px,13vw,120px);}
+.sym-card:hover{border-color:rgba(0,107,107,.2);}
+.sym-card.checked{border-color:var(--teal);background:rgba(0,107,107,.06);}
+.sym-check{width:22px;height:22px;border-radius:6px;border:2px solid var(--text3);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;transition:all .18s;}
+.sym-card.checked .sym-check{background:var(--teal);border-color:var(--teal);color:#fff;}
+.sym-card-text{font-size:clamp(11px,1.3vw,13px);font-weight:600;color:var(--text);line-height:1.5;}
+.triage-btn-row{display:flex;gap:10px;margin-bottom:20px;}
+.t-btn{padding:13px 28px;border-radius:11px;font-family:var(--ff-sans);font-size:14px;font-weight:800;cursor:pointer;border:none;transition:all .2s;}
+.t-btn.primary{background:var(--teal);color:#fff;}.t-btn.primary:hover{background:var(--teal-d);}
+.t-btn.reset{background:transparent;border:1.5px solid var(--text3);color:var(--text3);font-size:12px;}
+.result-card{display:none;padding:clamp(18px,3vw,26px);border-radius:14px;border-left:6px solid;animation:resIn .38s ease;}
+@keyframes resIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+.result-card.show{display:block;}
+.result-card.green{background:var(--green-l);border-color:var(--green);}
+.result-card.yellow{background:var(--warn-l);border-color:var(--warn);}
+.result-card.red{background:var(--danger-l);border-color:var(--danger);}
+.result-icon{font-size:32px;margin-bottom:10px;display:block;}
+.result-title{font-family:var(--ff-serif);font-size:clamp(17px,2.5vw,22px);font-weight:900;margin-bottom:8px;}
+.result-card.green .result-title{color:var(--green);}.result-card.yellow .result-title{color:var(--warn);}.result-card.red .result-title{color:var(--danger);}
+.result-desc{font-size:clamp(12px,1.5vw,14px);color:var(--text2);line-height:1.7;margin-bottom:14px;}
+.result-action{display:inline-block;padding:8px 18px;border-radius:20px;font-size:13px;font-weight:800;}
+.result-card.green  .result-action{background:rgba(29,138,98,.12);color:var(--green);}
+.result-card.yellow .result-action{background:rgba(180,83,9,.12);color:var(--warn);}
+.result-card.red    .result-action{background:rgba(200,64,64,.12);color:var(--danger);}
+.result-evidence{margin-top:10px;font-size:11px;color:var(--text3);font-style:italic;line-height:1.5;}
+.result-placeholder{padding:32px;text-align:center;color:var(--text3);background:var(--card);border-radius:14px;border:2px dashed rgba(0,0,0,.08);}
+
+/* === 4. COMPRESS + DND === */
+.compress-tl{display:flex;border-radius:16px;overflow:hidden;box-shadow:0 3px 18px rgba(0,0,0,.08);}
+.ct-seg{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:clamp(16px,3vw,24px) clamp(12px,2vw,18px);text-align:center;gap:5px;}
+.ct-seg.cold{background:linear-gradient(135deg,#DBEAFE,#E8F4FF);flex:4;border-right:3px solid #3B82F6;}
+.ct-seg.switch{background:#F3F4F6;flex:.8;border-right:3px solid #D1D5DB;}
+.ct-seg.hot{background:linear-gradient(135deg,var(--warn-l),#FFF0D5);flex:5;}
+.ct-icon{font-size:clamp(24px,4vw,34px);}.ct-day{font-size:12px;font-weight:800;}
+.ct-seg.cold .ct-day{color:#1D4ED8;}.ct-seg.switch .ct-day{color:var(--text3);font-size:11px;}.ct-seg.hot .ct-day{color:var(--warn);}
+.ct-title{font-size:clamp(14px,2vw,18px);font-weight:900;}
+.ct-seg.cold .ct-title{color:#1D4ED8;}.ct-seg.hot .ct-title{color:var(--warn);}
+.ct-desc{font-size:clamp(11px,1.3vw,13px);color:var(--text2);line-height:1.5;}
+.dnd-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(14px,2.5vw,24px);}
+.do-card{background:var(--green-l);border-radius:18px;padding:clamp(18px,3vw,26px);border:1px solid rgba(0,107,107,.15);}
+.dont-card{background:var(--danger-l);border-radius:18px;padding:clamp(18px,3vw,26px);border:1px solid rgba(200,64,64,.15);}
+.dnd-title{font-size:clamp(17px,2.5vw,20px);font-weight:900;margin-bottom:16px;display:flex;align-items:center;gap:8px;}
+.do-card .dnd-title{color:var(--teal-d);}.dont-card .dnd-title{color:var(--danger);}
+.dnd-items{display:flex;flex-direction:column;gap:9px;}
+.dnd-item{display:flex;align-items:flex-start;gap:11px;padding:11px 13px;border-radius:10px;}
+.do-card .dnd-item{background:rgba(255,255,255,.62);}.dont-card .dnd-item{background:rgba(255,255,255,.5);}
+.dnd-icon{font-size:18px;flex-shrink:0;width:34px;height:34px;display:flex;align-items:center;justify-content:center;border-radius:50%;}
+.do-card .dnd-icon{background:rgba(0,107,107,.1);}.dont-card .dnd-icon{background:rgba(200,64,64,.1);}
+.dnd-label{font-size:clamp(12px,1.5vw,14px);font-weight:700;color:var(--text);}
+.dnd-reason{font-size:clamp(11px,1.3vw,12px);color:var(--text2);margin-top:2px;line-height:1.4;}
+
+/* === Q&A === */
+.qa-sec{background:var(--bg);padding:clamp(50px,8vh,80px) clamp(20px,5vw,72px);}
+.qa-in{max-width:900px;margin:0 auto;}
+.qa-hr{display:flex;align-items:center;gap:12px;margin-bottom:clamp(18px,3vh,30px);}
+.qa-hr-line{flex:1;height:1px;background:rgba(0,0,0,.08);}
+.qa-hr-text{font-size:clamp(13px,1.8vw,15px);font-weight:700;color:var(--text2);white-space:nowrap;}
+.qa-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(10px,1.8vw,16px);}
+.qa-flip{perspective:900px;height:clamp(148px,18vw,178px);cursor:pointer;}
+.qa-fi{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .52s cubic-bezier(.77,0,.175,1);}
+.qa-flip.flipped .qa-fi{transform:rotateY(180deg);}
+.qa-f,.qa-b{position:absolute;inset:0;backface-visibility:hidden;border-radius:12px;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:clamp(12px,2vw,18px);text-align:center;}
+.qa-f{background:var(--card);box-shadow:0 2px 12px rgba(0,0,0,.07);border:2px solid transparent;transition:border-color .2s;}
+.qa-flip:hover .qa-f{border-color:var(--teal-l);}
+.qa-f .qn{font-size:11px;font-weight:800;color:var(--teal);letter-spacing:.1em;margin-bottom:7px;}
+.qa-f .qt{font-size:clamp(12px,1.6vw,14px);font-weight:600;color:var(--text);line-height:1.4;}
+.qa-f .qh{margin-top:9px;font-size:10px;color:var(--text3);}
+.qa-b{transform:rotateY(180deg);}
+.qa-b.correct{background:var(--green-l);border:2px solid var(--green);}
+.qa-b.wrong{background:var(--danger-l);border:2px solid var(--danger);}
+.qa-b.info{background:var(--teal-l);border:2px solid var(--teal);}
+.qa-b .ai{font-size:22px;margin-bottom:5px;}
+.qa-b .al{font-size:clamp(13px,1.8vw,15px);font-weight:800;margin-bottom:5px;}
+.qa-b.correct .al{color:var(--green);}.qa-b.wrong .al{color:var(--danger);}.qa-b.info .al{color:var(--teal-d);}
+.qa-b .ar{font-size:clamp(10px,1.3vw,12px);color:var(--text2);line-height:1.45;}
+
+/* === 5. SUMMARY STICKY === */
+.summary-scroll{position:relative;height:420vh;}
+.summary-sticky{position:sticky;top:0;height:100vh;display:flex;align-items:center;justify-content:center;overflow:hidden;background:var(--dark);}
+.sum-bg{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 50%,rgba(0,107,107,.12) 0%,transparent 55%);pointer-events:none;}
+.sum-panel{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:clamp(24px,6vw,80px);opacity:0;transform:scale(.96);transition:opacity .55s ease,transform .55s ease;pointer-events:none;}
+.sum-panel.show{opacity:1;transform:none;}
+.sum-num{font-family:var(--ff-serif);font-size:clamp(80px,22vw,220px);font-weight:900;line-height:.9;color:rgba(127,216,216,.08);position:absolute;z-index:0;user-select:none;}
+.sum-content{position:relative;z-index:1;max-width:700px;}
+.sum-tag{display:inline-block;background:rgba(127,216,216,.12);border:1px solid rgba(127,216,216,.22);color:var(--teal-vl);font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;padding:5px 16px;border-radius:20px;margin-bottom:clamp(16px,3vh,28px);}
+.sum-headline{font-family:var(--ff-serif);font-size:clamp(32px,7vw,72px);font-weight:900;color:#fff;line-height:1.15;margin-bottom:clamp(12px,2.5vh,22px);word-break:keep-all;}
+.sum-headline em{color:var(--teal-vl);font-style:normal;}
+.sum-body{font-size:clamp(14px,2.2vw,18px);color:rgba(255,255,255,.48);line-height:1.8;word-break:keep-all;}
+
+/* === 6. OUTRO === */
+.outro-slide{background:linear-gradient(160deg,var(--dark) 0%,#0d2626 50%,#071414 100%);min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:clamp(60px,10vh,100px) clamp(20px,5vw,72px);text-align:center;color:#fff;position:relative;overflow:hidden;}
+.outro-slide::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 40%,rgba(0,107,107,.15) 0%,transparent 55%);pointer-events:none;}
+.outro-inner{max-width:760px;margin:0 auto;position:relative;z-index:1;}
+.outro-eyebrow{font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:rgba(127,216,216,.6);margin-bottom:16px;}
+.outro-title{font-family:var(--ff-serif);font-size:clamp(30px,6vw,56px);font-weight:900;line-height:1.18;margin-bottom:14px;word-break:keep-all;}
+.outro-title em{color:var(--teal-vl);font-style:normal;}
+.outro-lead{font-size:clamp(14px,2vw,17px);color:rgba(255,255,255,.45);line-height:1.9;margin-bottom:clamp(40px,7vh,64px);word-break:keep-all;}
+.outro-qr-row{display:flex;align-items:center;justify-content:center;gap:clamp(32px,6vw,64px);flex-wrap:wrap;margin-bottom:clamp(36px,6vh,56px);}
+.qr-box{width:clamp(100px,14vw,140px);height:clamp(100px,14vw,140px);background:rgba(255,255,255,.07);border:2px solid rgba(255,255,255,.14);border-radius:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;font-size:12px;color:rgba(255,255,255,.28);margin-bottom:10px;}
+.qr-label{font-size:12px;color:rgba(255,255,255,.35);font-weight:600;}
+.outro-credit-main{font-size:clamp(13px,1.8vw,15px);color:rgba(255,255,255,.35);line-height:2.2;}
+.outro-credit-main strong{color:rgba(255,255,255,.62);}
+/* ticker */
+.ref-ticker-wrap{position:relative;background:rgba(0,0,0,.35);overflow:hidden;height:28px;border-top:1px solid rgba(255,255,255,.06);cursor:pointer;width:100%;}
+.ref-ticker-inner{display:flex;align-items:center;height:100%;white-space:nowrap;animation:tickerRun 50s linear infinite;}
+.ref-ticker-inner:hover{animation-play-state:paused;}
+@keyframes tickerRun{0%{transform:translateX(0);}100%{transform:translateX(-50%);}}
+.ref-tick-item{display:inline-block;padding:0 clamp(20px,3.5vw,36px);font-size:11px;color:rgba(255,255,255,.28);}
+/* ref full panel */
+.ref-full-panel{display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.88);backdrop-filter:blur(12px);overflow-y:auto;padding:clamp(40px,8vh,80px) clamp(24px,5vw,60px);animation:fadeInPanel .35s ease;}
+@keyframes fadeInPanel{from{opacity:0;}to{opacity:1;}}
+.ref-full-panel.show{display:block;}
+.ref-panel-inner{max-width:800px;margin:0 auto;}
+.ref-panel-title{font-family:var(--ff-serif);font-size:clamp(20px,3.5vw,30px);font-weight:900;color:#fff;margin-bottom:24px;}
+.ref-close{float:right;background:rgba(255,255,255,.12);border:none;color:#fff;font-size:16px;font-weight:700;padding:8px 16px;border-radius:8px;cursor:pointer;font-family:var(--ff-sans);}
+.ref-close:hover{background:rgba(255,255,255,.2);}
+.ref-list-full{list-style:none;display:flex;flex-direction:column;gap:10px;}
+.ref-item-full{font-size:clamp(12px,1.5vw,13px);color:rgba(255,255,255,.55);line-height:1.75;padding-left:22px;position:relative;}
+.ref-item-full::before{content:'·';position:absolute;left:6px;font-weight:900;color:var(--teal-vl);font-size:16px;line-height:1.4;}
+.ref-item-full em{font-style:normal;font-weight:700;color:rgba(255,255,255,.82);}
+/* responsive */
+@media(max-width:700px){
+  .sym-grid{grid-template-columns:repeat(2,1fr);grid-template-rows:auto;}
+  .grid2,.dnd-grid{grid-template-columns:1fr;}
+  .compress-tl{flex-direction:column;}
+  .ct-seg.cold,.ct-seg.switch,.ct-seg.hot{border-right:none;border-bottom:3px solid;}
+  .ct-seg.cold{border-bottom-color:#3B82F6;}.ct-seg.switch{border-bottom-color:#D1D5DB;}
+  .qa-grid{grid-template-columns:1fr 1fr;}
+  .healing-tabs{flex-wrap:wrap;}
+  .htab{flex:1 1 45%;border-right:none;border-bottom:1px solid rgba(0,0,0,.06);}
+  .outro-qr-row{flex-direction:column;gap:24px;}
+}
+@media(max-width:420px){.qa-grid{grid-template-columns:1fr;}.sym-grid{grid-template-columns:1fr 1fr;}}
+
+/* ════ SHARED NAV ════ */
+:root{--nav-h:52px;}
+.snav{position:fixed;top:0;left:0;right:0;z-index:9999;height:var(--nav-h);
+  background:rgba(10,30,30,.96);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  border-bottom:1px solid rgba(127,216,216,.1);}
+.snav-inner{max-width:1280px;margin:0 auto;display:flex;align-items:center;
+  height:100%;padding:0 clamp(10px,2vw,20px);gap:8px;}
+.snav-logo{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:700;
+  color:rgba(255,255,255,.5);white-space:nowrap;flex-shrink:0;text-decoration:none;}
+.snav-dot{width:6px;height:6px;border-radius:50%;background:#7FD8D8;
+  box-shadow:0 0 6px #7FD8D8;animation:sdot 2s ease-in-out infinite;flex-shrink:0;}
+@keyframes sdot{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.4;transform:scale(.75);}}
+.snav-tabs{display:flex;align-items:center;gap:1px;flex:1;overflow-x:auto;
+  scrollbar-width:none;-webkit-overflow-scrolling:touch;}
+.snav-tabs::-webkit-scrollbar{display:none;}
+.stab{display:inline-flex;align-items:center;padding:5px 11px;border-radius:18px;
+  font-size:11.5px;font-weight:600;color:rgba(255,255,255,.38);
+  text-decoration:none;white-space:nowrap;transition:all .18s;flex-shrink:0;}
+.stab:hover{color:rgba(255,255,255,.75);background:rgba(255,255,255,.07);}
+.stab.active{color:#7FD8D8;background:rgba(127,216,216,.13);font-weight:700;}
+.snav-progress{position:absolute;bottom:0;left:0;height:2px;background:#7FD8D8;
+  transition:width .15s;box-shadow:0 0 5px #7FD8D8;}
+@media(max-width:520px){
+  .snav-logo .logo-text{display:none;}
+  .snav-logo::after{content:'JBUH';font-size:11px;font-weight:800;
+    color:rgba(127,216,216,.7);letter-spacing:.06em;}
+  .stab{font-size:11px;padding:4px 8px;}
+}
+
+/* ── 하단 prev/next 내비게이션 ── */
+.bottom-nav{display:flex;justify-content:space-between;align-items:center;
+  padding:clamp(20px,4vh,36px) clamp(20px,5vw,60px);
+  background:var(--dark,#0a1e1e);border-top:1px solid rgba(127,216,216,.1);}
+.bnav-btn{display:inline-flex;align-items:center;gap:8px;
+  padding:10px 22px;border-radius:24px;
+  background:rgba(127,216,216,.08);border:1px solid rgba(127,216,216,.2);
+  color:#7FD8D8;font-family:inherit;font-size:13px;font-weight:700;
+  text-decoration:none;transition:all .18s;}
+.bnav-btn:hover{background:rgba(127,216,216,.18);color:#fff;}
+</style>
+<body style="padding-top:var(--nav-h,52px);">
+<nav class="snav" id="siteNav">
+  <div class="snav-inner">
+    <a class="snav-logo" href="p0_opening.html">
+      <span class="snav-dot"></span>
+      <span class="logo-text">전북대병원 · 구강악안면외과</span>
+    </a>
+    <div class="snav-tabs">
+      <a class="stab" href="p0_opening.html">오프닝</a>
+      <a class="stab" href="p1_class.html">매복 분류</a>
+      <a class="stab" href="p2_timing.html">발치 시기</a>
+      <a class="stab" href="p3_anesthesia.html">마취·통증</a>
+      <a class="stab" href="p4_special.html">특수 환자</a>
+      <a class="stab" href="p5_complications.html">합병증</a>
+      <a class="stab active" href="p6_recovery.html">회복</a>
+    </div>
+  </div>
+  <div class="snav-progress" id="snavProg"></div>
+</nav>
+<script>
+(function(){
+  var p=document.getElementById('snavProg');
+  window.addEventListener('scroll',function(){
+    if(p)p.style.width=(window.scrollY/(document.body.scrollHeight-window.innerHeight)*100)+'%';
+  },{passive:true});
+})();
+</script>
+<!-- 1. HEALING TABS -->
+<section class="sec white">
+  <div class="inner">
+    <div class="eyebrow rv">회복의 과학</div>
+    <h2 class="headline rv d1">발치와(Socket)는 이렇게 치유됩니다</h2>
+    <p class="lead rv d2">탭을 선택하면 각 단계의 생물학적 과정을 확인할 수 있습니다.</p>
+    <div class="divider rv d3"></div>
+    <div class="healing-tabs rv d3">
+      <button class="htab active" onclick="showHealing(0,this)">Day 1<small>혈병 형성</small></button>
+      <button class="htab" onclick="showHealing(1,this)">Day 3~7<small>육아조직</small></button>
+      <button class="htab" onclick="showHealing(2,this)">Day 14~30<small>상피화</small></button>
+      <button class="htab" onclick="showHealing(3,this)">Day 180+<small>완전 골 충전</small></button>
+    </div>
+    <div class="healing-viewer rv d4" id="healingViewer">
+      <div class="healing-viewer-img" id="healingImgWrap" style="aspect-ratio:1024/559;">
+        <img src="image/healing_socket.png" alt="발치와 회복" id="healingImg">
+      </div>
+      <div class="healing-desc" id="healingDesc"></div>
+    </div>
+  </div>
+</section>
+
+<!-- 2. DUAL STICKY -->
+<div class="dual-scroll-wrap" id="dualScrollWrap">
+  <div class="dual-sticky">
+    <div class="dual-img" id="dualImgA"><img src="image/neg_pressure.png" alt="음압 기전"></div>
+    <div class="dual-caption" id="capA">빨대·흡연·세게 침 뱉기 — 음압 기전으로 혈병 탈락</div>
+    <div class="dual-img hidden" id="dualImgB"><img src="image/dry_socket.png" alt="건성 발치와"></div>
+    <div class="dual-caption hidden" id="capB">건성 발치와 단면 — 치조골·신경 말단 노출, 심한 방사통</div>
+    <div class="smoker-stat" id="smokerStat">
+      <div class="stat-pill">흡연 시 건성 발치와 발생률</div>
+      <div class="stat-numbers">
+        <div class="stat-col general">
+          <div class="stat-label">비흡연자</div>
+          <div class="stat-num"><span id="cntGeneral">0</span></div>
+          <div class="stat-unit">% 미만</div>
+        </div>
+        <div class="stat-vs">vs</div>
+        <div class="stat-col smoker">
+          <div class="stat-label">흡연자</div>
+          <div class="stat-num"><span id="cntSmoker">0</span></div>
+          <div class="stat-unit">%까지</div>
+        </div>
+      </div>
+      <div class="stat-source">Chow et al., J Oral Maxillofac Surg 2020 · 신경수·박원종, 대치협지 2021</div>
+    </div>
+  </div>
+</div>
+
+<!-- 3. SYMPTOM GRID -->
+<section class="sec grey">
+  <div class="inner">
+    <div class="eyebrow rv">증거 기반 자가 감별 진단</div>
+    <h2 class="headline rv d1">지금 내 증상은 어디에 해당할까요?</h2>
+    <p class="lead rv d2">해당하는 증상을 모두 선택하고 하단 버튼을 눌러 판단 결과를 확인하세요.<br><strong style="color:var(--danger);">⚠ 교육 목적이며 임상 진단을 대체하지 않습니다.</strong></p>
+    <div class="divider rv d3"></div>
+    <div class="sym-grid rv d3">
+      <div class="sym-card" onclick="toggleCard(this)" data-cat="normal"><div class="sym-check">✓</div><div class="sym-card-text">발치 다음날부터 점점 붓기가 심해짐</div></div>
+      <div class="sym-card" onclick="toggleCard(this)" data-cat="normal"><div class="sym-check">✓</div><div class="sym-card-text">욱신거리는 통증이 심하나 처방약 복용 후 감소</div></div>
+      <div class="sym-card" onclick="toggleCard(this)" data-cat="ds"><div class="sym-check">✓</div><div class="sym-card-text">발치하고 4일차쯤 갑자기 증가하는 통증</div></div>
+      <div class="sym-card" onclick="toggleCard(this)" data-cat="ds"><div class="sym-check">✓</div><div class="sym-card-text">발치와에서 심한 악취 발생</div></div>
+      <div class="sym-card" onclick="toggleCard(this)" data-cat="ds"><div class="sym-check">✓</div><div class="sym-card-text">처방 진통제가 더 이상 효과 없음</div></div>
+      <div class="sym-card" onclick="toggleCard(this)" data-cat="ds"><div class="sym-check">✓</div><div class="sym-card-text">귀 쪽으로 퍼지는 방사통</div></div>
+      <div class="sym-card" onclick="toggleCard(this)" data-cat="inf"><div class="sym-check">✓</div><div class="sym-card-text">발열 38.3°C 이상 (체온계 측정)</div></div>
+      <div class="sym-card" onclick="toggleCard(this)" data-cat="inf"><div class="sym-check">✓</div><div class="sym-card-text">입이 잘 안 벌어짐 (개구 제한)</div></div>
+      <div class="sym-card" onclick="toggleCard(this)" data-cat="inf"><div class="sym-check">✓</div><div class="sym-card-text">음식 삼키기가 어려움 (연하 곤란)</div></div>
+      <div class="sym-card" onclick="toggleCard(this)" data-cat="inf"><div class="sym-check">✓</div><div class="sym-card-text">목·턱 아래가 단단하게 붓거나 빨개짐</div></div>
+    </div>
+    <div class="triage-btn-row rv d4">
+      <button class="t-btn primary" onclick="diagnose()">🔍 판단 결과 확인</button>
+      <button class="t-btn reset" onclick="resetTriage()">초기화</button>
+    </div>
+    <div id="resultArea">
+      <div class="result-placeholder" id="resultPh"><div style="font-size:30px;margin-bottom:10px;opacity:.3;">🩺</div><div style="font-size:14px;font-weight:600;">증상을 선택하고 결과를 확인하세요</div></div>
+      <div class="result-card green" id="res-green"><span class="result-icon">🟢</span><div class="result-title">정상 회복 경과</div><div class="result-desc">선택된 증상은 발치 후 정상적인 치유 반응의 범위 내에 있습니다. Day 1~2의 붓기 심화와 박동성 통증은 조직 손상에 따른 정상 염증 반응이며, 진통제가 효과적이라면 경과를 관찰하세요.</div><div class="result-action">✅ 경과 관찰 — 처방 진통제 복용 유지</div><div class="result-evidence">근거: 발치 후 염증 반응 peak는 수술 후 24~48시간 (Alling &amp; Catone, 1994). 진통제 유효성이 정상 vs 건성발치와의 핵심 감별점.</div></div>
+      <div class="result-card yellow" id="res-yellow"><span class="result-icon">🟡</span><div class="result-title">건성 발치와 (Dry Socket) 의심</div><div class="result-desc">Alveolar Osteitis 진단 기준에 부합하는 증상이 확인되었습니다. 발치 3~5일 후 통증 재발/악화, 악취, 진통제 무효, 방사통 중 2개 이상이 선택되었습니다. 집에서 버티지 마세요.</div><div class="result-action">⚠ 내원 권고 — 발치 병원에 연락하세요</div><div class="result-evidence">근거: Blum IR (1992) 건성발치와 진단 기준. 신경수·박원종 (2021)</div></div>
+      <div class="result-card red" id="res-red"><span class="result-icon">🔴</span><div class="result-title">심부 감염 의심 — 즉시 응급 내원</div><div class="result-desc">발열·개구 제한·연하 곤란·경부 종창은 심부 감염(deep space infection)의 Red flag 징후입니다. 악하간극·부인두간극으로의 파급 시 기도 압박 위험이 있어 응급에 해당합니다.</div><div class="result-action">🚨 즉시 응급 내원 — 지체하지 마세요</div><div class="result-evidence">근거: 신경수·박원종 (2021) — 개구제한 + 발열 + 연하곤란은 심부 감염 Red flag signs</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 4. COMPRESS + DND -->
+<section class="sec white">
+  <div class="inner">
+    <div class="eyebrow rv">회복 관리 가이드</div>
+    <h2 class="headline rv d1">발치 후 48시간 — 무엇을 해야 하나요?</h2>
+    <div class="divider rv d2"></div>
+    <h3 class="rv d2" style="font-size:clamp(16px,2.5vw,20px);font-weight:800;margin-bottom:14px;">냉찜질 → 온찜질 전환</h3>
+    <div class="compress-tl rv d3">
+      <div class="ct-seg cold"><div class="ct-icon">❄️</div><div class="ct-day">Day 0 ~ 2</div><div class="ct-title">냉찜질</div><div class="ct-desc">10~15분 적용 / 10분 휴식<br>혈관수축·출혈 억제</div></div>
+      <div class="ct-seg switch"><div class="ct-icon">↔</div><div class="ct-day">Day 3 전환</div></div>
+      <div class="ct-seg hot"><div class="ct-icon">🔥</div><div class="ct-day">Day 3 이후</div><div class="ct-title">온찜질</div><div class="ct-desc">혈류 촉진 / 부종 흡수<br>근육 이완</div></div>
+    </div>
+    <div style="text-align:center;font-size:12px;color:var(--text3);margin:8px 0 32px;padding:7px;background:var(--bg);border-radius:8px;" class="rv d4">⚠ Day 3 이전 온찜질 사용 시 출혈 증가 위험</div>
+    <div class="dnd-grid rv d4">
+      <div class="do-card">
+        <div class="dnd-title"><span style="font-size:22px;">✅</span> 해야 할 것</div>
+        <div class="dnd-items">
+          <div class="dnd-item"><div class="dnd-icon">🩹</div><div><div class="dnd-label">거즈 물기 (1시간 이상)</div><div class="dnd-reason">혈병 형성을 위한 가장 중요한 행동</div></div></div>
+          <div class="dnd-item"><div class="dnd-icon">❄️</div><div><div class="dnd-label">냉찜질 (처음 2일)</div><div class="dnd-reason">부종·출혈 예방. 10~15분 on/10분 off</div></div></div>
+          <div class="dnd-item"><div class="dnd-icon">🥣</div><div><div class="dnd-label">부드러운 음식</div><div class="dnd-reason">반대쪽으로 씹기. 유동식→연식 단계적 진행</div></div></div>
+          <div class="dnd-item"><div class="dnd-icon">🛏️</div><div><div class="dnd-label">충분한 휴식</div><div class="dnd-reason">머리를 심장보다 약간 높게 유지</div></div></div>
+        </div>
+      </div>
+      <div class="dont-card">
+        <div class="dnd-title"><span style="font-size:22px;">❌</span> 하면 안 될 것</div>
+        <div class="dnd-items">
+          <div class="dnd-item"><div class="dnd-icon">🥤</div><div><div class="dnd-label">빨대 사용 ❌</div><div class="dnd-reason">음압 → 혈병 탈락 → 건성 발치와</div></div></div>
+          <div class="dnd-item"><div class="dnd-icon">🚬</div><div><div class="dnd-label">흡연·전자담배 ❌ (실밥 전까지)</div><div class="dnd-reason">음압 + 니코틴 혈관수축 이중 위험 (Majid 2024)</div></div></div>
+          <div class="dnd-item"><div class="dnd-icon">🍺</div><div><div class="dnd-label">음주 ❌ (48~72시간)</div><div class="dnd-reason">혈관확장 → 출혈, 약물 상호작용</div></div></div>
+          <div class="dnd-item"><div class="dnd-icon">💦</div><div><div class="dnd-label">세게 침 뱉기·코 풀기 ❌</div><div class="dnd-reason">음압·양압 모두 혈병에 악영향</div></div></div>
+          <div class="dnd-item"><div class="dnd-icon">🏃</div><div><div class="dnd-label">격렬한 운동·사우나 ❌ (2일)</div><div class="dnd-reason">혈압 상승 → 출혈·혈병 불안정</div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Q&A -->
+<section class="qa-sec">
+  <div class="qa-in">
+    <div class="qa-hr rv"><div class="qa-hr-text">클릭해서 정답 확인</div><div class="qa-hr-line"></div></div>
+    <div class="qa-grid">
+      <div class="qa-flip" onclick="this.classList.toggle('flipped')"><div class="qa-fi"><div class="qa-f"><div class="qn">Q21</div><div class="qt">드라이소켓이면 집에서 버텨도 되나요?</div><div class="qh">👆 클릭</div></div><div class="qa-b wrong"><div class="ai">✕</div><div class="al">절대 안 됩니다</div><div class="ar">진통제 무효 + 악취 + 방사통이면 즉시 내원. 세척·진정드레싱 충전이 필요합니다</div></div></div></div>
+      <div class="qa-flip" onclick="this.classList.toggle('flipped')"><div class="qa-fi"><div class="qa-f"><div class="qn">Q22</div><div class="qt">붓기는 언제 가장 심하고 얼마나 지속되나요?</div><div class="qh">👆 클릭</div></div><div class="qa-b info"><div class="ai">📅</div><div class="al">Day 2 peak, 1주 지속</div><div class="ar">수술 후 24~48시간에 최고조. 이후 서서히 감소. 약 1주 이내 대부분 호전</div></div></div></div>
+      <div class="qa-flip" onclick="this.classList.toggle('flipped')"><div class="qa-fi"><div class="qa-f"><div class="qn">Q23</div><div class="qt">전자담배는 일반 담배보다 안전하니 피워도 되나요?</div><div class="qh">👆 클릭</div></div><div class="qa-b wrong"><div class="ai">✕</div><div class="al">동일하게 금지</div><div class="ar">음압 기전 동일 + 니코틴 혈관수축 동일. Majid (Evidence-Based Dentistry, 2024)</div></div></div></div>
+      <div class="qa-flip" onclick="this.classList.toggle('flipped')"><div class="qa-fi"><div class="qa-f"><div class="qn">Q24</div><div class="qt">4개 동시에 뽑을 수 있나요?</div><div class="qh">👆 클릭</div></div><div class="qa-b info"><div class="ai">🦷</div><div class="al">케이스에 따라</div><div class="ar">같은 쪽 2개 원칙. 전신건강·저난이도·응급대응 가능 시 4개 가능. 전신마취 하 일괄 발치 가능</div></div></div></div>
+      <div class="qa-flip" onclick="this.classList.toggle('flipped')"><div class="qa-fi"><div class="qa-f"><div class="qn">Q25</div><div class="qt">발치 후 구멍은 언제 채워지나요?</div><div class="qh">👆 클릭</div></div><div class="qa-b info"><div class="ai">⏳</div><div class="al">상피 수주, 골 6~8개월</div><div class="ar">점막 상피화 수주 내, 골 완전 충전에는 6~8개월 소요</div></div></div></div>
+      <div class="qa-flip" onclick="this.classList.toggle('flipped')"><div class="qa-fi"><div class="qa-f" style="background:var(--teal-l);border-color:var(--teal);"><div class="qn" style="color:var(--teal);">핵심</div><div class="qt" style="color:var(--teal-d);">회복의 핵심 한 마디는?</div><div class="qh" style="color:var(--teal);">👆 클릭</div></div><div class="qa-b info"><div class="ai">💡</div><div class="al">혈병을 지켜라</div><div class="ar">혈병만 잘 유지해도 합병증의 절반을 막을 수 있습니다. 빨대·흡연·세게 뱉기 금지</div></div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 5. SUMMARY STICKY -->
+<div class="summary-scroll" id="sumScrollWrap">
+  <div class="summary-sticky">
+    <div class="sum-bg"></div>
+    <div class="sum-panel" id="sum0"><div class="sum-num">01</div><div class="sum-content"><div class="sum-tag">검진</div><div class="sum-headline">무증상 <em>≠</em> 무위험</div><div class="sum-body">증상이 없어도 치근흡수·낭종이 조용히 진행 중일 수 있습니다.<br>정기 파노라마 X-ray 검진이 핵심입니다.</div></div></div>
+    <div class="sum-panel" id="sum1"><div class="sum-num">02</div><div class="sum-content"><div class="sum-tag">시기</div><div class="sum-headline"><em>25세 이전</em>이 유리합니다</div><div class="sum-body">치근 미완성·골 유연성으로<br>난이도·합병증·회복 모두 유리한 시기입니다.</div></div></div>
+    <div class="sum-panel" id="sum2"><div class="sum-num">03</div><div class="sum-content"><div class="sum-tag">대처</div><div class="sum-headline">집에서 <em>버티지</em> 마세요</div><div class="sum-body">발열·개구 제한·진통제 무효·악취<br>이 중 하나라도 해당되면 즉시 내원이 정답입니다.</div></div></div>
+  </div>
+</div>
+
+<!-- 6. OUTRO -->
+<div class="outro-slide">
+  <div class="outro-inner">
+    <div class="outro-eyebrow">전북대학교병원 구강악안면외과 · 사랑니 Q&amp;A</div>
+    <h2 class="outro-title"><em>검진이 먼저</em>입니다</h2>
+    <p class="outro-lead">사랑니는 증상이 없어도 숨어서 진행 중일 수 있습니다.<br>정기 파노라마 X-ray로 조기에 발견하고, 필요한 시기에 전문의와 함께 결정하세요.</p>
+    <div class="outro-qr-row">
+      <div>
+        <div class="qr-box" style="padding:0;overflow:hidden;background:transparent;border:2px solid rgba(255,255,255,.2);">
+          <img src="image/QR_Code.png" alt="강의자료 QR코드"
+               style="width:100%;height:100%;object-fit:contain;border-radius:14px;display:block;"
+               onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+          <div style="display:none;flex-direction:column;align-items:center;justify-content:center;
+               width:100%;height:100%;gap:6px;font-size:12px;color:rgba(255,255,255,.35);">
+            <span style="font-size:28px;">📱</span><span>QR 준비중</span>
+          </div>
+        </div>
+        <div class="qr-label">강의 자료</div>
+      </div>
+      <div class="outro-credit-main"><strong>신경수 교수</strong><br>전북대학교병원 구강악안면외과<br>2026. 05. 09</div>
+    </div>
+  </div>
+  <div class="ref-ticker-wrap" onclick="openRefPanel()" title="클릭하면 참고문헌 전체 보기">
+    <div class="ref-ticker-inner" id="refTicker"></div>
+  </div>
+</div>
+
+<!-- REF FULL PANEL -->
+<div class="ref-full-panel" id="refFullPanel">
+  <div class="ref-panel-inner">
+    <button class="ref-close" onclick="closeRefPanel()">✕ 닫기</button>
+    <div class="ref-panel-title">참고문헌 (References)</div>
+    <ul class="ref-list-full">
+      <li class="ref-item-full"><em>대한구강악안면외과학회.</em> (2013). 구강악안면외과학 교과서 (제3판). 의치학사.</li>
+      <li class="ref-item-full"><em>Kim, J.-W. et al.</em> (2025). Medication-related osteonecrosis of the jaw: 2025 Korean position statement. <em>J Korean AOMFS, 51,</em> 333–353.</li>
+      <li class="ref-item-full"><em>이정근.</em> 항혈전제 투여 환자의 치과 진료지침. 대한구강악안면외과학회 진료지침위원회.</li>
+      <li class="ref-item-full"><em>박홍주.</em> (2019). 항혈소판제를 투여받는 환자의 치과치료. <em>대한치과의사협회지, 57</em>(10), 606–613.</li>
+      <li class="ref-item-full"><em>신경수, 박원종.</em> (2021). 발치 후 발생하는 감염성 질환. <em>대한치과의사협회지, 59</em>(11).</li>
+      <li class="ref-item-full"><em>Kim, H. J. et al.</em> (2021). Anatomical Risk Factors of IAN Injury with Surgical Extraction of Mandibular Third Molar in Korean Population.</li>
+      <li class="ref-item-full"><em>Rafetto, L. K.</em> (Guest Ed.). (2012). Contemporary Management of Third Molars. <em>Atlas OMSC NA, 20</em>(2).</li>
+      <li class="ref-item-full"><em>Majid, O. W.</em> (2024). Electronic cigarettes and dry socket risk after tooth extraction. <em>Evidence-Based Dentistry.</em></li>
+      <li class="ref-item-full"><em>Chow, O. et al.</em> (2020). Alveolar osteitis: a review of current concepts. <em>J Oral Maxillofac Surg, 78</em>(7).</li>
+      <li class="ref-item-full"><em>Blum, I. R.</em> (1992). Contemporary views on dry socket (alveolar osteitis). <em>Int J Oral Maxillofac Surg, 31</em>(3), 309–317.</li>
+    </ul>
+  </div>
+</div>
+<script>
+/* === HEALING TABS === */
+const HEALING=[
+  {day:'Day 1',title:'혈병 형성 (Blood Clot Formation)',it:'0%',il:'0%',body:'발치 직후 발치와에 신선한 혈병(fresh blood clot)이 형성됩니다. 혈병은 혈소판·성장인자·섬유소망으로 구성된 치유의 scaffold입니다. 이 단계에서 혈병을 탈락시키는 행동(빨대·흡연·세게 뱉기)이 건성 발치와의 주원인이 됩니다.'},
+  {day:'Day 3~7',title:'육아조직 형성 (Granulation Tissue)',it:'0%',il:'-100%',body:'혈병이 혈관이 풍부한 육아조직(highly vascular granulation tissue)으로 대체됩니다. 신생 모세혈관(angiogenesis)이 발치와 내로 증식하고, 상피세포가 가장자리에서 이동(epithelial migration)을 시작합니다. 건성 발치와 위험이 가장 높은 단계입니다.'},
+  {day:'Day 14~30',title:'상피화 및 골 형성 (Epithelialization)',it:'-100%',il:'0%',body:'상피세포가 발치와를 덮어 완전한 점막 폐쇄(complete epithelial closure)가 이루어집니다. 하부에서는 신생 골소주(new woven bone)가 형성되고 결합조직이 성숙합니다. 봉합사 제거(Day 5~7) 후 일상 활동이 가능해집니다.'},
+  {day:'Day 180+',title:'완전 골 충전 (Complete Bone Fill)',it:'-100%',il:'-100%',body:'발치와가 성숙한 층판골(mature lamellar bone)로 완전히 채워집니다. Haversian system이 형성되고 피질골판(cortical plate)이 재건됩니다. 정상 치은 상피로 피개된 발치와 경계는 방사선 사진에서 거의 식별 불가능해집니다. 평균 6~8개월 소요.'}
+];
+function showHealing(idx){
+  document.querySelectorAll('.htab').forEach((t,i)=>t.classList.toggle('active',i===idx));
+  const d=HEALING[idx];
+  document.getElementById('healingImg').style.top=d.it;
+  document.getElementById('healingImg').style.left=d.il;
+  const desc=document.getElementById('healingDesc');
+  desc.style.opacity='0';
+  setTimeout(()=>{desc.innerHTML=`<div class="hdesc-day">${d.day}</div><div class="hdesc-title">${d.title}</div><div class="hdesc-body">${d.body}</div>`;desc.style.opacity='1';},180);
+}
+showHealing(0);
+
+/* === DUAL STICKY === */
+const dualWrap=document.getElementById('dualScrollWrap');
+const imgA=document.getElementById('dualImgA'),imgB=document.getElementById('dualImgB');
+const capA=document.getElementById('capA'),capB=document.getElementById('capB');
+const smokerStat=document.getElementById('smokerStat');
+let countUpDone=false;
+function clamp(v,lo,hi){return Math.max(lo,Math.min(hi,v));}
+window.addEventListener('scroll',()=>{
+  const rect=dualWrap.getBoundingClientRect();
+  const prog=clamp(-rect.top/(dualWrap.offsetHeight-window.innerHeight),0,1);
+  if(prog<0.38){imgA.classList.remove('hidden');imgB.classList.add('hidden');capA.classList.remove('hidden');capB.classList.add('hidden');smokerStat.classList.remove('show');}
+  else if(prog<0.70){imgA.classList.add('hidden');imgB.classList.remove('hidden');capA.classList.add('hidden');capB.classList.remove('hidden');smokerStat.classList.remove('show');}
+  else{imgA.classList.add('hidden');imgB.classList.remove('hidden');capA.classList.add('hidden');capB.classList.add('hidden');smokerStat.classList.add('show');if(!countUpDone){countUpDone=true;runCountUp();}}
+},{passive:true});
+function runCountUp(){
+  [{el:document.getElementById('cntGeneral'),end:5,dur:900},{el:document.getElementById('cntSmoker'),end:20,dur:1400}].forEach(({el,end,dur})=>{
+    let start=null;
+    (function step(ts){if(!start)start=ts;const p=Math.min((ts-start)/dur,1);const e=p<.5?2*p*p:-1+(4-2*p)*p;el.textContent=Math.round(e*end);if(p<1)requestAnimationFrame(step);})(performance.now());
+  });
+}
+
+/* === SYMPTOM GRID === */
+function toggleCard(el){el.classList.toggle('checked');}
+function diagnose(){
+  const inf=document.querySelectorAll('.sym-card[data-cat="inf"].checked').length;
+  const ds=document.querySelectorAll('.sym-card[data-cat="ds"].checked').length;
+  ['res-green','res-yellow','res-red'].forEach(id=>document.getElementById(id).classList.remove('show'));
+  document.getElementById('resultPh').style.display='none';
+  if(inf>=1)document.getElementById('res-red').classList.add('show');
+  else if(ds>=2)document.getElementById('res-yellow').classList.add('show');
+  else document.getElementById('res-green').classList.add('show');
+}
+function resetTriage(){
+  document.querySelectorAll('.sym-card').forEach(el=>el.classList.remove('checked'));
+  ['res-green','res-yellow','res-red'].forEach(id=>document.getElementById(id).classList.remove('show'));
+  document.getElementById('resultPh').style.display='';
+}
+
+/* === SUMMARY STICKY === */
+const sumWrap=document.getElementById('sumScrollWrap');
+const sumPanels=[document.getElementById('sum0'),document.getElementById('sum1'),document.getElementById('sum2')];
+window.addEventListener('scroll',()=>{
+  const rect=sumWrap.getBoundingClientRect();
+  const prog=clamp(-rect.top/(sumWrap.offsetHeight-window.innerHeight),0,1);
+  const idx=prog<0.33?0:prog<0.66?1:2;
+  sumPanels.forEach((p,i)=>p.classList.toggle('show',i===idx));
+},{passive:true});
+sumPanels[0].classList.add('show');
+
+/* === REF TICKER === */
+const refs=['대한구강악안면외과학회. (2013). 구강악안면외과학 교과서 제3판.','Kim et al. (2025). MRONJ 2025 Korean Position Statement. J Korean AOMFS 51.','이정근. 항혈전제 투여 환자의 치과 진료지침. 대한구강악안면외과학회.','박홍주. (2019). 항혈소판제 환자의 치과치료. 대한치과의사협회지 57(10).','신경수·박원종. (2021). 발치 후 감염성 질환. 대한치과의사협회지 59(11).','Kim HJ et al. (2021). IAN 손상 해부학적 위험인자 (한국인).','Rafetto LK. (2012). Contemporary Management of Third Molars.','Majid OW. (2024). 전자담배와 건성발치와. Evidence-Based Dentistry.','Chow O et al. (2020). Alveolar Osteitis. J OMS 78(7).','Blum IR. (1992). Dry Socket 진단 기준. Int J OMS 31(3).'];
+(function buildTicker(){const t=document.getElementById('refTicker');[1,2].forEach(()=>refs.forEach(r=>{const s=document.createElement('span');s.className='ref-tick-item';s.textContent=r+' · ';t.appendChild(s);}));})();
+function openRefPanel(){document.getElementById('refFullPanel').classList.add('show');document.body.style.overflow='hidden';}
+function closeRefPanel(){document.getElementById('refFullPanel').classList.remove('show');document.body.style.overflow='';}
+document.getElementById('refFullPanel').addEventListener('click',e=>{if(e.target===e.currentTarget)closeRefPanel();});
+
+/* === SCROLL REVEAL === */
+const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');obs.unobserve(e.target);}});},{threshold:.1,rootMargin:'0px 0px -30px 0px'});
+document.querySelectorAll('.rv').forEach(el=>obs.observe(el));
+</script>
+
+<div class="bottom-nav">
+  <a class="bnav-btn prev" href="p5_complications.html">← 합병증</a>
+  <span></span>
+</div>
+</body>
+</html>

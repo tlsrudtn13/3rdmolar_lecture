@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>마취·통증 | 사랑니 Q&A — 전북대병원</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700;900&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --teal:#006B6B; --teal-l:#E0F0F0; --teal-d:#004F4F; --teal-vl:#7FD8D8;
+  --green:#1D8A62; --green-l:#D1FAE5;
+  --danger:#C84040; --danger-l:#FDE8E8;
+  --warn:#B45309; --warn-l:#FEF3C7;
+  --blue:#2D5FA6; --blue-l:#DBEAFE;
+  --bg:#F5F3EE; --card:#fff; --text:#1A1916; --text2:#5C5A54; --text3:#9A9890;
+  --dark:#0a1e1e;
+  --ff-serif:'Noto Serif KR',serif;
+  --ff-sans:'Noto Sans KR',sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:var(--ff-sans);background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;}
+
+/* ════════════════════════════════════════
+   공통
+════════════════════════════════════════ */
+.rv{opacity:0;transform:translateY(20px);transition:opacity .6s cubic-bezier(.22,1,.36,1),transform .6s cubic-bezier(.22,1,.36,1);}
+.rv.in{opacity:1;transform:none;}
+.d1{transition-delay:.08s;}.d2{transition-delay:.16s;}.d3{transition-delay:.24s;}
+.d4{transition-delay:.32s;}.d5{transition-delay:.40s;}
+
+.section-wrap{padding:clamp(70px,11vh,120px) clamp(20px,5vw,72px);}
+.section-wrap.light{background:var(--bg);}
+.section-wrap.white{background:#fff;}
+.inner{max-width:880px;margin:0 auto;}
+.eyebrow{font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--teal);margin-bottom:14px;}
+.sec-headline{font-family:var(--ff-serif);font-size:clamp(26px,5.5vw,48px);font-weight:900;line-height:1.2;margin-bottom:14px;word-break:keep-all;}
+.sec-lead{font-size:clamp(14px,2vw,17px);color:var(--text2);line-height:1.85;max-width:660px;margin-bottom:36px;word-break:keep-all;}
+.divider{width:44px;height:3px;background:var(--teal);border-radius:2px;margin:0 0 28px;}
+
+/* ════════════════════════════════════════
+   1. 스크롤리텔링 래퍼
+════════════════════════════════════════ */
+.pain-scroll-wrap{position:relative;height:820vh;}
+
+.pain-sticky{
+  position:sticky;top:0;height:100vh;
+  width:100%;overflow:hidden;
+  display:flex;align-items:center;justify-content:center;
+  background:var(--dark);
+}
+
+/* 배경 그라디언트 (단계별로 미묘하게 변화) */
+.pain-bg{
+  position:absolute;inset:0;
+  background:radial-gradient(ellipse at 20% 60%,rgba(0,107,107,.16) 0%,transparent 55%),var(--dark);
+  transition:background 1.2s ease;
+}
+.pain-bg.danger-mode{
+  background:radial-gradient(ellipse at 50% 50%,rgba(200,64,64,.14) 0%,transparent 55%),#100808;
+}
+.pain-bg.emoji-mode{
+  background:radial-gradient(ellipse at 50% 50%,rgba(180,83,9,.1) 0%,transparent 55%),#0a100a;
+}
+
+/* 세 패널: Q패널(질문) / A패널(답변) / 이모지패널 */
+.pain-panel{
+  position:absolute;inset:0;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  text-align:center;
+  padding:0 clamp(24px,6vw,80px);
+  gap:clamp(8px,2.5vh,22px);
+  opacity:0;transition:opacity .55s ease;
+  pointer-events:none;
+}
+.pain-panel.show{opacity:1;pointer-events:auto;}
+
+/* ── Q 패널 ── */
+.pq-sub{
+  font-size:clamp(16px,3vw,28px);
+  color:rgba(255,255,255,.38);
+  font-weight:500;letter-spacing:.06em;
+  opacity:0;transform:translateY(14px);
+  transition:opacity .5s ease,transform .5s ease;
+}
+.pq-sub.in{opacity:1;transform:none;}
+.pq-main{
+  font-family:var(--ff-serif);
+  font-size:clamp(40px,9vw,100px);
+  font-weight:900;color:#fff;line-height:1.1;
+  opacity:0;transform:translateY(20px);
+  transition:opacity .5s ease,transform .5s ease;
+  word-break:keep-all;
+}
+.pq-main.in{opacity:1;transform:none;}
+.pq-question{
+  font-family:var(--ff-serif);
+  font-size:clamp(44px,10vw,110px);
+  font-weight:900;line-height:1.1;
+  color:#ffffff;
+  text-shadow:0 2px 20px rgba(0,0,0,.4);
+  opacity:0;transform:translateY(24px);
+  transition:opacity .5s ease,transform .5s ease;
+  word-break:keep-all;
+}
+.pq-question.in{opacity:1;transform:none;}
+/* 물음표만 teal */
+.pq-question .mark{color:var(--teal-vl);}
+
+/* ── A 패널 ── */
+.pa-no{
+  font-size:clamp(22px,4.5vw,44px);
+  font-weight:700;color:var(--teal-vl);letter-spacing:.02em;
+  opacity:0;transform:translateY(14px);
+  transition:opacity .45s ease,transform .45s ease;
+}
+.pa-no.in{opacity:1;transform:none;}
+.pa-only{
+  font-family:var(--ff-serif);
+  font-size:clamp(38px,8vw,86px);
+  font-weight:900;color:rgba(255,255,255,.82);line-height:1.1;
+  opacity:0;transform:translateY(18px);
+  transition:opacity .5s ease,transform .5s ease;
+  word-break:keep-all;
+}
+.pa-only.in{opacity:1;transform:none;}
+/* 아파요! — 가장 임팩트 있게 */
+.pa-ouch{
+  font-family:var(--ff-serif);
+  font-size:clamp(80px,20vw,220px);
+  font-weight:900;
+  color:var(--danger);
+  line-height:.9;letter-spacing:-.02em;
+  text-shadow:
+    0 0 40px rgba(200,64,64,.7),
+    0 0 100px rgba(200,64,64,.35),
+    0 6px 20px rgba(0,0,0,.5);
+  opacity:0;
+  transform:scale(.4) rotate(-8deg);
+  transition:opacity .45s cubic-bezier(.34,1.56,.64,1),
+             transform .5s cubic-bezier(.34,1.56,.64,1);
+}
+.pa-ouch.in{
+  opacity:1;
+  transform:scale(1) rotate(0deg);
+}
+/* 계속 미세하게 진동 */
+.pa-ouch.in.shake{animation:ouchwobble 2.8s ease-in-out infinite 0.45s;}
+@keyframes ouchwobble{
+  0%,100%{transform:scale(1) rotate(0);}
+  15%{transform:scale(1.015) rotate(.8deg);}
+  30%{transform:scale(.988) rotate(-.5deg);}
+  50%{transform:scale(1.008) rotate(.3deg);}
+  70%{transform:scale(.994) rotate(-.2deg);}
+}
+
+/* ── 이모지 패널 ── */
+.pe-text{
+  font-family:var(--ff-serif);
+  font-size:clamp(28px,6vw,64px);
+  font-weight:900;color:#fff;
+  position:relative;z-index:2;
+  opacity:0;transform:translateY(14px);
+  transition:opacity .5s ease,transform .5s ease;
+  word-break:keep-all;
+}
+.pe-text.in{opacity:1;transform:none;}
+
+/* 이모지 플러드 컨테이너 */
+.emoji-flood{
+  position:absolute;inset:0;
+  pointer-events:none;z-index:1;
+  overflow:hidden;
+}
+.emoji-item{
+  position:absolute;
+  line-height:1;
+  opacity:0;
+  animation:emojiPop .45s cubic-bezier(.34,1.56,.64,1) both,
+            emojiFloat 2.2s ease-in-out infinite;
+}
+@keyframes emojiPop{
+  0%{opacity:0;transform:scale(0) rotate(-20deg);}
+  100%{opacity:1;transform:scale(1) rotate(0);}
+}
+@keyframes emojiFloat{
+  0%,100%{transform:translateY(0) rotate(0);}
+  50%{transform:translateY(-8px) rotate(3deg);}
+}
+/* 이모지 일괄 페이드아웃 */
+.emoji-flood.fading .emoji-item{
+  animation:emojiFadeOut .5s ease both;
+}
+@keyframes emojiFadeOut{to{opacity:0;transform:scale(.5);}}
+
+/* ════════════════════════════════════════
+   2. 마취 + 감각 카드
+════════════════════════════════════════ */
+.anest-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(16px,3vw,32px);}
+
+/* 마취 방법 카드 */
+.anest-method-card{
+  background:var(--card);border-radius:20px;
+  padding:clamp(20px,3.5vw,32px);
+  box-shadow:0 4px 24px rgba(0,0,0,.07);
+}
+.anest-method-card h3{
+  font-family:var(--ff-serif);
+  font-size:clamp(17px,2.8vw,22px);font-weight:900;
+  color:var(--teal-d);margin-bottom:20px;
+}
+.anest-method-list{display:flex;flex-direction:column;gap:14px;}
+.anest-item{
+  display:flex;gap:14px;align-items:flex-start;
+  padding:14px 16px;
+  border-radius:12px;
+  transition:background .2s;
+}
+.anest-item:hover{background:var(--teal-l);}
+.anest-item-icon{
+  font-size:24px;flex-shrink:0;
+  width:42px;height:42px;
+  display:flex;align-items:center;justify-content:center;
+  border-radius:10px;
+}
+.anest-item.topical .anest-item-icon{background:rgba(29,138,98,.1);}
+.anest-item.wand    .anest-item-icon{background:rgba(45,95,166,.1);}
+.anest-item.sedation .anest-item-icon{background:rgba(180,83,9,.1);}
+.anest-item-body h4{
+  font-size:clamp(14px,1.8vw,16px);font-weight:800;margin-bottom:4px;
+}
+.anest-item.topical  h4{color:var(--green);}
+.anest-item.wand     h4{color:var(--blue);}
+.anest-item.sedation h4{color:var(--warn);}
+.anest-item-body p{font-size:clamp(12px,1.4vw,13px);color:var(--text2);line-height:1.6;}
+
+/* 감각/주의 카드 */
+.sense-card{
+  display:flex;flex-direction:column;gap:14px;
+}
+.sense-block{
+  border-radius:16px;padding:clamp(16px,3vw,24px);
+}
+.sense-block.remains{
+  background:var(--blue-l);border:1.5px solid rgba(45,95,166,.15);flex:1;
+}
+.sense-block.blocked{
+  background:var(--green-l);border:1.5px solid rgba(29,138,98,.15);
+}
+.sense-block.warning{
+  background:var(--warn-l);border-left:4px solid var(--warn);border-radius:0 14px 14px 0;
+}
+.sense-block h4{
+  font-family:var(--ff-serif);font-size:clamp(15px,2.2vw,18px);font-weight:900;margin-bottom:12px;
+}
+.sense-block.remains h4{color:var(--blue);}
+.sense-block.blocked h4{color:var(--green);}
+.sense-block.warning h4{color:var(--warn);}
+.sense-tag-row{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:8px;}
+.stag{
+  display:inline-flex;align-items:center;gap:5px;
+  padding:5px 12px;border-radius:20px;font-size:12px;font-weight:700;
+}
+.stag.blue{background:rgba(45,95,166,.15);color:var(--blue);}
+.stag.green{background:rgba(29,138,98,.15);color:var(--green);}
+.sense-note{font-size:clamp(11px,1.4vw,13px);color:var(--text2);line-height:1.6;}
+.warn-text{font-size:clamp(12px,1.5vw,14px);color:var(--warn);font-weight:600;line-height:1.6;}
+
+/* 마취 효과 O/X 카드 */
+.anest-effect-card{
+  border-radius:16px;overflow:hidden;
+  box-shadow:0 4px 24px rgba(0,0,0,.09);
+  border:1.5px solid rgba(0,0,0,.06);
+}
+.aec-header{
+  background:linear-gradient(135deg,var(--teal-d),var(--teal));
+  padding:14px 20px;
+  display:flex;align-items:center;gap:10px;
+}
+.aec-header-icon{font-size:22px;}
+.aec-header-title{font-family:var(--ff-serif);font-size:16px;font-weight:900;color:#fff;}
+.aec-header-sub{font-size:11px;color:rgba(255,255,255,.6);margin-top:1px;}
+.aec-body{display:grid;grid-template-columns:1fr 1fr;background:var(--card);}
+.aec-col{padding:18px 20px;}
+.aec-col.blocked{border-right:1px solid rgba(0,0,0,.06);}
+.aec-col-head{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 14px;border-radius:10px;
+  margin-bottom:14px;
+}
+.aec-col.blocked .aec-col-head{background:rgba(29,138,98,.1);}
+.aec-col.remains  .aec-col-head{background:rgba(45,95,166,.1);}
+.aec-col-icon{font-size:22px;flex-shrink:0;}
+.aec-col-title{font-size:14px;font-weight:800;}
+.aec-col.blocked .aec-col-title{color:var(--green);}
+.aec-col.remains  .aec-col-title{color:var(--blue);}
+.aec-rows{display:flex;flex-direction:column;gap:8px;}
+.aec-row{
+  display:flex;align-items:center;gap:10px;
+  padding:9px 12px;border-radius:8px;
+  font-size:clamp(12px,1.5vw,13px);font-weight:600;
+}
+.aec-col.blocked .aec-row{background:rgba(29,138,98,.07);color:var(--teal-d);}
+.aec-col.remains  .aec-row{background:rgba(45,95,166,.07);color:var(--blue);}
+.aec-row-mark{
+  width:22px;height:22px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;font-weight:900;flex-shrink:0;
+}
+.aec-col.blocked .aec-row-mark{background:var(--green);color:#fff;}
+.aec-col.remains  .aec-row-mark{background:var(--blue);color:#fff;}
+
+/* ════════════════════════════════════════
+   3. Q&A 플립 카드
+════════════════════════════════════════ */
+.qa-section{background:var(--bg);padding:clamp(50px,8vh,80px) clamp(20px,5vw,72px);}
+.qa-inner{max-width:880px;margin:0 auto;}
+.qa-hr{display:flex;align-items:center;gap:12px;margin-bottom:clamp(20px,3.5vh,32px);}
+.qa-hr-line{flex:1;height:1px;background:rgba(0,0,0,.08);}
+.qa-hr-text{font-size:clamp(13px,1.8vw,15px);font-weight:700;color:var(--text2);white-space:nowrap;}
+
+.qa-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(10px,1.8vw,16px);}
+.qa-flip{perspective:900px;height:clamp(148px,18vw,180px);cursor:pointer;}
+.qa-fi{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .52s cubic-bezier(.77,0,.175,1);}
+.qa-flip.flipped .qa-fi{transform:rotateY(180deg);}
+.qa-f,.qa-b{position:absolute;inset:0;backface-visibility:hidden;border-radius:12px;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:clamp(12px,2vw,18px);text-align:center;}
+.qa-f{background:var(--card);box-shadow:0 2px 12px rgba(0,0,0,.07);border:2px solid transparent;transition:border-color .2s;}
+.qa-flip:hover .qa-f{border-color:var(--teal-l);}
+.qa-f .qn{font-size:11px;font-weight:800;color:var(--teal);letter-spacing:.1em;margin-bottom:7px;}
+.qa-f .qt{font-size:clamp(12px,1.6vw,14px);font-weight:600;color:var(--text);line-height:1.4;}
+.qa-f .qh{margin-top:9px;font-size:10px;color:var(--text3);}
+.qa-b{transform:rotateY(180deg);}
+.qa-b.correct{background:var(--green-l);border:2px solid var(--green);}
+.qa-b.wrong{background:var(--danger-l);border:2px solid var(--danger);}
+.qa-b.info{background:var(--teal-l);border:2px solid var(--teal);}
+.qa-b .ai{font-size:24px;margin-bottom:6px;}
+.qa-b .al{font-size:clamp(13px,1.8vw,15px);font-weight:800;margin-bottom:5px;}
+.qa-b.correct .al{color:var(--green);}
+.qa-b.wrong   .al{color:var(--danger);}
+.qa-b.info    .al{color:var(--teal-d);}
+.qa-b .ar{font-size:clamp(10px,1.3vw,12px);color:var(--text2);line-height:1.45;}
+
+@media(max-width:680px){
+  .anest-grid{grid-template-columns:1fr;}
+  .aec-body{grid-template-columns:1fr;}
+  .aec-col.blocked{border-right:none;border-bottom:1px solid rgba(0,0,0,.06);}
+  .qa-grid{grid-template-columns:1fr 1fr;}
+}
+@media(max-width:420px){.qa-grid{grid-template-columns:1fr;}}
+
+/* ════ SHARED NAV ════ */
+:root{--nav-h:52px;}
+.snav{position:fixed;top:0;left:0;right:0;z-index:9999;height:var(--nav-h);
+  background:rgba(10,30,30,.96);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  border-bottom:1px solid rgba(127,216,216,.1);}
+.snav-inner{max-width:1280px;margin:0 auto;display:flex;align-items:center;
+  height:100%;padding:0 clamp(10px,2vw,20px);gap:8px;}
+.snav-logo{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:700;
+  color:rgba(255,255,255,.5);white-space:nowrap;flex-shrink:0;text-decoration:none;}
+.snav-dot{width:6px;height:6px;border-radius:50%;background:#7FD8D8;
+  box-shadow:0 0 6px #7FD8D8;animation:sdot 2s ease-in-out infinite;flex-shrink:0;}
+@keyframes sdot{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.4;transform:scale(.75);}}
+.snav-tabs{display:flex;align-items:center;gap:1px;flex:1;overflow-x:auto;
+  scrollbar-width:none;-webkit-overflow-scrolling:touch;}
+.snav-tabs::-webkit-scrollbar{display:none;}
+.stab{display:inline-flex;align-items:center;padding:5px 11px;border-radius:18px;
+  font-size:11.5px;font-weight:600;color:rgba(255,255,255,.38);
+  text-decoration:none;white-space:nowrap;transition:all .18s;flex-shrink:0;}
+.stab:hover{color:rgba(255,255,255,.75);background:rgba(255,255,255,.07);}
+.stab.active{color:#7FD8D8;background:rgba(127,216,216,.13);font-weight:700;}
+.snav-progress{position:absolute;bottom:0;left:0;height:2px;background:#7FD8D8;
+  transition:width .15s;box-shadow:0 0 5px #7FD8D8;}
+@media(max-width:520px){
+  .snav-logo .logo-text{display:none;}
+  .snav-logo::after{content:'JBUH';font-size:11px;font-weight:800;
+    color:rgba(127,216,216,.7);letter-spacing:.06em;}
+  .stab{font-size:11px;padding:4px 8px;}
+}
+
+/* ── 하단 prev/next 내비게이션 ── */
+.bottom-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: clamp(20px, 4vh, 36px) clamp(20px, 5vw, 60px);
+  background: var(--dark, #0a1e1e);
+  border-top: 1px solid rgba(127,216,216,.1);
+}
+
+.bnav-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 22px;
+  border-radius: 24px;
+  background: rgba(127,216,216,.08);
+  border: 1px solid rgba(127,216,216,.2);
+  color: #7FD8D8;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: all .18s;
+}
+
+.bnav-btn:hover {
+  background: rgba(127,216,216,.18);
+  color: #fff;
+}</style>
+<script src="https://cdn.jsdelivr.net/npm/twemoji@14.0.2/dist/twemoji.min.js" crossorigin="anonymous"></script>
+</head>
+<body style="padding-top:var(--nav-h,52px);">
+<nav class="snav" id="siteNav">
+  <div class="snav-inner">
+    <a class="snav-logo" href="p0_opening.html">
+      <span class="snav-dot"></span>
+      <span class="logo-text">전북대병원 · 구강악안면외과</span>
+    </a>
+    <div class="snav-tabs">
+      <a class="stab" href="p0_opening.html">오프닝</a>
+      <a class="stab" href="p1_class.html">매복 분류</a>
+      <a class="stab" href="p2_timing.html">발치 시기</a>
+      <a class="stab active" href="p3_anesthesia.html">마취·통증</a>
+      <a class="stab" href="p4_special.html">특수 환자</a>
+      <a class="stab" href="p5_complications.html">합병증</a>
+      <a class="stab" href="p6_recovery.html">회복</a>
+    </div>
+  </div>
+  <div class="snav-progress" id="snavProg"></div>
+</nav>
+<script>
+(function(){
+  var p=document.getElementById('snavProg');
+  window.addEventListener('scroll',function(){
+    if(p)p.style.width=(window.scrollY/(document.body.scrollHeight-window.innerHeight)*100)+'%';
+  },{passive:true});
+})();
+</script>
+
+<!-- ════════════════════════════════════════
+     1. 스크롤리텔링 — 질문과 답변
+════════════════════════════════════════ -->
+<div class="pain-scroll-wrap" id="painScrollWrap">
+  <div class="pain-sticky">
+    <div class="pain-bg" id="painBg"></div>
+
+    <!-- Q 패널: "선생님 / 사랑니 뽑을 때 / 많이 아파요?" -->
+    <div class="pain-panel" id="qPanel">
+      <div class="pq-sub"      id="pq-sub">선생님,</div>
+      <div class="pq-main"     id="pq-main">사랑니 뽑을 때</div>
+      <div class="pq-question" id="pq-q">많이 아파요<span class="mark">?</span></div>
+    </div>
+
+    <!-- A 패널: "아니요 / 마취 할 때만 / 아파요!" -->
+    <div class="pain-panel" id="aPanel">
+      <div class="pa-no"   id="pa-no">아니요,</div>
+      <div class="pa-only" id="pa-only">마취 할 때만</div>
+      <div class="pa-ouch" id="pa-ouch">아파요!</div>
+    </div>
+
+    <!-- 이모지 패널: "아프면 손 드세요" + 이모지 홍수 -->
+    <div class="pain-panel" id="emojiPanel">
+      <div class="pe-text" id="pe-text">아프면 손 드세요 🙋</div>
+      <div class="emoji-flood" id="emojiFlood"></div>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════
+     2. 마취 방법 + 남아있는 감각
+════════════════════════════════════════ -->
+<section class="section-wrap light">
+  <div class="inner">
+
+    <div class="eyebrow rv">마취와 통증의 과학</div>
+    <h2 class="sec-headline rv d1">통증은 없애지만, 전부 없애진 않습니다</h2>
+    <p class="sec-lead rv d2">마취는 통증·냉온감을 차단하지만, 압박감·진동·당김은 남아있습니다. 이것은 정상입니다.</p>
+    <div class="divider rv d3"></div>
+
+    <div class="anest-grid rv d3">
+
+      <!-- 왼쪽: 마취 방법 -->
+      <div class="anest-method-card">
+        <h3>통증을 줄이는 방법들</h3>
+        <div class="anest-method-list">
+
+          <div class="anest-item topical">
+            <div class="anest-item-icon">🧴</div>
+            <div class="anest-item-body">
+              <h4>도포마취 (Topical Anesthesia)</h4>
+              <p>주사 전 점막에 겔형 마취제를 3분간 도포합니다. 주삿바늘이 들어갈 때의 통증을 최소화합니다.</p>
+            </div>
+          </div>
+
+          <div class="anest-item wand">
+            <div class="anest-item-icon">🤖</div>
+            <div class="anest-item-body">
+              <h4>무통마취기 (Computer-controlled)</h4>
+              <p>컴퓨터가 일정한 속도로 마취제를 주입해 주입 통증을 줄입니다. 침윤·구개마취에 적용됩니다.</p>
+            </div>
+          </div>
+
+          <div class="anest-item sedation">
+            <div class="anest-item-icon">💊</div>
+            <div class="anest-item-body">
+              <h4>의식하진정 / 전신마취</h4>
+              <p>치과 공포가 심하거나 복잡한 케이스에 적용합니다. 구강악안면외과에서 시행 가능합니다.</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- 오른쪽: 감각 + 주의사항 -->
+      <div class="sense-card">
+
+        <!-- 마취 효과 O/X 카드 -->
+        <div class="anest-effect-card">
+          <div class="aec-header">
+            <span class="aec-header-icon">💉</span>
+            <div>
+              <div class="aec-header-title">마취 후 — 무엇이 차단되고, 무엇이 남나요?</div>
+              <div class="aec-header-sub">국소마취(IAN block) 효과 범위</div>
+            </div>
+          </div>
+          <div class="aec-body">
+            <div class="aec-col blocked">
+              <div class="aec-col-head">
+                <span class="aec-col-icon">✅</span>
+                <div class="aec-col-title">차단됨</div>
+              </div>
+              <div class="aec-rows">
+                <div class="aec-row"><div class="aec-row-mark">✓</div>통증 (Pain)</div>
+                <div class="aec-row"><div class="aec-row-mark">✓</div>냉온감</div>
+                <div class="aec-row"><div class="aec-row-mark">✓</div>날카로운 감각</div>
+              </div>
+            </div>
+            <div class="aec-col remains">
+              <div class="aec-col-head">
+                <span class="aec-col-icon">💬</span>
+                <div class="aec-col-title">남아 있음 (정상)</div>
+              </div>
+              <div class="aec-rows">
+                <div class="aec-row"><div class="aec-row-mark">!</div>압박감</div>
+                <div class="aec-row"><div class="aec-row-mark">!</div>진동 · 떨림</div>
+                <div class="aec-row"><div class="aec-row-mark">!</div>당기는 느낌</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sense-block remains">
+          <h4>압박감·진동은 왜 느껴지나요?</h4>
+          <div class="sense-tag-row">
+            <span class="stag blue">A-δ · C 섬유 차단 ✅</span>
+            <span class="stag blue">압각·진동 수용기 유지</span>
+          </div>
+          <p class="sense-note">
+            국소마취는 통증 신경(A-δ, C 섬유)을 차단하지만, 압력·진동을 감지하는 수용기는 그대로입니다.
+            시술 중 느껴지는 압박감과 진동은 정상적인 감각이며, 통증과는 다릅니다.
+          </p>
+        </div>
+
+        <div class="sense-block warning">
+          <h4>⚠ 급성 염증이 있으면 마취가 잘 안 될 수 있습니다</h4>
+          <p class="warn-text">
+            염증 부위는 pH가 낮아(산성) 마취제가 이온화되어 신경막 투과율이 감소합니다.
+            이 경우 추가 마취 또는 항생제 치료 후 재발치가 필요할 수 있습니다.
+          </p>
+        </div>
+
+      </div>
+    </div><!-- /anest-grid -->
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════════
+     3. Q&A 플립 카드
+════════════════════════════════════════ -->
+<section class="qa-section">
+  <div class="qa-inner">
+    <div class="qa-hr rv">
+      <div class="qa-hr-text">클릭해서 정답 확인</div>
+      <div class="qa-hr-line"></div>
+    </div>
+    <div class="qa-grid">
+
+      <div class="qa-flip" onclick="this.classList.toggle('flipped')">
+        <div class="qa-fi">
+          <div class="qa-f"><div class="qn">Q6</div><div class="qt">마취 후 시술 중 실제로 뭘 느끼나요?</div><div class="qh">👆 클릭</div></div>
+          <div class="qa-b info"><div class="ai">🤔</div><div class="al">압박·진동·촉각</div><div class="ar">통증과 냉온감은 차단되지만 압박감, 당기는 느낌, 진동은 남습니다. 아프면 손을 들어 알려주세요.</div></div>
+        </div>
+      </div>
+
+      <div class="qa-flip" onclick="this.classList.toggle('flipped')">
+        <div class="qa-fi">
+          <div class="qa-f"><div class="qn">Q7</div><div class="qt">아프면 중간에 손 들면 멈춰줘요?</div><div class="qh">👆 클릭</div></div>
+          <div class="qa-b correct"><div class="ai">⭕</div><div class="al">물론입니다</div><div class="ar">언제든 손을 들어 알려주시면 바로 멈춥니다. 참지 마세요. 마취를 추가할 수 있습니다.</div></div>
+        </div>
+      </div>
+
+      <div class="qa-flip" onclick="this.classList.toggle('flipped')">
+        <div class="qa-fi">
+          <div class="qa-f"><div class="qn">Q8</div><div class="qt">마취 주사도 아픈가요?</div><div class="qh">👆 클릭</div></div>
+          <div class="qa-b info"><div class="ai">💉</div><div class="al">도포마취로 최소화</div><div class="ar">주사 전 도포마취를 충분히 적용하고, 천천히 주입하면 대부분 많이 아프지 않습니다.</div></div>
+        </div>
+      </div>
+
+      <div class="qa-flip" onclick="this.classList.toggle('flipped')">
+        <div class="qa-fi">
+          <div class="qa-f"><div class="qn">Q9</div><div class="qt">발치 시간은 얼마나 걸리나요?</div><div class="qh">👆 클릭</div></div>
+          <div class="qa-b info"><div class="ai">⏱</div><div class="al">케이스마다 다름</div><div class="ar">단순 맹출 사랑니 5~15분, 복잡 매복 30분~1시간 이상. 난이도·협조도에 따라 가변적입니다.</div></div>
+        </div>
+      </div>
+
+      <div class="qa-flip" onclick="this.classList.toggle('flipped')">
+        <div class="qa-fi">
+          <div class="qa-f"><div class="qn">Q10</div><div class="qt">치과와 구강악안면외과는 뭐가 달라요?</div><div class="qh">👆 클릭</div></div>
+          <div class="qa-b info"><div class="ai">🏥</div><div class="al">복잡 케이스 전문</div><div class="ar">구강악안면외과는 복잡 매복, 전신질환·임산부 등 특수환자, 진정마취, 합병증 관리에 특화되어 있습니다.</div></div>
+        </div>
+      </div>
+
+      <div class="qa-flip" onclick="this.classList.toggle('flipped')">
+        <div class="qa-fi">
+          <div class="qa-f" style="background:var(--teal-l);border-color:var(--teal);">
+            <div class="qn" style="color:var(--teal);">핵심</div>
+            <div class="qt" style="color:var(--teal-d);">마취에서 가장 중요한 것은?</div>
+            <div class="qh" style="color:var(--teal);">👆 클릭</div>
+          </div>
+          <div class="qa-b info"><div class="ai">💡</div><div class="al">술자의 기술 + 소통</div><div class="ar">도포마취 충분히, 천천히 주입, 환자가 아프면 즉시 알리기 — 이 셋이 핵심입니다.</div></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<script>
+/* ════════════════════════════════════════
+   스크롤리텔링 — 진행률별 단계 제어
+   ────────────────────────────────────────
+   820vh 래퍼 / sticky 100vh (scroll space = 720vh)
+
+   스크롤 진행 0→1:
+     0.00-0.10 : 공백 (전환)
+     0.10-0.22 : "선생님," 등장
+     0.22-0.35 : "사랑니 뽑을 때" 추가
+     0.35-0.50 : "많이 아파요?" 추가 (흰색)
+     0.50-0.58 : Q패널 사라짐 / A패널 등장 "아니요,"
+     0.58-0.67 : "마취 할 때만" 추가
+     0.67-0.78 : "아파요!" PUNCH IN
+     0.78-0.91 : 이모지패널 / "아프면 손 드세요" (텀 충분히)
+     0.91-1.00 : 이모지 홍수
+════════════════════════════════════════ */
+(function(){
+  const wrap      = document.getElementById('painScrollWrap');
+  const bg        = document.getElementById('painBg');
+
+  /* 패널 */
+  const qPanel    = document.getElementById('qPanel');
+  const aPanel    = document.getElementById('aPanel');
+  const emojiPanel= document.getElementById('emojiPanel');
+
+  /* Q 요소 */
+  const pqSub     = document.getElementById('pq-sub');
+  const pqMain    = document.getElementById('pq-main');
+  const pqQ       = document.getElementById('pq-q');
+
+  /* A 요소 */
+  const paNo      = document.getElementById('pa-no');
+  const paOnly    = document.getElementById('pa-only');
+  const paOuch    = document.getElementById('pa-ouch');
+
+  /* 이모지 */
+  const peText    = document.getElementById('pe-text');
+  const emojiFlood= document.getElementById('emojiFlood');
+
+  let lastPhase = -1;
+  let emojisCreated = false;
+  let emojiFadingTimeout = null;
+
+  function clamp(v,lo,hi){return Math.max(lo,Math.min(hi,v));}
+
+  /* 이모지 생성 */
+  function createEmojis(){
+    if(emojisCreated) return;
+    emojisCreated = true;
+    const emojis = ['🙋','🙋‍♀️','🙋‍♂️','✋','🖐️'];
+    emojiFlood.innerHTML = '';
+    for(let i=0;i<42;i++){
+      const el = document.createElement('span');
+      el.className = 'emoji-item';
+      el.textContent = emojis[i % emojis.length];
+      el.style.cssText = [
+        `font-size:${Math.random()*38+22}px`,
+        `left:${Math.random()*93}%`,
+        `top:${Math.random()*88}%`,
+        `animation-delay:${i*0.045}s,${Math.random()*0.6+0.45}s`,
+        `animation-duration:.45s,${Math.random()*1.2+1.6}s`,
+      ].join(';');
+      emojiFlood.appendChild(el);
+    }
+  }
+
+  function clearEmojis(){
+    emojisCreated = false;
+    emojiFlood.classList.remove('fading');
+    emojiFlood.innerHTML = '';
+  }
+
+  function showPanel(p){
+    qPanel.classList.toggle('show', p==='q');
+    aPanel.classList.toggle('show', p==='a');
+    emojiPanel.classList.toggle('show', p==='e');
+  }
+
+  /* 진행률 → 단계 계산 */
+  function getPhase(prog){
+    if(prog < 0.10) return 0;
+    if(prog < 0.22) return 1;   // 선생님,
+    if(prog < 0.35) return 2;   // 사랑니 뽑을 때
+    if(prog < 0.50) return 3;   // 많이 아파요?
+    if(prog < 0.58) return 4;   // 아니요,
+    if(prog < 0.67) return 5;   // 마취 할 때만
+    if(prog < 0.78) return 6;   // 아파요!
+    if(prog < 0.91) return 7;   // 아프면 손 드세요 (텀 길게)
+    return 8;                   // 이모지 홍수
+  }
+
+  function setPhase(phase){
+    if(phase === lastPhase) return;
+    lastPhase = phase;
+
+    /* 배경 */
+    bg.className = 'pain-bg' + (phase>=6 && phase<7 ? ' danger-mode' : phase>=7 ? ' emoji-mode' : '');
+
+    /* ── Q 패널 ── */
+    if(phase <= 3){
+      showPanel('q');
+      pqSub.classList.toggle('in',  phase>=1);
+      pqMain.classList.toggle('in', phase>=2);
+      pqQ.classList.toggle('in',    phase>=3);
+    }
+
+    /* ── A 패널 ── */
+    else if(phase >= 4 && phase <= 6){
+      showPanel('a');
+      paNo.classList.toggle('in',   phase>=4);
+      paOnly.classList.toggle('in', phase>=5);
+      const ouchIn = phase>=6;
+      paOuch.classList.toggle('in', ouchIn);
+      /* 진동 애니메이션은 in 추가 0.5초 후 */
+      if(ouchIn){
+        setTimeout(()=>paOuch.classList.add('shake'), 500);
+      } else {
+        paOuch.classList.remove('shake');
+      }
+    }
+
+    /* ── 이모지 패널 ── */
+    else if(phase >= 7){
+      showPanel('e');
+      peText.classList.toggle('in', phase>=7);
+      if(phase===8){
+        createEmojis();
+        emojiFlood.classList.remove('fading');
+      } else {
+        /* phase가 7로 돌아오면(스크롤 업) 이모지 페이드아웃 후 제거 */
+        if(emojisCreated){
+          emojiFlood.classList.add('fading');
+          clearTimeout(emojiFadingTimeout);
+          emojiFadingTimeout = setTimeout(clearEmojis, 600);
+        }
+      }
+    }
+
+    /* 경계 처리: 뒤로 스크롤 */
+    if(phase < 4){
+      paNo.classList.remove('in'); paOnly.classList.remove('in');
+      paOuch.classList.remove('in','shake');
+      peText.classList.remove('in');
+      if(emojisCreated){ emojiFlood.classList.add('fading'); clearTimeout(emojiFadingTimeout); emojiFadingTimeout=setTimeout(clearEmojis,600); }
+    }
+    if(phase < 7){ peText.classList.remove('in'); }
+    if(phase < 1){ pqSub.classList.remove('in'); pqMain.classList.remove('in'); pqQ.classList.remove('in'); }
+  }
+
+  function onScroll(){
+    const rect  = wrap.getBoundingClientRect();
+    const scrollH = wrap.offsetHeight - window.innerHeight;
+    const prog  = clamp(-rect.top / scrollH, 0, 1);
+    setPhase(getPhase(prog));
+  }
+
+  window.addEventListener('scroll', onScroll, {passive:true});
+  requestAnimationFrame(onScroll);
+})();
+
+/* ════════════════════════════════════════
+   Scroll Reveal 공통
+════════════════════════════════════════ */
+const ro = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){e.target.classList.add('in');ro.unobserve(e.target);}
+  });
+},{threshold:.12,rootMargin:'0px 0px -36px 0px'});
+document.querySelectorAll('.rv').forEach(el=>ro.observe(el));
+</script>
+
+<div class="bottom-nav">
+  <a class="bnav-btn prev" href="p2_timing.html">← 발치 시기</a>
+  <a class="bnav-btn next" href="p4_special.html">특수 환자 →</a>
+</div>
+</body>
+</html>

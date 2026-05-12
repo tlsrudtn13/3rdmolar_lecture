@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>발치 시기 | 사랑니 Q&A — 전북대병원</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700;900&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+<!--
+  ════════════════════════════════════════
+  image/ 폴더 파일 매핑
+  image/root_resorption.png  ←  매복지치_-_치근흡수_2.png
+  image/cyst.png             ←  매복지치_시스트2.png
+  image/panorama_resorption.png  ←  나중에 업로드 예정
+  image/panorama_cyst.png        ←  나중에 업로드 예정
+  ════════════════════════════════════════
+-->
+
+<style>
+/* ─── 기반 ─── */
+:root {
+  --teal:#006B6B; --teal-l:#E0F0F0; --teal-d:#004F4F; --teal-vl:#7FD8D8;
+  --green:#1D8A62; --green-l:#D1FAE5;
+  --danger:#C84040; --danger-l:#FDE8E8;
+  --warn:#B45309; --warn-l:#FEF3C7;
+  --blue:#2D5FA6; --blue-l:#DBEAFE;
+  --bg:#F5F3EE; --card:#fff; --text:#1A1916; --text2:#5C5A54; --text3:#9A9890;
+  --dark:#0a1e1e; --dark2:#0d2626;
+  --ff-serif:'Noto Serif KR',serif;
+  --ff-sans:'Noto Sans KR',sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:var(--ff-sans);background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;}
+
+/* ─── 공통 레이아웃 ─── */
+.section-wrap{padding:clamp(70px,11vh,120px) clamp(20px,5vw,72px);}
+.section-wrap.dark{background:var(--dark);color:#fff;}
+.section-wrap.dark2{background:var(--dark2);color:#fff;}
+.section-wrap.light{background:var(--bg);}
+.section-wrap.white{background:#fff;}
+.inner{max-width:880px;margin:0 auto;}
+
+/* ─── 공통 텍스트 ─── */
+.eyebrow{font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--teal);margin-bottom:14px;}
+.eyebrow.on-dark{color:var(--teal-vl);}
+.sec-headline{font-family:var(--ff-serif);font-size:clamp(26px,5.5vw,48px);font-weight:900;line-height:1.2;margin-bottom:14px;word-break:keep-all;}
+.sec-lead{font-size:clamp(14px,2vw,17px);color:var(--text2);line-height:1.85;max-width:660px;margin-bottom:36px;word-break:keep-all;}
+.sec-lead.on-dark{color:rgba(255,255,255,.52);}
+.divider{width:44px;height:3px;background:var(--teal);border-radius:2px;margin:0 0 28px;}
+.divider.light{background:var(--teal-vl);}
+
+/* ─── Reveal 공통 ─── */
+.rv{opacity:0;transform:translateY(22px);transition:opacity .6s cubic-bezier(.22,1,.36,1),transform .6s cubic-bezier(.22,1,.36,1);}
+.rv.in{opacity:1;transform:none;}
+.d1{transition-delay:.08s;}.d2{transition-delay:.16s;}.d3{transition-delay:.24s;}
+.d4{transition-delay:.32s;}.d5{transition-delay:.40s;}.d6{transition-delay:.50s;}
+
+
+/* ════════════════════════════════════════
+   1. 적응증 섹션
+════════════════════════════════════════ */
+.indication-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(14px,2.5vw,24px);margin-bottom:28px;}
+.ind-card{border-radius:16px;padding:clamp(18px,3vw,28px);position:relative;}
+.ind-card.yes{background:#D1FAE5;border:2px solid #1D8A62;}
+.ind-card.no{background:#FDE8E8;border:2px solid #C84040;}
+.ind-label{font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:7px;}
+.ind-card.yes .ind-label{color:var(--green);}
+.ind-card.no .ind-label{color:var(--danger);}
+.ind-title{font-family:var(--ff-serif);font-size:clamp(16px,2.5vw,20px);font-weight:900;margin-bottom:10px;}
+.ind-card.yes .ind-title{color:var(--teal-d);}
+.ind-card.no .ind-title{color:var(--danger);}
+.ind-list{list-style:none;display:flex;flex-direction:column;gap:7px;}
+.ind-list li{font-size:clamp(12px,1.6vw,14px);color:var(--text2);display:flex;gap:8px;align-items:flex-start;line-height:1.55;}
+.ind-list li::before{content:'·';font-weight:900;flex-shrink:0;}
+.ind-card.yes .ind-list li::before{color:var(--green);}
+.ind-card.no .ind-list li::before{color:var(--danger);}
+.ind-note{padding:13px 16px;background:rgba(180,83,9,.08);border-left:4px solid var(--warn);border-radius:0 10px 10px 0;font-size:clamp(12px,1.5vw,13px);color:var(--warn);font-weight:600;line-height:1.6;}
+
+/* ════════════════════════════════════════
+   2. 무증상 ≠ 무위험 (Sticky Scrolly)
+════════════════════════════════════════ */
+.nosym-section{position:relative;height:350vh;background:var(--dark);}
+.nosym-sticky{
+  position:sticky;top:0;height:100vh;width:100%;
+  display:flex;align-items:center;justify-content:center;
+  overflow:hidden;
+}
+.nosym-bg{
+  position:absolute;inset:0;
+  background:radial-gradient(ellipse at 30% 60%,rgba(0,107,107,.18) 0%,transparent 55%),
+             radial-gradient(ellipse at 75% 25%,rgba(200,64,64,.10) 0%,transparent 45%),
+             var(--dark);
+}
+.nosym-stage{
+  position:relative;z-index:1;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;width:100%;padding:0 clamp(20px,6vw,80px);
+  gap:clamp(8px,2.5vh,20px);
+}
+
+/* 세 요소: 각각 opacity 0에서 시작 */
+.ns-word{
+  font-family:var(--ff-serif);
+  font-size:clamp(52px,12vw,130px);
+  font-weight:900;line-height:1.05;
+  opacity:0;transition:opacity .55s ease,transform .55s ease;
+  transform:translateY(16px);
+  will-change:opacity,transform;
+  word-break:keep-all;
+}
+.ns-word.show{opacity:1;transform:none;}
+.ns-safe{color:rgba(255,255,255,.88);}
+.ns-danger{color:rgba(255,255,255,.88);}
+.ns-sign{
+  font-family:var(--ff-serif);
+  font-size:clamp(80px,18vw,180px);
+  font-weight:900;line-height:.9;
+  color:var(--danger);
+  opacity:0;
+  transform:scale(.5) rotate(-15deg);
+  transition:opacity .45s cubic-bezier(.34,1.56,.64,1),
+             transform .5s cubic-bezier(.34,1.56,.64,1);
+  will-change:opacity,transform;
+  text-shadow:0 0 60px rgba(200,64,64,.6);
+}
+.ns-sign.show{opacity:1;transform:scale(1) rotate(0deg);}
+.ns-subtext{
+  font-size:clamp(14px,2.2vw,19px);color:rgba(255,255,255,.48);
+  line-height:1.7;max-width:560px;margin-top:clamp(8px,2vh,20px);
+  opacity:0;transition:opacity .5s ease .15s;word-break:keep-all;
+}
+.ns-subtext.show{opacity:1;}
+
+/* ════════════════════════════════════════
+   3. 두 가지 위험 — 플립 카드
+════════════════════════════════════════ */
+.risk-cards-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(16px,3vw,32px);}
+
+/* 플립 컨테이너 */
+.flip-card-wrap{perspective:1200px;height:clamp(340px,45vw,480px);cursor:pointer;}
+.flip-card-inner{
+  position:relative;width:100%;height:100%;
+  transform-style:preserve-3d;
+  transition:transform .65s cubic-bezier(.77,0,.175,1);
+}
+.flip-card-wrap.flipped .flip-card-inner{transform:rotateY(180deg);}
+.flip-front,.flip-back{
+  position:absolute;inset:0;border-radius:20px;
+  backface-visibility:hidden;overflow:hidden;
+}
+
+/* 앞면: 이미지 카드 */
+.flip-front{background:#fff;box-shadow:0 6px 32px rgba(0,0,0,.1);}
+.flip-front-img{
+  width:100%;height:72%;object-fit:cover;display:block;
+  transition:transform .4s ease;
+}
+.flip-card-wrap:hover .flip-front-img{transform:scale(1.03);}
+.flip-front-body{padding:16px 18px;}
+.flip-front-tag{display:inline-block;font-size:10px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;padding:3px 10px;border-radius:10px;margin-bottom:6px;}
+.flip-front-tag.red{background:var(--danger-l);color:var(--danger);}
+.flip-front-tag.blue{background:var(--blue-l);color:var(--blue);}
+.flip-front-title{font-family:var(--ff-serif);font-size:clamp(16px,2.5vw,20px);font-weight:900;margin-bottom:4px;color:var(--text);}
+.flip-front-hint{font-size:11px;color:var(--text3);display:flex;align-items:center;gap:5px;}
+.flip-hint-icon{font-size:14px;}
+
+/* 뒷면: 파노라마 + 설명 */
+.flip-back{transform:rotateY(180deg);background:var(--dark2);display:flex;flex-direction:column;}
+.flip-back-img-zone{
+  width:100%;flex:1;background:#1a3333;
+  display:flex;align-items:center;justify-content:center;
+  overflow:hidden;position:relative;
+}
+.flip-back-img-zone img{
+  width:100%;height:100%;object-fit:cover;
+  opacity:.85;
+}
+.flip-back-ph{text-align:center;color:rgba(255,255,255,.25);font-size:13px;line-height:1.6;padding:20px;}
+.flip-back-ph-icon{font-size:28px;display:block;margin-bottom:8px;}
+.flip-back-body{padding:16px 18px;flex-shrink:0;}
+.flip-back-title{font-family:var(--ff-serif);font-size:clamp(14px,2vw,17px);font-weight:900;color:rgba(255,255,255,.9);margin-bottom:8px;}
+.flip-back-desc{font-size:clamp(11px,1.4vw,13px);color:rgba(255,255,255,.52);line-height:1.65;}
+.flip-back-close{
+  display:inline-flex;align-items:center;gap:5px;
+  margin-top:8px;font-size:11px;color:var(--teal-vl);font-weight:700;
+}
+
+/* ════════════════════════════════════════
+   4. J-Curve — Sticky Scroll
+════════════════════════════════════════ */
+/* 스크롤 래퍼: 여기 height를 조정하면 애니메이션 속도가 바뀜
+   350vh = 100vh(고정 뷰) + 250vh(스크롤 여유) */
+.jcurve-scroll-wrap{position:relative;height:350vh;}
+.jcurve-sticky{
+  position:sticky;top:0;height:100vh;overflow:hidden;
+  background:var(--bg);
+  display:flex;flex-direction:column;justify-content:center;
+}
+.jcurve-inner{max-width:880px;margin:0 auto;width:100%;padding:clamp(20px,5vw,72px);}
+
+.jcurve-svg-wrap{
+  position:relative;
+  margin:clamp(24px,4vh,40px) 0;
+}
+.jcurve-svg-wrap svg{width:100%;height:auto;display:block;}
+
+/* 두 path — 초기에 완전히 숨김, stroke-dashoffset은 JS가 실시간 제어 */
+#jpath-green,#jpath-red{transition:none;}
+/* 변곡점·주석 그룹: 곡선 완성 후 등장 */
+#j-annot{opacity:0;transition:opacity .55s ease;}
+#j-annot.show{opacity:1;}
+
+/* 존 배지 */
+.jcurve-zones{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:clamp(20px,3vh,36px);}
+.jzone{display:inline-flex;align-items:center;gap:6px;padding:5px 13px;border-radius:20px;font-size:12px;font-weight:700;}
+.jzone.green{background:var(--green-l);color:var(--green);}
+.jzone.red{background:var(--danger-l);color:var(--danger);}
+
+/* J-curve 아래 설명 카드 */
+.jcurve-explain {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(14px, 2.5vw, 24px);
+  /* 1. 상단 패딩을 0으로 줄임 */
+  padding: 0 clamp(20px, 5vw, 72px) clamp(70px, 11vh, 120px); 
+  max-width: 880px;
+  margin: 0 auto;
+  /* 2. 위로 바짝 끌어올려서 남는 여백 제거 (반응형 음수 마진) */
+  margin-top: clamp(-140px, -20vh, -60px); 
+  /* 3. 위로 끌어올렸을 때 배경에 가려지지 않도록 앞으로 빼줌 */
+  position: relative;
+  z-index: 10;
+}.jex-card{border-radius:16px;padding:clamp(18px,3vw,26px);}
+.jex-card.young{background:var(--green-l);border:1.5px solid rgba(29,138,98,.2);}
+.jex-card.old{background:var(--danger-l);border:1.5px solid rgba(200,64,64,.2);}
+.jex-icon{font-size:28px;margin-bottom:10px;display:block;}
+.jex-title{font-family:var(--ff-serif);font-size:clamp(16px,2.5vw,20px);font-weight:900;margin-bottom:10px;}
+.jex-card.young .jex-title{color:var(--teal-d);}
+.jex-card.old .jex-title{color:var(--danger);}
+.jex-list{list-style:none;display:flex;flex-direction:column;gap:7px;}
+.jex-list li{font-size:clamp(12px,1.5vw,13px);color:var(--text2);display:flex;gap:8px;align-items:flex-start;line-height:1.6;}
+.jex-list li::before{content:'→';font-weight:800;flex-shrink:0;}
+.jex-card.young .jex-list li::before{color:var(--green);}
+.jex-card.old   .jex-list li::before{color:var(--danger);}
+
+/* ════════════════════════════════════════
+   5. Q&A 플립 카드
+════════════════════════════════════════ */
+.qa-section{background:var(--bg);padding:clamp(50px,8vh,80px) clamp(20px,5vw,72px);}
+.qa-inner{max-width:880px;margin:0 auto;}
+.qa-header-row{display:flex;align-items:center;gap:12px;margin-bottom:clamp(20px,3.5vh,32px);}
+.qa-header-line{flex:1;height:1px;background:rgba(0,0,0,.08);}
+.qa-header-text{font-size:clamp(13px,1.8vw,15px);font-weight:700;color:var(--text2);white-space:nowrap;}
+
+.qa-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(10px,1.8vw,16px);}
+.qa-flip{perspective:900px;height:clamp(140px,18vw,174px);cursor:pointer;}
+.qa-inner-flip{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .52s cubic-bezier(.77,0,.175,1);}
+.qa-flip.flipped .qa-inner-flip{transform:rotateY(180deg);}
+.qa-f,.qa-b{position:absolute;inset:0;backface-visibility:hidden;border-radius:12px;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:clamp(12px,2vw,18px);text-align:center;}
+.qa-f{background:var(--card);box-shadow:0 2px 12px rgba(0,0,0,.07);border:2px solid transparent;transition:border-color .2s;}
+.qa-flip:hover .qa-f{border-color:var(--teal-l);}
+.qa-f .q-num{font-size:11px;font-weight:800;color:var(--teal);letter-spacing:.1em;margin-bottom:7px;}
+.qa-f .q-text{font-size:clamp(12px,1.6vw,14px);font-weight:600;color:var(--text);line-height:1.4;}
+.qa-f .q-hint{margin-top:9px;font-size:10px;color:var(--text3);}
+.qa-b{transform:rotateY(180deg);}
+.qa-b.correct{background:var(--green-l);border:2px solid var(--green);}
+.qa-b.wrong{background:var(--danger-l);border:2px solid var(--danger);}
+.qa-b.info{background:var(--teal-l);border:2px solid var(--teal);}
+.qa-b .ans-icon{font-size:24px;margin-bottom:6px;}
+.qa-b .ans-label{font-size:clamp(13px,1.8vw,15px);font-weight:800;margin-bottom:5px;}
+.qa-b.correct .ans-label{color:var(--green);}
+.qa-b.wrong   .ans-label{color:var(--danger);}
+.qa-b.info    .ans-label{color:var(--teal-d);}
+.qa-b .ans-reason{font-size:clamp(10px,1.3vw,12px);color:var(--text2);line-height:1.45;}
+
+/* ─── 반응형 ─── */
+@media(max-width:680px){
+  .indication-grid{grid-template-columns:1fr;}
+  .risk-cards-grid{grid-template-columns:1fr;}
+  .flip-card-wrap{height:360px;}
+  .jcurve-explain{grid-template-columns:1fr;}
+  .qa-grid{grid-template-columns:1fr 1fr;}
+}
+@media(max-width:420px){
+  .qa-grid{grid-template-columns:1fr;}
+}
+
+/* ════ SHARED NAV ════ */
+:root{--nav-h:52px;}
+.snav{position:fixed;top:0;left:0;right:0;z-index:9999;height:var(--nav-h);
+  background:rgba(10,30,30,.96);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  border-bottom:1px solid rgba(127,216,216,.1);}
+.snav-inner{max-width:1280px;margin:0 auto;display:flex;align-items:center;
+  height:100%;padding:0 clamp(10px,2vw,20px);gap:8px;}
+.snav-logo{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:700;
+  color:rgba(255,255,255,.5);white-space:nowrap;flex-shrink:0;text-decoration:none;}
+.snav-dot{width:6px;height:6px;border-radius:50%;background:#7FD8D8;
+  box-shadow:0 0 6px #7FD8D8;animation:sdot 2s ease-in-out infinite;flex-shrink:0;}
+@keyframes sdot{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.4;transform:scale(.75);}}
+.snav-tabs{display:flex;align-items:center;gap:1px;flex:1;overflow-x:auto;
+  scrollbar-width:none;-webkit-overflow-scrolling:touch;}
+.snav-tabs::-webkit-scrollbar{display:none;}
+.stab{display:inline-flex;align-items:center;padding:5px 11px;border-radius:18px;
+  font-size:11.5px;font-weight:600;color:rgba(255,255,255,.38);
+  text-decoration:none;white-space:nowrap;transition:all .18s;flex-shrink:0;}
+.stab:hover{color:rgba(255,255,255,.75);background:rgba(255,255,255,.07);}
+.stab.active{color:#7FD8D8;background:rgba(127,216,216,.13);font-weight:700;}
+.snav-progress{position:absolute;bottom:0;left:0;height:2px;background:#7FD8D8;
+  transition:width .15s;box-shadow:0 0 5px #7FD8D8;}
+@media(max-width:520px){
+  .snav-logo .logo-text{display:none;}
+  .snav-logo::after{content:'JBUH';font-size:11px;font-weight:800;
+    color:rgba(127,216,216,.7);letter-spacing:.06em;}
+  .stab{font-size:11px;padding:4px 8px;}
+}
+
+/* ── 하단 prev/next 내비게이션 ── */
+.bottom-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: clamp(20px, 4vh, 36px) clamp(20px, 5vw, 60px);
+  background: var(--dark, #0a1e1e);
+  border-top: 1px solid rgba(127,216,216,.1);
+}
+
+.bnav-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 22px;
+  border-radius: 24px;
+  background: rgba(127,216,216,.08);
+  border: 1px solid rgba(127,216,216,.2);
+  color: #7FD8D8;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: all .18s;
+}
+
+.bnav-btn:hover {
+  background: rgba(127,216,216,.18);
+  color: #fff;
+}</style>
+<script src="https://cdn.jsdelivr.net/npm/twemoji@14.0.2/dist/twemoji.min.js" crossorigin="anonymous"></script>
+</head>
+<body style="padding-top:var(--nav-h,52px);">
+<nav class="snav" id="siteNav">
+  <div class="snav-inner">
+    <a class="snav-logo" href="p0_opening.html">
+      <span class="snav-dot"></span>
+      <span class="logo-text">전북대병원 · 구강악안면외과</span>
+    </a>
+    <div class="snav-tabs">
+      <a class="stab" href="p0_opening.html">오프닝</a>
+      <a class="stab" href="p1_class.html">매복 분류</a>
+      <a class="stab active" href="p2_timing.html">발치 시기</a>
+      <a class="stab" href="p3_anesthesia.html">마취·통증</a>
+      <a class="stab" href="p4_special.html">특수 환자</a>
+      <a class="stab" href="p5_complications.html">합병증</a>
+      <a class="stab" href="p6_recovery.html">회복</a>
+    </div>
+  </div>
+  <div class="snav-progress" id="snavProg"></div>
+</nav>
+<script>
+(function(){
+  var p=document.getElementById('snavProg');
+  window.addEventListener('scroll',function(){
+    if(p)p.style.width=(window.scrollY/(document.body.scrollHeight-window.innerHeight)*100)+'%';
+  },{passive:true});
+})();
+</script>
+
+<!-- ════════════════════════════════════════
+     1. 적응증 — 언제 뽑고 언제 기다리나
+════════════════════════════════════════ -->
+<section class="section-wrap light">
+  <div class="inner">
+
+    <div class="eyebrow rv">사랑니 발치의 기준</div>
+    <h2 class="sec-headline rv d1">뽑아야 할 때, 기다려도 될 때</h2>
+    <p class="sec-lead rv d2">
+      증상이 있거나 이미 문제가 생긴 사랑니는 빨리 처치해야 합니다.
+      하지만 아무 문제 없는 사랑니를 예방 목적으로 무조건 뽑는 것은 권장되지 않습니다.
+    </p>
+    <div class="divider rv d3"></div>
+
+    <div class="indication-grid">
+
+      <!-- 발치 적응증 -->
+      <div class="ind-card yes rv d3">
+        <div class="ind-label"><span>✅</span> 발치 적응증</div>
+        <div class="ind-title">이런 경우엔 뽑아야 합니다</div>
+        <ul class="ind-list">
+          <li>반복적인 치관주위염 (잇몸 붓고 아픔)</li>
+          <li>사랑니 또는 인접 제2대구치의 우식 (충치)</li>
+          <li>교정 치료 계획상 필요</li>
+          <li>부분 맹출로 위생 관리 불가능</li>
+        </ul>
+      </div>
+
+      <!-- 예방적 발치 -->
+      <div class="ind-card no rv d4">
+        <div class="ind-label"><span>⚠️</span> 주의가 필요한 관점</div>
+        <div class="ind-title">예방적 발치, 무조건은 아닙니다</div>
+        <ul class="ind-list">
+          <li>증상·소견 없는 완전 매복 — 추적 관찰 가능</li>
+          <li>"나중에 문제될 것 같다"는 막연한 이유만으로는 근거 부족</li>
+          <li>고령·전신질환자에서 불필요한 수술 위험</li>
+          <li>교정 전 무조건 발치 — 증거 불충분 (NICE 가이드라인)</li>
+        </ul>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════════
+     2. 무증상 ≠ 무위험 — Sticky Scrolly
+════════════════════════════════════════ -->
+<div class="nosym-section" id="nosymSection">
+  <div class="nosym-sticky" id="nosymSticky">
+    <div class="nosym-bg"></div>
+    <div class="nosym-stage">
+      <!-- 순서: 무증상 → 무위험 → ≠ 등장 -->
+      <div class="ns-word ns-safe"  id="ns-word1">무증상</div>
+      <div class="ns-sign"          id="ns-sign">≠</div>
+      <div class="ns-word ns-danger" id="ns-word2">무위험</div>
+      <div class="ns-subtext" id="ns-sub">
+        증상이 없다고 안전한 게 아닙니다.<br>
+        매복 사랑니는 소리 없이 인접 치아와 뼈를 파괴합니다.
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════
+     3. 숨어있는 두 가지 위험
+════════════════════════════════════════ -->
+<section class="section-wrap white">
+  <div class="inner">
+
+    <div class="eyebrow rv">증상 없이 진행하는 합병증</div>
+    <h2 class="sec-headline rv d1">파노라마에서만 보이는 위험들</h2>
+    <p class="sec-lead rv d2">
+      자각 증상이 없어도 매복 사랑니는 조용히 인접 치아와 뼈를 손상시킵니다.
+      카드를 클릭하면 실제 임상 사례를 확인할 수 있습니다.
+    </p>
+    <div class="divider rv d3"></div>
+
+    <div class="risk-cards-grid rv d3">
+
+      <!-- 카드 1: 치근 흡수 -->
+      <div class="flip-card-wrap" id="card-root" onclick="flipCard('card-root')">
+        <div class="flip-card-inner">
+          <!-- 앞면 -->
+          <div class="flip-front">
+            <img class="flip-front-img"
+                 src="image/root_resorption.png"
+                 alt="인접치 치근 흡수"
+                 onerror="this.style.background='#e8e0d4';this.style.height='72%';this.style.objectFit='initial';">
+            <div class="flip-front-body">
+              <div class="flip-front-tag red">Root Resorption</div>
+              <div class="flip-front-title">인접치 치근 흡수</div>
+              <div class="flip-front-hint"><span class="flip-hint-icon">👆</span> 클릭해서 임상 사례 확인</div>
+            </div>
+          </div>
+          <!-- 뒷면 -->
+          <div class="flip-back">
+            <div class="flip-back-img-zone">
+              <img src="image/panorama_resorption.png" alt="치근흡수 파노라마"
+                   onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+              
+            </div>
+            <div class="flip-back-body">
+              <div class="flip-back-title">🦷 인접치 치근 흡수 (Root Resorption)</div>
+              <div class="flip-back-desc">
+                근심경사·수평 매복 사랑니가 제2대구치 치근을 만성 압박합니다.
+                수년간 무증상으로 진행하다 우연히 파노라마에서 발견됩니다.
+                심한 경우 M2도 발치해야 하며, 조기 발견이 핵심입니다.
+              </div>
+              <div class="flip-back-close">↩ 다시 클릭해서 닫기</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 카드 2: 함치성 낭종 -->
+      <div class="flip-card-wrap" id="card-cyst" onclick="flipCard('card-cyst')">
+        <div class="flip-card-inner">
+          <!-- 앞면 -->
+          <div class="flip-front">
+            <img class="flip-front-img"
+                 src="image/cyst.png"
+                 alt="함치성 낭종"
+                 onerror="this.style.background='#dce8f0';this.style.height='72%';this.style.objectFit='initial';">
+            <div class="flip-front-body">
+              <div class="flip-front-tag blue">Dentigerous Cyst</div>
+              <div class="flip-front-title">함치성 낭종</div>
+              <div class="flip-front-hint"><span class="flip-hint-icon">👆</span> 클릭해서 임상 사례 확인</div>
+            </div>
+          </div>
+          <!-- 뒷면 -->
+          <div class="flip-back">
+            <div class="flip-back-img-zone">
+              <img src="image/panorama_cyst.png" alt="낭종 파노라마"
+                   onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+              
+            </div>
+            <div class="flip-back-body">
+              <div class="flip-back-title">🫧 함치성 낭종 (Dentigerous Cyst)</div>
+              <div class="flip-back-desc">
+                매복치 치관을 둘러싸는 낭종입니다. 5~10년간 무증상으로 팽창하며
+                주변 골을 파괴합니다. 거대 낭종은 하악골 골절 위험까지 동반합니다.
+                조기 파노라마 검진으로만 발견 가능합니다.
+              </div>
+              <div class="flip-back-close">↩ 다시 클릭해서 닫기</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /risk-cards-grid -->
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════════
+     4. J-Curve — 스크롤 연동 애니메이션
+════════════════════════════════════════ -->
+<div class="jcurve-scroll-wrap" id="jcurveScrollWrap">
+  <div class="jcurve-sticky">
+    <div class="jcurve-inner">
+
+      <div class="eyebrow rv">발치 시기의 중요성</div>
+      <h2 class="sec-headline rv d1">어릴 때 뽑는 게 정말 유리할까요?</h2>
+      <p class="sec-lead rv d2">
+        나이가 들수록 발치 난이도가 비선형적으로 상승합니다.
+        단순히 편한 시기가 아니라, <strong>의학적으로 유리한 시기</strong>가 존재합니다.
+      </p>
+
+      <div class="jcurve-svg-wrap" id="jcurveWrap">
+        <svg id="jcurveSvg" viewBox="0 0 640 300" xmlns="http://www.w3.org/2000/svg">
+          <rect x="60" y="20" width="160" height="235" fill="#D1FAE5" opacity=".35"/>
+          <rect x="220" y="20" width="380" height="235" fill="#FDE8E8" opacity=".28"/>
+          <g stroke="#E0E0E0" stroke-width=".8" stroke-dasharray="4,3">
+            <line x1="60" y1="50"  x2="600" y2="50"/>
+            <line x1="60" y1="100" x2="600" y2="100"/>
+            <line x1="60" y1="150" x2="600" y2="150"/>
+            <line x1="60" y1="205" x2="600" y2="205"/>
+            <line x1="160" y1="20" x2="160" y2="255"/>
+            <line x1="260" y1="20" x2="260" y2="255"/>
+            <line x1="360" y1="20" x2="360" y2="255"/>
+            <line x1="460" y1="20" x2="460" y2="255"/>
+            <line x1="560" y1="20" x2="560" y2="255"/>
+          </g>
+          <line x1="60" y1="255" x2="610" y2="255" stroke="#374151" stroke-width="2"/>
+          <polygon points="610,251 610,259 622,255" fill="#374151"/>
+          <line x1="60" y1="255" x2="60" y2="18" stroke="#374151" stroke-width="2"/>
+          <polygon points="56,18 64,18 60,8" fill="#374151"/>
+          <text x="14" y="137" font-size="12" fill="#5C5A54" font-family="sans-serif"
+                transform="rotate(-90,14,137)" text-anchor="middle">수술 난이도</text>
+          <text x="340" y="285" text-anchor="middle" font-size="12" fill="#5C5A54" font-family="sans-serif">연령 (세)</text>
+          <text x="60"  y="272" text-anchor="middle" font-size="11" fill="#9A9890" font-family="sans-serif">15</text>
+          <text x="160" y="272" text-anchor="middle" font-size="11" fill="#9A9890" font-family="sans-serif">20</text>
+          <text x="220" y="272" text-anchor="middle" font-size="11" fill="#C84040" font-weight="700" font-family="sans-serif">25</text>
+          <text x="360" y="272" text-anchor="middle" font-size="11" fill="#9A9890" font-family="sans-serif">35</text>
+          <text x="460" y="272" text-anchor="middle" font-size="11" fill="#9A9890" font-family="sans-serif">45</text>
+          <text x="560" y="272" text-anchor="middle" font-size="11" fill="#9A9890" font-family="sans-serif">55</text>
+          <text x="598" y="272" text-anchor="middle" font-size="10" fill="#9A9890" font-family="sans-serif">65</text>
+          <text x="140" y="14" text-anchor="middle" font-size="11" fill="#1D8A62" font-weight="700" font-family="sans-serif">안전구간</text>
+          <text x="410" y="14" text-anchor="middle" font-size="11" fill="#C84040" font-weight="700" font-family="sans-serif">난이도 상승구간</text>
+          <!-- 곡선 paths -->
+          <path id="jpath-green"
+                d="M 60,245 C 100,242 160,238 220,234"
+                fill="none" stroke="#1D8A62" stroke-width="4" stroke-linecap="round"/>
+          <path id="jpath-red"
+                d="M 220,234 C 290,224 340,196 390,158 C 430,126 480,86 590,28"
+                fill="none" stroke="#C84040" stroke-width="4" stroke-linecap="round"/>
+          <!-- 변곡점·주석 그룹: 두 곡선이 완성된 후 등장 -->
+          <g id="j-annot">
+            <!-- 변곡점 수직 점선 -->
+            <line x1="220" y1="20" x2="220" y2="234" stroke="#C84040"
+                  stroke-dasharray="5,4" stroke-width="1.5" opacity=".45"/>
+            <!-- 변곡점 빨간 점 + 라벨 -->
+            <circle cx="220" cy="234" r="9" fill="#C84040" stroke="#fff" stroke-width="2.5"/>
+            <text x="232" y="200" font-size="12" fill="#C84040"
+                  font-weight="700" font-family="sans-serif">25세 변곡점</text>
+            <!-- 주석 텍스트 -->
+            <text x="76"  y="230" font-size="11" fill="#1D8A62" font-weight="600" font-family="sans-serif">치근 미완성 · 발치 용이</text>
+            <text x="430" y="140"  font-size="11" fill="#C84040" font-weight="600" font-family="sans-serif">골유착 · hypercementosis</text>
+            <text x="430" y="155"  font-size="11" fill="#C84040" opacity=".7"      font-family="sans-serif">합병증 · 회복시간 급증</text>
+          </g>
+        </svg>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- J-Curve 아래 설명 카드 — 스티키 해제 후 자연스럽게 등장 -->
+<div class="jcurve-explain rv" id="jcurveExplain">
+
+  <div class="jex-card young">
+    <span class="jex-icon">🌱</span>
+    <div class="jex-title">25세 이전 — 유리한 이유</div>
+    <ul class="jex-list">
+      <li>치근이 아직 완전히 형성되지 않아 분리가 쉬움</li>
+      <li>주변 골이 상대적으로 탄력적 — 덜 부러짐</li>
+      <li>치주인대(PDL)가 넓어 기구 접근 용이</li>
+      <li>회복 속도 빠름, 합병증 발생률 낮음</li>
+      <li>IAN과의 거리도 상대적으로 여유 있음</li>
+    </ul>
+  </div>
+
+  <div class="jex-card old">
+    <span class="jex-icon">⚠️</span>
+    <div class="jex-title">나이 들수록 어려워지는 이유</div>
+    <ul class="jex-list">
+      <li><strong>골유착 (Ankylosis)</strong></li>
+      <li><strong>Hypercementosis</strong></li>
+      <li><strong>PDL 위축</strong></li>
+      <li>고혈압·당뇨 등 전신질환 동반 빈도 증가</li>
+      <li>골 밀도 증가 → 수술 시간 길어져 신경 손상 위험 상승</li>
+    </ul>
+  </div>
+
+</div>
+
+
+<!-- ════════════════════════════════════════
+     5. Q&A 플립 카드
+════════════════════════════════════════ -->
+<section class="qa-section">
+  <div class="qa-inner">
+
+    <div class="qa-header-row rv">
+      <div class="qa-header-text">클릭해서 정답 확인</div>
+      <div class="qa-header-line"></div>
+    </div>
+
+    <div class="qa-grid">
+
+      <div class="qa-flip" onclick="this.classList.toggle('flipped')">
+        <div class="qa-inner-flip">
+          <div class="qa-f"><div class="q-num">Q1</div><div class="q-text">20대에 사랑니는 무조건 다 뽑아야 한다</div><div class="q-hint">👆 클릭</div></div>
+          <div class="qa-b wrong"><div class="ans-icon">✕</div><div class="ans-label">거짓</div><div class="ans-reason">증상·소견 없으면 경과 관찰 가능. 일률적 예방 발치는 근거 부족 (NICE)</div></div>
+        </div>
+      </div>
+
+      <div class="qa-flip" onclick="this.classList.toggle('flipped')">
+        <div class="qa-inner-flip">
+          <div class="qa-f"><div class="q-num">Q2</div><div class="q-text">완전히 올라온 사랑니도 뽑아야 할 수 있다</div><div class="q-hint">👆 클릭</div></div>
+          <div class="qa-b correct"><div class="ans-icon">⭕</div><div class="ans-label">참</div><div class="ans-reason">치주낭·반복 염증·인접치 손상이 있으면 완전 맹출해도 발치 적응증</div></div>
+        </div>
+      </div>
+
+      <div class="qa-flip" onclick="this.classList.toggle('flipped')">
+        <div class="qa-inner-flip">
+          <div class="qa-f"><div class="q-num">Q3</div><div class="q-text">교정 전에는 무조건 사랑니를 빼야 한다</div><div class="q-hint">👆 클릭</div></div>
+          <div class="qa-b wrong"><div class="ans-icon">✕</div><div class="ans-label">거짓</div><div class="ans-reason">교정 계획·공간 분석에 따라 달라짐. 일률적 사전 발치 근거 부족</div></div>
+        </div>
+      </div>
+
+      <div class="qa-flip" onclick="this.classList.toggle('flipped')">
+        <div class="qa-inner-flip">
+          <div class="qa-f"><div class="q-num">Q4</div><div class="q-text">임신 중에는 절대로 발치할 수 없다</div><div class="q-hint">👆 클릭</div></div>
+          <div class="qa-b wrong"><div class="ans-icon">✕</div><div class="ans-label">거짓</div><div class="ans-reason">임신 2기(14~27주)는 상대적 안전구간. 긴급 시 발치 가능</div></div>
+        </div>
+      </div>
+
+      <div class="qa-flip" onclick="this.classList.toggle('flipped')">
+        <div class="qa-inner-flip">
+          <div class="qa-f"><div class="q-num">Q5</div><div class="q-text">나이가 많을수록 발치가 더 위험하다</div><div class="q-hint">👆 클릭</div></div>
+          <div class="qa-b correct"><div class="ans-icon">⭕</div><div class="ans-label">참</div><div class="ans-reason">골화·PDL위축·hypercementosis로 난이도 상승. J-curve가 이를 보여줍니다</div></div>
+        </div>
+      </div>
+
+      <div class="qa-flip" onclick="this.classList.toggle('flipped')">
+        <div class="qa-inner-flip">
+          <div class="qa-f" style="background:var(--teal-l);border-color:var(--teal);">
+            <div class="q-num" style="color:var(--teal);">핵심</div>
+            <div class="q-text" style="color:var(--teal-d);">이 섹션 한 줄 요약은?</div>
+            <div class="q-hint" style="color:var(--teal);">👆 클릭</div>
+          </div>
+          <div class="qa-b info"><div class="ans-icon">💡</div><div class="ans-label">검진이 먼저!</div><div class="ans-reason">무증상이어도 정기 파노라마로 추적. 발치 적기는 25세 이전이 유리합니다</div></div>
+        </div>
+      </div>
+
+    </div><!-- /qa-grid -->
+  </div>
+</section>
+
+
+<script>
+/* ════════════════════════════════════════
+   무증상≠무위험 — Sticky Scrolly
+════════════════════════════════════════ */
+(function () {
+  const section = document.getElementById('nosymSection');
+  const w1  = document.getElementById('ns-word1');
+  const w2  = document.getElementById('ns-word2');
+  const sign = document.getElementById('ns-sign');
+  const sub  = document.getElementById('ns-sub');
+  let lastStep = -1;
+
+  function setStep(step) {
+    if (step === lastStep) return;
+    lastStep = step;
+    /* step 0: 초기화 */
+    if (step < 0) {
+      w1.classList.remove('show'); w2.classList.remove('show');
+      sign.classList.remove('show'); sub.classList.remove('show');
+      return;
+    }
+    /* step 1 → 무증상 */
+    w1.classList.toggle('show', step >= 1);
+    /* step 2 → 무위험 */
+    w2.classList.toggle('show', step >= 2);
+    /* step 3 → ≠ 등장 */
+    sign.classList.toggle('show', step >= 3);
+    sub.classList.toggle('show',  step >= 3);
+  }
+
+  window.addEventListener('scroll', () => {
+    const rect = section.getBoundingClientRect();
+    const sH   = section.offsetHeight - window.innerHeight;
+    const prog  = Math.max(0, Math.min(1, -rect.top / sH));
+    /* 0~25%: 전환 / 25-50%: 무증상 / 50-75%: 무위험 / 75-100%: ≠ */
+    const step = prog < 0.18 ? 0
+               : prog < 0.42 ? 1
+               : prog < 0.66 ? 2
+               : 3;
+    setStep(step);
+  }, { passive: true });
+})();
+
+/* ════════════════════════════════════════
+   이미지 카드 플립
+════════════════════════════════════════ */
+function flipCard(id) {
+  document.getElementById(id).classList.toggle('flipped');
+}
+
+/* ════════════════════════════════════════
+   J-Curve — 스크롤 연동 애니메이션
+   ─────────────────────────────────────
+   스크롤 진행률(progress 0→1)에 따라:
+     0.00 → 0.44 : 초록 선 그려짐
+     0.44 → 0.90 : 빨간 선 그려짐
+     0.90 이후    : 변곡점 빨간 점 + 모든 주석 텍스트 등장
+   설명 카드(jcurveExplain)는 스티키 해제 후
+   IntersectionObserver(rv 클래스)가 자동으로 처리
+════════════════════════════════════════ */
+(function () {
+  const wrap  = document.getElementById('jcurveScrollWrap');
+  const pathG = document.getElementById('jpath-green');
+  const pathR = document.getElementById('jpath-red');
+  const annot = document.getElementById('j-annot');
+
+  let lenG = 0, lenR = 0, inited = false;
+
+  function init() {
+    lenG = pathG.getTotalLength();
+    lenR = pathR.getTotalLength();
+    pathG.style.strokeDasharray  = lenG;
+    pathG.style.strokeDashoffset = lenG;
+    pathR.style.strokeDasharray  = lenR;
+    pathR.style.strokeDashoffset = lenR;
+    inited = true;
+  }
+
+  function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
+
+  function onScroll() {
+    if (!inited) init();
+    const rect  = wrap.getBoundingClientRect();
+    const scrollH = wrap.offsetHeight - window.innerHeight;
+    const prog  = clamp(-rect.top / scrollH, 0, 1);
+
+    /* ① 초록 선: 0 → 0.44 */
+    pathG.style.strokeDashoffset = lenG * (1 - clamp(prog / 0.44, 0, 1));
+
+    /* ② 빨간 선: 0.44 → 0.90 */
+    pathR.style.strokeDashoffset = lenR * (1 - clamp((prog - 0.44) / 0.46, 0, 1));
+
+    /* ③ 변곡점·주석: 두 곡선이 거의 다 그려진 후(90%) 등장 */
+    annot.classList.toggle('show', prog >= 0.90);
+  }
+
+  function tryInit() {
+    if (!inited && pathG.getBoundingClientRect().width > 0) init();
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('load', function(){ tryInit(); onScroll(); });
+  setTimeout(function(){ tryInit(); onScroll(); }, 300);
+  requestAnimationFrame(function(){ tryInit(); onScroll(); });
+})();
+
+/* ════════════════════════════════════════
+   Scroll Reveal (공통)
+════════════════════════════════════════ */
+const ro = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('in'); ro.unobserve(e.target); }
+  });
+}, { threshold: 0.12, rootMargin: '0px 0px -36px 0px' });
+document.querySelectorAll('.rv').forEach(el => ro.observe(el));
+</script>
+
+
+<div class="bottom-nav">
+  <a class="bnav-btn prev" href="p1_class.html">← 매복 분류</a>
+  <a class="bnav-btn next" href="p3_anesthesia.html">마취·통증 →</a>
+</div>
+</body>
+</html>

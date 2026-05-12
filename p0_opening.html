@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>오프닝 | 사랑니 Q&A — 전북대병원</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700;900&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<!-- Twemoji: 크로스플랫폼 이모지 렌더링 (Windows 깃발 이모지 미지원 대응) -->
+<script src="https://cdn.jsdelivr.net/npm/twemoji@14.0.2/dist/twemoji.min.js" crossorigin="anonymous"></script>
+
+<!--
+  ════════════════════════════════════════
+  파일 경로
+  image/opening_hero.png  ←  사랑니_발치.png
+  ════════════════════════════════════════
+-->
+
+<style>
+/* ── Twemoji 이미지 크기 제어 ── */
+img.emoji {
+  height: 1em;
+  width: 1em;
+  vertical-align: -0.12em;
+  display: inline-block;
+  pointer-events: none;
+}
+/* .lang-flag 내 트위모지는 부모 font-size 기준으로 자동 크기 조정 */
+.lang-flag img.emoji {
+  vertical-align: -0.18em;
+}
+
+/* ── 기본 ── */
+:root {
+  --teal:   #006B6B;  --teal-l:  #E0F0F0;
+  --teal-d: #004F4F;  --teal-vl: #7FD8D8;
+  --bg:     #F5F3EE;  --text:    #1A1916;
+  --text2:  #5C5A54;  --text3:   #9A9890;
+  --dark:   #0a1e1e;
+  --ff-serif: 'Noto Serif KR', serif;
+  --ff-sans:  'Noto Sans KR', sans-serif;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--ff-sans);
+  background: var(--dark);
+  color: #fff;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ════════════════════════════════════════
+   1. HERO SLIDE
+════════════════════════════════════════ */
+.hero-slide {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  min-height: 560px;
+  background: #0a1e1e;   /* 다크 배경 — 여백 영역 색상 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* picture/img — 여백+중앙 배치 */
+.hero-bg-picture {
+  position: absolute;
+  /* 상하 5%, 좌우 6% 여백 — 이미지가 화면보다 작게 보임 */
+  inset: 5% 6%;
+  display: flex; align-items: center; justify-content: center;
+}
+.hero-bg {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  display: block;
+  border-radius: 12px;
+  box-shadow: 0 8px 48px rgba(0,0,0,.45);
+}
+/* 오버레이 — 데스크탑용 (좌측 상단만 살짝 어둡게) */
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    120deg,
+    rgba(10, 30, 30, 0.22) 0%,
+    rgba(10, 30, 30, 0.06) 45%,
+    transparent 100%
+  );
+}
+
+/* 하단 그라데이션 — 얇고 하단 30%에서만 시작 */
+.hero-fade-bottom {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 80px;
+  background: linear-gradient(to bottom, transparent 0%, #0a1e1e 100%);
+  pointer-events: none;
+}
+
+/* ── 모바일 Hero 오버라이드 ──
+   세로 이미지는 밝은 크림 배경이므로 다크 오버레이 제거
+   이미지 전체가 화면에 온전히 보이도록 contain + 배경색 매칭 */
+/* ─ 모바일: 세로 이미지로 전환 ─ */
+@media (max-width: 768px) {
+  .hero-slide {
+    background: #0d1a1a;
+    height: 100svh;
+    min-height: 580px;
+  }
+  .hero-bg-picture {
+    inset: 3% 3%;   /* 모바일 여백 줄임 */
+  }
+  .hero-overlay { display:none; }
+  .hero-fade-bottom {
+    height: 48px;
+    background: linear-gradient(to bottom, transparent, #0a1e1e);
+  }
+  .hero-badge { display:none; }
+}
+
+/* 좌상단 병원 뱃지 */
+.hero-badge {
+  position: absolute;
+  top: clamp(20px, 4vh, 36px);
+  left: clamp(20px, 4vw, 48px);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255,255,255,0.12);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.18);
+  border-radius: 24px;
+  padding: 7px 16px;
+  font-size: clamp(11px, 1.4vw, 13px);
+  color: rgba(255,255,255,0.88);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+.hero-badge-dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--teal-vl);
+  box-shadow: 0 0 6px var(--teal-vl);
+  flex-shrink: 0;
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.5; transform: scale(0.8); }
+}
+
+/* 우하단 스크롤 힌트 */
+.hero-scroll-hint {
+  position: absolute;
+  bottom: clamp(40px, 7vh, 72px);
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: rgba(255,255,255,0.38);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.scroll-arrow {
+  width: 18px; height: 18px;
+  border-right: 2px solid rgba(255,255,255,0.3);
+  border-bottom: 2px solid rgba(255,255,255,0.3);
+  transform: rotate(45deg);
+  animation: bounce-down 1.6s ease-in-out infinite;
+}
+@keyframes bounce-down {
+  0%, 100% { transform: rotate(45deg) translateY(0); }
+  50%       { transform: rotate(45deg) translateY(6px); }
+}
+
+/* ════════════════════════════════════════
+   2. SCROLLYTELLING — ETYMOLOGY
+════════════════════════════════════════ */
+.scrolly-section {
+  position: relative;
+  /* 언어 카드 개수 × 100vh — sticky stage가 각 단계에서 멈춤 */
+  min-height: 1100vh;
+  background: var(--dark);
+}
+
+.sticky-stage {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* 배경 그라디언트 */
+.sticky-bg {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 25% 60%, rgba(0,107,107,0.14) 0%, transparent 55%),
+    radial-gradient(ellipse at 78% 30%, rgba(166,124,58,0.06) 0%, transparent 45%),
+    var(--dark);
+}
+.sticky-bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, rgba(255,255,255,0.022) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+/* 언어 카드 컨테이너 */
+.lang-stage {
+  position: relative;
+  width: 100%;
+  max-width: 780px;
+  padding: 0 clamp(20px, 6vw, 60px);
+  text-align: center;
+  height: 360px;
+  z-index: 1;
+}
+
+/* 각 언어 카드 — 절대 위치로 겹쳐서 하나씩 보임 */
+.lang-item {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.48s ease, transform 0.48s ease;
+  pointer-events: none;
+}
+.lang-item.active {
+  opacity: 1;
+  transform: translateY(0);
+}
+.lang-item.exiting {
+  opacity: 0;
+  transform: translateY(-20px);
+  transition-duration: 0.32s;
+}
+
+/* 국기 + 나라명 가로 배열 */
+.lang-nation {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(8px, 1.5vw, 14px);
+  margin-bottom: clamp(16px, 3vh, 24px);
+}
+.lang-flag     { font-size: clamp(32px, 6vw, 54px); line-height: 1; }
+.lang-country  { font-size: clamp(11px, 1.4vw, 13px); font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(255,255,255,0.38); }
+.lang-word     { font-size: clamp(40px, 9vw, 80px); font-weight: 900; color: #fff; line-height: 1.05; letter-spacing: -0.01em; }
+.lang-roman    { font-size: clamp(15px, 2.5vw, 20px); color: rgba(255,255,255,0.3); margin-top: 8px; }
+.lang-meaning  { font-size: clamp(14px, 2vw, 17px); color: rgba(255,255,255,0.48); margin-top: 12px; line-height: 1.6; font-style: italic; }
+
+/* 한국어 강조 */
+.lang-item.korean .lang-nation .lang-country { color: rgba(127,216,216,0.7); }
+.lang-item.korean .lang-word { color: var(--teal-vl); }
+.lang-item.korean .lang-meaning { color: rgba(127,216,216,0.65); font-style: normal; }
+
+/* Final reveal 카드 */
+.lang-item.final .lang-word {
+  font-size: clamp(22px, 4.5vw, 46px);
+  color: rgba(255,255,255,0.25);
+  text-decoration: line-through;
+  text-decoration-color: rgba(255,255,255,0.15);
+  margin-bottom: 10px;
+}
+.final-term {
+  font-size: clamp(38px, 7.5vw, 68px);
+  font-weight: 900;
+  color: var(--teal-vl);
+  display: block;
+  line-height: 1.1;
+}
+.final-sub {
+  font-size: clamp(13px, 1.8vw, 16px);
+  color: rgba(255,255,255,0.38);
+  margin-top: 16px;
+  line-height: 1.6;
+}
+
+/* 진행 도트 */
+.progress-dots {
+  position: absolute;
+  bottom: clamp(28px, 5vh, 48px);
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 8px;
+  z-index: 2;
+}
+.pdot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: rgba(255,255,255,0.18);
+  transition: background 0.3s, transform 0.3s;
+}
+.pdot.on { background: var(--teal-vl); transform: scale(1.6); }
+
+/* 스크롤 힌트 (첫 카드에만) */
+.etym-scroll-hint {
+  position: absolute;
+  bottom: clamp(50px, 9vh, 80px);
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: rgba(255,255,255,0.28);
+  font-size: 11px;
+  letter-spacing: 0.07em;
+  transition: opacity 0.4s;
+  z-index: 2;
+}
+.etym-scroll-hint .s-arr {
+  width: 16px; height: 16px;
+  border-right: 1.5px solid rgba(255,255,255,0.25);
+  border-bottom: 1.5px solid rgba(255,255,255,0.25);
+  transform: rotate(45deg);
+  animation: bounce-down 1.6s ease-in-out infinite;
+}
+
+/* ════════════════════════════════════════
+   3. WHY SECTION — 왜 존재하는가
+════════════════════════════════════════ */
+.why-section {
+  background: linear-gradient(180deg, var(--dark) 0%, #0d2424 40%, #0f2c2c 100%);
+  padding: clamp(80px, 14vh, 140px) clamp(24px, 6vw, 80px);
+  position: relative;
+  overflow: hidden;
+}
+/* 미세 노이즈 느낌 배경 */
+.why-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, rgba(255,255,255,0.018) 1px, transparent 1px);
+  background-size: 28px 28px;
+  pointer-events: none;
+}
+
+.why-inner {
+  max-width: 900px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+/* 태그 */
+.why-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: rgba(127,216,216,0.1);
+  border: 1px solid rgba(127,216,216,0.22);
+  color: var(--teal-vl);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 6px 16px;
+  border-radius: 24px;
+  margin-bottom: clamp(24px, 4vh, 40px);
+}
+.why-tag-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--teal-vl);
+}
+
+/* 큰 제목 */
+.why-headline {
+  font-family: var(--ff-serif);
+  font-size: clamp(30px, 6.5vw, 62px);
+  font-weight: 900;
+  line-height: 1.18;
+  color: #fff;
+  margin-bottom: clamp(12px, 2.5vh, 22px);
+  word-break: keep-all;
+}
+.why-headline em {
+  color: var(--teal-vl);
+  font-style: normal;
+  position: relative;
+}
+.why-headline em::after {
+  content: '';
+  position: absolute;
+  left: 0; bottom: -3px; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--teal-vl), transparent);
+  border-radius: 2px;
+}
+
+/* 부제 */
+.why-lead {
+  font-size: clamp(15px, 2.2vw, 19px);
+  color: rgba(255,255,255,0.50);
+  line-height: 1.85;
+  max-width: 640px;
+  margin-bottom: clamp(40px, 7vh, 70px);
+  word-break: keep-all;
+}
+.why-lead strong { color: rgba(127,216,216,0.82); font-weight: 700; }
+
+/* 3가지 이유 카드 */
+.why-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(14px, 2.5vw, 24px);
+  margin-bottom: clamp(40px, 7vh, 72px);
+}
+.why-card {
+  background: rgba(255,255,255,0.042);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 18px;
+  padding: clamp(22px, 3.5vw, 36px) clamp(18px, 3vw, 28px);
+  transition: background 0.25s, border-color 0.25s, transform 0.25s;
+  position: relative;
+  overflow: hidden;
+}
+.why-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--teal-vl), transparent);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.why-card:hover {
+  background: rgba(127,216,216,0.07);
+  border-color: rgba(127,216,216,0.18);
+  transform: translateY(-4px);
+}
+.why-card:hover::before { opacity: 1; }
+
+.why-card-num {
+  font-family: var(--ff-serif);
+  font-size: clamp(36px, 5.5vw, 56px);
+  font-weight: 900;
+  color: rgba(127,216,216,0.18);
+  line-height: 1;
+  margin-bottom: clamp(10px, 2vh, 18px);
+  display: block;
+}
+.why-card-icon {
+  font-size: clamp(26px, 4vw, 38px);
+  display: block;
+  margin-bottom: clamp(10px, 1.8vh, 16px);
+  line-height: 1;
+}
+.why-card-title {
+  font-family: var(--ff-serif);
+  font-size: clamp(16px, 2.5vw, 22px);
+  font-weight: 900;
+  color: rgba(255,255,255,0.90);
+  margin-bottom: clamp(8px, 1.5vh, 12px);
+  line-height: 1.3;
+  word-break: keep-all;
+}
+.why-card-desc {
+  font-size: clamp(12px, 1.6vw, 14px);
+  color: rgba(255,255,255,0.40);
+  line-height: 1.7;
+  word-break: keep-all;
+}
+
+/* 하단 강조 문장 */
+.why-closing {
+  text-align: center;
+  padding: clamp(28px, 5vh, 50px) 0 0;
+  border-top: 1px solid rgba(255,255,255,0.06);
+}
+.why-closing-text {
+  font-family: var(--ff-serif);
+  font-size: clamp(18px, 3.5vw, 30px);
+  font-weight: 900;
+  color: rgba(255,255,255,0.72);
+  margin-bottom: 12px;
+  word-break: keep-all;
+}
+.why-closing-text em { color: var(--teal-vl); font-style: normal; }
+.why-closing-sub {
+  font-size: clamp(13px, 1.8vw, 15px);
+  color: rgba(255,255,255,0.35);
+  line-height: 1.7;
+}
+
+/* ── Scroll-reveal 공통 ── */
+.reveal {
+  opacity: 0;
+  transform: translateY(26px);
+  transition: opacity 0.65s cubic-bezier(0.22,1,0.36,1),
+              transform 0.65s cubic-bezier(0.22,1,0.36,1);
+}
+.reveal.in { opacity: 1; transform: none; }
+.rv1 { transition-delay: 0.08s; }
+.rv2 { transition-delay: 0.17s; }
+.rv3 { transition-delay: 0.26s; }
+.rv4 { transition-delay: 0.36s; }
+.rv5 { transition-delay: 0.46s; }
+.rv6 { transition-delay: 0.56s; }
+
+/* ── 반응형 ── */
+@media (max-width: 680px) {
+  .why-cards { grid-template-columns: 1fr; }
+}
+
+/* ════ SHARED NAV ════ */
+:root{--nav-h:52px;}
+.snav{position:fixed;top:0;left:0;right:0;z-index:9999;height:var(--nav-h);
+  background:rgba(10,30,30,.96);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  border-bottom:1px solid rgba(127,216,216,.1);}
+.snav-inner{max-width:1280px;margin:0 auto;display:flex;align-items:center;
+  height:100%;padding:0 clamp(10px,2vw,20px);gap:8px;}
+.snav-logo{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:700;
+  color:rgba(255,255,255,.5);white-space:nowrap;flex-shrink:0;text-decoration:none;}
+.snav-dot{width:6px;height:6px;border-radius:50%;background:#7FD8D8;
+  box-shadow:0 0 6px #7FD8D8;animation:sdot 2s ease-in-out infinite;flex-shrink:0;}
+@keyframes sdot{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.4;transform:scale(.75);}}
+.snav-tabs{display:flex;align-items:center;gap:1px;flex:1;overflow-x:auto;
+  scrollbar-width:none;-webkit-overflow-scrolling:touch;}
+.snav-tabs::-webkit-scrollbar{display:none;}
+.stab{display:inline-flex;align-items:center;padding:5px 11px;border-radius:18px;
+  font-size:11.5px;font-weight:600;color:rgba(255,255,255,.38);
+  text-decoration:none;white-space:nowrap;transition:all .18s;flex-shrink:0;}
+.stab:hover{color:rgba(255,255,255,.75);background:rgba(255,255,255,.07);}
+.stab.active{color:#7FD8D8;background:rgba(127,216,216,.13);font-weight:700;}
+.snav-progress{position:absolute;bottom:0;left:0;height:2px;background:#7FD8D8;
+  transition:width .15s;box-shadow:0 0 5px #7FD8D8;}
+@media(max-width:520px){
+  .snav-logo .logo-text{display:none;}
+  .snav-logo::after{content:'JBUH';font-size:11px;font-weight:800;
+    color:rgba(127,216,216,.7);letter-spacing:.06em;}
+  .stab{font-size:11px;padding:4px 8px;}
+}
+
+/* ── 하단 prev/next 내비게이션 ── */
+.bottom-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: clamp(20px, 4vh, 36px) clamp(20px, 5vw, 60px);
+  background: var(--dark, #0a1e1e);
+  border-top: 1px solid rgba(127,216,216,.1);
+}
+
+.bnav-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 22px;
+  border-radius: 24px;
+  background: rgba(127,216,216,.08);
+  border: 1px solid rgba(127,216,216,.2);
+  color: #7FD8D8;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: all .18s;
+}
+
+.bnav-btn:hover {
+  background: rgba(127,216,216,.18);
+  color: #fff;
+}
+</style>
+</head>
+<body style="padding-top:var(--nav-h,52px);">
+<nav class="snav" id="siteNav">
+  <div class="snav-inner">
+    <a class="snav-logo" href="p0_opening.html">
+      <span class="snav-dot"></span>
+      <span class="logo-text">전북대병원 · 구강악안면외과</span>
+    </a>
+    <div class="snav-tabs">
+      <a class="stab active" href="p0_opening.html">오프닝</a>
+      <a class="stab" href="p1_class.html">매복 분류</a>
+      <a class="stab" href="p2_timing.html">발치 시기</a>
+      <a class="stab" href="p3_anesthesia.html">마취·통증</a>
+      <a class="stab" href="p4_special.html">특수 환자</a>
+      <a class="stab" href="p5_complications.html">합병증</a>
+      <a class="stab" href="p6_recovery.html">회복</a>
+    </div>
+  </div>
+  <div class="snav-progress" id="snavProg"></div>
+</nav>
+<script>
+(function(){
+  var p=document.getElementById('snavProg');
+  window.addEventListener('scroll',function(){
+    if(p)p.style.width=(window.scrollY/(document.body.scrollHeight-window.innerHeight)*100)+'%';
+  },{passive:true});
+})();
+</script>
+
+<!-- ════════════════════════════════════════
+     1. HERO SLIDE
+════════════════════════════════════════ -->
+<section class="hero-slide" id="heroSlide">
+
+  <!-- 배경 이미지: 모바일 = 세로 버전 / 데스크탑 = 가로 버전 -->
+  <picture class="hero-bg-picture">
+    <source media="(max-width: 768px)" srcset="image/opening_hero_vertical.png">
+    <img class="hero-bg"
+         src="image/opening_hero.png"
+         alt="전북대병원 구강악안면외과 신경수 교수 - 사랑니 강의"
+         onerror="this.style.background='#1a3a3a';this.style.opacity='0';">
+  </picture>
+
+  <!-- 오버레이 -->
+  <div class="hero-overlay"></div>
+  <div class="hero-fade-bottom"></div>
+
+  <!-- 병원 뱃지 -->
+  <div class="hero-badge">
+    <div class="hero-badge-dot"></div>
+    전북대학교병원 구강악안면외과
+  </div>
+
+  <!-- 스크롤 힌트 -->
+  <div class="hero-scroll-hint">
+    <span>scroll</span>
+    <div class="scroll-arrow"></div>
+  </div>
+
+</section>
+
+
+<!-- ════════════════════════════════════════
+     2. ETYMOLOGY SCROLLYTELLING
+════════════════════════════════════════ -->
+<div class="scrolly-section" id="scrollySection">
+  <div class="sticky-stage" id="stickyStage">
+    <div class="sticky-bg"></div>
+
+    <!-- 언어 카드들 -->
+    <div class="lang-stage" id="langStage">
+
+      <!-- 0: 인트로 -->
+      <div class="lang-item active" id="li-0">
+        <div class="lang-nation">
+          <span class="lang-flag">🌍</span>
+          <span class="lang-country">Around the World</span>
+        </div>
+        <div class="lang-word" style="font-size:clamp(26px,5vw,50px);color:rgba(255,255,255,0.55);">
+          전 세계가 이 치아에<br>이름을 붙였습니다
+        </div>
+        <div class="lang-meaning" style="margin-top:20px;">스크롤해서 확인하세요</div>
+      </div>
+
+      <!-- 1: 독일 -->
+      <div class="lang-item" id="li-1">
+        <div class="lang-nation">
+          <span class="lang-flag">🇩🇪</span>
+          <span class="lang-country">Deutsch</span>
+        </div>
+        <div class="lang-word">Weisheitszahn</div>
+        <div class="lang-meaning">"지혜의 이" — Weisheit = 지혜</div>
+      </div>
+
+      <!-- 2: 프랑스 -->
+      <div class="lang-item" id="li-2">
+        <div class="lang-nation">
+          <span class="lang-flag">🇫🇷</span>
+          <span class="lang-country">Français</span>
+        </div>
+        <div class="lang-word">Dent de Sagesse</div>
+        <div class="lang-meaning">"지혜의 이" — sagesse = 지혜</div>
+      </div>
+
+      <!-- 3: 스페인 -->
+      <div class="lang-item" id="li-3">
+        <div class="lang-nation">
+          <span class="lang-flag">🇪🇸</span>
+          <span class="lang-country">Español</span>
+        </div>
+        <div class="lang-word">Muela del Juicio</div>
+        <div class="lang-meaning">"판단력의 어금니" — juicio = 판단·분별</div>
+      </div>
+
+      <!-- 4: 그리스 -->
+      <div class="lang-item" id="li-4">
+        <div class="lang-nation">
+          <span class="lang-flag">🇬🇷</span>
+          <span class="lang-country">Ελληνικά</span>
+        </div>
+        <div class="lang-word">Δόντι Σοφίας</div>
+        <div class="lang-meaning">"지혜의 치아" — Σοφία = 소피아, 지혜</div>
+      </div>
+
+      <!-- 5: 중국어 -->
+      <div class="lang-item" id="li-5">
+        <div class="lang-nation">
+          <span class="lang-flag">🇨🇳</span>
+          <span class="lang-country">中文</span>
+        </div>
+        <div class="lang-word">智齿</div>
+        <div class="lang-roman">Zhì Chǐ</div>
+        <div class="lang-meaning">"지혜의 이" — 동아시아 공통 개념</div>
+      </div>
+
+      <!-- 6: 영어 -->
+      <div class="lang-item" id="li-6">
+        <div class="lang-nation">
+          <span class="lang-flag">🇬🇧</span>
+          <span class="lang-country">English</span>
+        </div>
+        <div class="lang-word">Wisdom Tooth</div>
+        <div class="lang-meaning">"지혜의 이" — 17~25세, 분별력이 생기는 나이</div>
+      </div>
+
+      <!-- 7: 일본어 -->
+      <div class="lang-item" id="li-7">
+        <div class="lang-nation">
+          <span class="lang-flag">🇯🇵</span>
+          <span class="lang-country">日本語</span>
+        </div>
+        <div class="lang-word">親知らず</div>
+        <div class="lang-roman">Oyashirazu</div>
+        <div class="lang-meaning">"부모도 모르게" — 부모 곁을 떠날 나이에 난다</div>
+      </div>
+
+      <!-- 8: 한국어 -->
+      <div class="lang-item korean" id="li-8">
+        <div class="lang-nation">
+          <span class="lang-flag">🇰🇷</span>
+          <span class="lang-country">한국어</span>
+        </div>
+        <div class="lang-word">사랑니</div>
+        <div class="lang-meaning">
+          사랑을 처음 알 나이에 난다<br>
+          또는 — 나기 시작할 때 사랑처럼 아프다
+        </div>
+      </div>
+
+      <!-- 9: Final reveal -->
+      <div class="lang-item final" id="li-9">
+        <div class="lang-word">사랑니</div>
+        <div style="display:flex;align-items:center;justify-content:center;gap:clamp(10px,2vw,20px);flex-wrap:wrap;margin-top:4px;">
+          <span style="font-size:clamp(24px,4vw,40px);color:rgba(255,255,255,0.22);">=</span>
+          <span class="final-term">제3대구치</span>
+        </div>
+        <div class="final-sub">Third Molar · M₃ · 智齒<br>인류 진화 과정에서 점점 불필요해지고 있는 치아</div>
+      </div>
+
+    </div><!-- /lang-stage -->
+
+    <!-- 진행 도트 -->
+    <div class="progress-dots" id="progressDots">
+      <div class="pdot on"></div><div class="pdot"></div><div class="pdot"></div>
+      <div class="pdot"></div><div class="pdot"></div><div class="pdot"></div>
+      <div class="pdot"></div><div class="pdot"></div><div class="pdot"></div>
+      <div class="pdot"></div>
+    </div>
+
+    <!-- 스크롤 힌트 (인트로 카드일 때만 보임) -->
+    <div class="etym-scroll-hint" id="etymHint">
+      <span>scroll</span>
+      <div class="s-arr"></div>
+    </div>
+
+  </div><!-- /sticky-stage -->
+</div><!-- /scrolly-section -->
+
+
+<!-- ════════════════════════════════════════
+     3. WHY — 왜 존재하는가
+════════════════════════════════════════ -->
+<section class="why-section" id="whySection">
+  <div class="why-inner">
+
+    <div class="why-tag reveal">
+      <div class="why-tag-dot"></div>
+      왜 존재하는가
+    </div>
+
+    <h2 class="why-headline reveal rv1">
+      사랑니는<br>
+      <em>진화의 흔적</em>입니다
+    </h2>
+
+    <p class="why-lead reveal rv2">
+      초기 인류는 질긴 날 음식을 씹기 위해 더 넓은 턱과 더 많은 어금니가 필요했습니다.
+      식습관이 바뀌고 조리가 발달하면서 턱은 작아졌지만 치아 수는 그대로입니다.
+      그 결과 <strong>제3대구치 = 사랑니</strong>가 문제를 일으키게 됩니다.
+    </p>
+
+    <!-- 3가지 이유 카드 -->
+    <div class="why-cards">
+
+      <div class="why-card reveal rv3">
+        <span class="why-card-num">01</span>
+        <span class="why-card-icon">🧬</span>
+        <div class="why-card-title">유전적 요소</div>
+        <div class="why-card-desc">
+          턱 크기와 치아 크기의 비율은 유전됩니다.
+          부모가 매복 사랑니를 경험했다면 자녀도 비슷할 가능성이 높습니다.
+        </div>
+      </div>
+
+      <div class="why-card reveal rv4">
+        <span class="why-card-num">02</span>
+        <span class="why-card-icon">📉</span>
+        <div class="why-card-title">선천 결손 증가 중</div>
+        <div class="why-card-desc">
+          전 세계적으로 사랑니 맹아 자체가 없는 사람이 약 10~25%에 달합니다.
+          진화가 지금도 진행 중이라는 증거입니다.
+        </div>
+      </div>
+
+      <div class="why-card reveal rv5">
+        <span class="why-card-num">03</span>
+        <span class="why-card-icon">⏳</span>
+        <div class="why-card-title">퇴화하는 치아</div>
+        <div class="why-card-desc">
+          일부 연구자는 수천 년 후 인류에서 사랑니가 완전히 사라질 것으로 예측합니다.
+          우리 세대는 그 과도기에 있습니다.
+        </div>
+      </div>
+
+    </div><!-- /why-cards -->
+
+    <!-- 하단 마무리 문장 -->
+    <div class="why-closing reveal rv6">
+      <div class="why-closing-text">
+        자, 이제 <em>함께 알아볼까요?</em>
+      </div>
+      <div class="why-closing-sub">
+        사랑니에 대한 궁금증 — Q&amp;A로 함께 알아봅시다
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<script>
+/* ════════════════════════════════════════
+   SCROLLYTELLING 로직
+════════════════════════════════════════ */
+(function () {
+  const section  = document.getElementById('scrollySection');
+  const items    = document.querySelectorAll('.lang-item');
+  const dots     = document.querySelectorAll('.pdot');
+  const hint     = document.getElementById('etymHint');
+  const TOTAL    = items.length; // 0~9
+  let current    = 0;
+
+  function goTo(idx) {
+    if (idx === current) return;
+    items[current].classList.remove('active');
+    items[current].classList.add('exiting');
+    const prev = current;
+    setTimeout(() => items[prev].classList.remove('exiting'), 380);
+    current = Math.max(0, Math.min(TOTAL - 1, idx));
+    items[current].classList.add('active');
+    dots.forEach((d, i) => d.classList.toggle('on', i === current));
+    hint.style.opacity = current === 0 ? '1' : '0';
+  }
+
+  function onScroll() {
+    const rect = section.getBoundingClientRect();
+    const sH   = section.offsetHeight;
+    const prog = Math.max(0, Math.min(1, -rect.top / (sH - window.innerHeight)));
+    goTo(Math.min(TOTAL - 1, Math.floor(prog * TOTAL)));
+  }
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  /* 발표모드 외부 접근용 */
+  window._etym = { goTo, getIdx: () => current, total: TOTAL };
+})();
+
+/* ════════════════════════════════════════
+   SCROLL REVEAL (Intersection Observer)
+════════════════════════════════════════ */
+const ro = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('in'); ro.unobserve(e.target); }
+  });
+}, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+document.querySelectorAll('.reveal').forEach(el => ro.observe(el));
+
+/* ════════════════════════════════════════
+   TWEMOJI — 크로스플랫폼 이모지 렌더링
+   Windows에서 깃발 이모지가 텍스트로 표시되는 문제 해결
+════════════════════════════════════════ */
+if (typeof twemoji !== 'undefined') {
+  twemoji.parse(document.body, {
+    folder: 'svg',
+    ext: '.svg',
+    base: 'https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/'
+  });
+}
+</script>
+
+
+<div class="bottom-nav">
+  <span></span>
+  <a class="bnav-btn next" href="p1_class.html">매복 분류 →</a>
+</div>
+</body>
+</html>

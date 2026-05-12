@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>특수 환자 | 사랑니 Q&A — 전북대병원</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700;900&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --teal:#006B6B; --teal-l:#E0F0F0; --teal-d:#004F4F; --teal-vl:#7FD8D8;
+  --green:#1D8A62; --green-l:#D1FAE5;
+  --danger:#C84040; --danger-l:#FDE8E8;
+  --warn:#B45309; --warn-l:#FEF3C7;
+  --blue:#2D5FA6; --blue-l:#DBEAFE;
+  --maroon:#7B2636;
+  --bg:#F5F3EE; --card:#fff; --text:#1A1916; --text2:#5C5A54; --text3:#9A9890;
+  --dark:#0a1e1e;
+  --ff-serif:'Noto Serif KR',serif;
+  --ff-sans:'Noto Sans KR',sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:var(--ff-sans);background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;}
+
+/* ─── 공통 ─── */
+.rv{opacity:0;transform:translateY(22px);transition:opacity .65s cubic-bezier(.22,1,.36,1),transform .65s cubic-bezier(.22,1,.36,1);}
+.rv.in{opacity:1;transform:none;}
+.d1{transition-delay:.07s;}.d2{transition-delay:.14s;}.d3{transition-delay:.22s;}
+.d4{transition-delay:.30s;}.d5{transition-delay:.40s;}.d6{transition-delay:.50s;}
+
+/* 좌→우 슬라이드 */
+.rv-left{opacity:0;transform:translateX(-28px);transition:opacity .6s cubic-bezier(.22,1,.36,1),transform .6s cubic-bezier(.22,1,.36,1);}
+.rv-left.in{opacity:1;transform:none;}
+.rv-right{opacity:0;transform:translateX(28px);transition:opacity .6s cubic-bezier(.22,1,.36,1),transform .6s cubic-bezier(.22,1,.36,1);}
+.rv-right.in{opacity:1;transform:none;}
+
+/* ─── 레이아웃 ─── */
+.section-pad{padding:clamp(72px,11vh,120px) clamp(20px,5vw,72px);}
+.inner{max-width:900px;margin:0 auto;}
+
+/* ─── 섹션 구분 ─── */
+.topic-banner{
+  background:var(--dark);
+  padding:clamp(52px,9vh,96px) clamp(20px,5vw,72px);
+  color:#fff;
+  overflow:hidden;
+  position:relative;
+}
+.topic-banner::after{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at 80% 50%,rgba(0,107,107,.18) 0%,transparent 55%);
+  pointer-events:none;
+}
+.topic-banner-inner{max-width:900px;margin:0 auto;position:relative;z-index:1;}
+.topic-tag{
+  display:inline-flex;align-items:center;gap:7px;
+  background:rgba(127,216,216,.1);border:1px solid rgba(127,216,216,.2);
+  color:var(--teal-vl);font-size:11px;font-weight:800;letter-spacing:.1em;
+  text-transform:uppercase;padding:5px 15px;border-radius:20px;margin-bottom:16px;
+}
+.topic-title{
+  font-family:var(--ff-serif);
+  font-size:clamp(30px,6vw,56px);font-weight:900;line-height:1.2;
+  margin-bottom:12px;word-break:keep-all;
+}
+.topic-title em{color:var(--teal-vl);font-style:normal;}
+.topic-desc{font-size:clamp(14px,2vw,17px);color:rgba(255,255,255,.5);line-height:1.8;max-width:600px;word-break:keep-all;}
+
+.eyebrow{font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--teal);margin-bottom:12px;}
+.headline{font-family:var(--ff-serif);font-size:clamp(22px,4.5vw,38px);font-weight:900;line-height:1.25;margin-bottom:12px;word-break:keep-all;}
+.lead{font-size:clamp(14px,1.9vw,16px);color:var(--text2);line-height:1.85;margin-bottom:28px;word-break:keep-all;}
+.divider{width:40px;height:3px;background:var(--teal);border-radius:2px;margin:0 0 24px;}
+
+.card{background:var(--card);border-radius:18px;padding:clamp(18px,3vw,28px);box-shadow:0 3px 20px rgba(0,0,0,.07);}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:clamp(14px,2.5vw,24px);}
+
+/* ════════════════════════════════════════
+   임신 삼분기 타임라인 (A5)
+════════════════════════════════════════ */
+.trimester-bar{
+  display:flex;border-radius:18px;overflow:visible;  /* ★ visible로 변경 */
+  box-shadow:0 4px 24px rgba(0,0,0,.1);
+  margin-top:22px;margin-bottom:20px;position:relative;
+}
+/* 개별 셀에 clip 적용 */
+.trimester.t1{border-radius:14px 0 0 14px;}
+.trimester.t3{border-radius:0 14px 14px 0;}
+.trimester{flex:1;padding:clamp(16px,2.5vw,24px) clamp(14px,2vw,20px);}
+.trimester.t1{background:var(--danger-l);border-left:5px solid var(--danger);}
+.trimester.t2{
+  background:var(--green-l);
+  border:3px solid var(--teal);
+  box-shadow:0 0 0 4px rgba(0,107,107,.1);
+  z-index:1;position:relative;
+}
+.trimester.t3{background:var(--warn-l);border-right:5px solid var(--warn);}
+.trimester.t2::before{
+  content:'★ 최적 구간';
+  position:absolute;top:-13px;left:50%;transform:translateX(-50%);
+  background:var(--teal);color:#fff;font-size:10px;font-weight:800;
+  padding:2px 12px;border-radius:10px;white-space:nowrap;
+}
+.t-badge{font-size:10px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;margin-bottom:4px;}
+.trimester.t1 .t-badge{color:var(--danger);}
+.trimester.t2 .t-badge{color:var(--teal);}
+.trimester.t3 .t-badge{color:var(--warn);}
+.t-weeks{font-size:12px;font-weight:700;margin-bottom:6px;}
+.t-title{font-family:var(--ff-serif);font-size:clamp(15px,2.5vw,20px);font-weight:900;line-height:1.2;margin-bottom:6px;}
+.trimester.t1 .t-title{color:var(--danger);}
+.trimester.t2 .t-title{color:var(--teal-d);}
+.trimester.t3 .t-title{color:var(--warn);}
+.t-msg{font-size:clamp(11px,1.4vw,13px);color:var(--text2);line-height:1.5;}
+
+/* 삼분기 애니메이션 */
+.trimester.t1{opacity:0;transform:translateX(-20px);transition:opacity .5s ease,transform .5s ease;}
+.trimester.t2{opacity:0;transform:translateY(16px);transition:opacity .55s ease .12s,transform .55s ease .12s;}
+.trimester.t3{opacity:0;transform:translateX(20px);transition:opacity .5s ease .24s,transform .5s ease .24s;}
+.trimester-bar.in .trimester{opacity:1;transform:none;}
+
+/* 약제 표 */
+.drug-expand-btn{
+  display:flex;justify-content:space-between;align-items:center;
+  width:100%;padding:13px 16px;border-radius:10px;
+  background:var(--card);border:2px solid var(--teal-l);
+  font-family:var(--ff-sans);font-size:14px;font-weight:700;
+  color:var(--teal-d);cursor:pointer;margin-bottom:6px;
+  transition:background .18s;
+}
+.drug-expand-btn:hover{background:var(--teal-l);}
+.drug-expand-btn .arr{transition:transform .3s;color:var(--teal);}
+.drug-expand-open .arr{transform:rotate(180deg);}
+.drug-expand-body{display:none;background:var(--card);border-radius:10px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.07);}
+.drug-expand-open + .drug-expand-body{display:block;}
+
+.drug-table{width:100%;border-collapse:collapse;font-size:clamp(12px,1.5vw,14px);}
+.drug-table th{background:var(--teal-l);color:var(--teal-d);padding:9px 14px;font-weight:800;text-align:center;}
+.drug-table th:first-child{text-align:left;}
+.drug-table td{padding:9px 14px;text-align:center;border-bottom:1px solid rgba(0,0,0,.05);}
+.drug-table td:first-child{text-align:left;font-weight:600;}
+.drug-table tr:last-child td{border-bottom:none;}
+.ok{color:var(--green);font-weight:800;}
+.no{color:var(--danger);font-weight:800;}
+.caution{color:var(--warn);font-weight:800;}
+
+/* ════════════════════════════════════════
+   항혈전제 저울 (A6)
+════════════════════════════════════════ */
+.scale-svg-wrap{max-width:420px;margin:0 auto;}
+.scale-svg-wrap svg{width:100%;height:auto;}
+.scale-legend{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px;}
+.sl-item{border-radius:12px;padding:12px 16px;font-size:clamp(12px,1.5vw,13px);}
+.sl-item.bleed{background:var(--green-l);border:1.5px solid rgba(29,138,98,.2);}
+.sl-item.thromb{background:var(--danger-l);border:1.5px solid rgba(200,64,64,.2);}
+.sl-item h5{font-size:clamp(13px,1.6vw,15px);font-weight:800;margin-bottom:5px;}
+.sl-item.bleed h5{color:var(--green);}
+.sl-item.thromb h5{color:var(--danger);}
+.sl-item p{color:var(--text2);line-height:1.55;}
+
+.principle-card{
+  background:var(--danger-l);border-left:5px solid var(--danger);
+  border-radius:0 14px 14px 0;padding:16px 20px;
+}
+.principle-card h4{font-size:clamp(14px,2vw,16px);font-weight:800;color:var(--danger);margin-bottom:10px;}
+.point-list{list-style:none;display:flex;flex-direction:column;gap:8px;}
+.point-list li{display:flex;gap:8px;align-items:flex-start;font-size:clamp(12px,1.5vw,14px);color:var(--text2);line-height:1.55;}
+.point-list li::before{content:'→';color:var(--teal);font-weight:800;flex-shrink:0;}
+.inr-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  background:var(--warn-l);border:1px solid var(--warn);
+  color:var(--warn);font-size:12px;font-weight:800;
+  padding:4px 12px;border-radius:20px;margin-top:10px;
+}
+
+/* ════════════════════════════════════════
+   MRONJ 타임라인 (A7)
+════════════════════════════════════════ */
+.mronj-block{margin-bottom:28px;}
+.mronj-label{
+  display:flex;align-items:center;gap:10px;
+  font-size:clamp(13px,1.8vw,15px);font-weight:800;
+  margin-bottom:14px;flex-wrap:wrap;
+}
+.tl-tag{display:inline-flex;align-items:center;padding:3px 11px;border-radius:10px;font-size:11px;font-weight:800;letter-spacing:.04em;}
+.tl-tag.blue{background:var(--blue-l);color:var(--blue);}
+.tl-tag.red{background:var(--danger-l);color:var(--danger);}
+
+/* 타임라인 스크롤 래퍼 — 잘림 방지 */
+.tl-scroll{
+  overflow-x:auto;
+  -webkit-overflow-scrolling:touch;
+  padding-bottom:4px;
+  /* 스크롤바 숨김 (유지하되 visually hidden) */
+  scrollbar-width:none;
+}
+.tl-scroll::-webkit-scrollbar{display:none;}
+
+/* 모바일에서 수평 스크롤 힌트 */
+.tl-scroll-hint{
+  display:none;font-size:11px;color:var(--text3);
+  text-align:right;margin-top:4px;
+}
+@media(max-width:600px){.tl-scroll-hint{display:block;}}
+
+.tl-row{
+  display:flex;
+  min-width:640px;
+  border-radius:12px;
+  /* overflow:hidden 제거 — ::before/::after 잘림 방지 */
+  box-shadow:0 2px 14px rgba(0,0,0,.08);
+  height:auto;
+  min-height:76px;
+}
+/* 첫/끝 세그먼트에 border-radius 직접 부여 */
+.tl-row > .tl-seg:first-child{border-radius:12px 0 0 12px;}
+.tl-row > .tl-seg:last-child {border-radius:0 12px 12px 0;}
+
+.tl-seg{
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  padding:8px 10px;text-align:center;
+  font-size:clamp(10px,1.2vw,12px);font-weight:700;
+  line-height:1.4;position:relative;
+  transition:filter .2s;
+  cursor:default;
+}
+.tl-seg:hover{filter:brightness(.92);}
+.tl-seg .si{font-size:clamp(16px,2vw,22px);margin-bottom:3px;flex-shrink:0;}
+.tl-seg small{font-size:10px;font-weight:400;opacity:.75;display:block;margin-top:1px;}
+
+/* 세그먼트 내부 뱃지 (잘림 없음) */
+.tl-inner-badge{
+  background:var(--teal);color:#fff;
+  font-size:10px;font-weight:800;
+  padding:2px 8px;border-radius:8px;
+  white-space:nowrap;margin-bottom:5px;
+}
+.tl-inner-warn{
+  background:var(--danger);color:#fff;
+  font-size:10px;font-weight:800;
+  padding:2px 8px;border-radius:8px;
+  white-space:nowrap;margin-top:5px;
+}
+
+/* BP 타임라인 색상 */
+.tl-dosing {background:var(--blue-l); color:var(--blue);  flex:4;}
+.tl-holiday{background:#F3F4F6;       color:var(--text2); flex:2.2;}
+.tl-extract{background:var(--teal);   color:#fff;         flex:1.2;}
+.tl-heal   {background:var(--green-l);color:var(--green); flex:2.8;}
+.tl-restart{background:var(--blue-l); color:var(--blue);  flex:2.8;}
+
+/* 데노수맙 타임라인 색상 */
+.tl-inject {background:var(--maroon); color:#fff;         flex:0.9;}
+.tl-peak   {background:var(--danger-l);color:var(--danger);flex:2.8;}
+.tl-optimal{
+  background:var(--green-l);color:var(--green);flex:2.8;
+  border:2.5px solid var(--teal);
+}
+.tl-next   {background:var(--blue-l); color:var(--blue);  flex:2.8;}
+
+/* 타임라인 위아래 여백 */
+.tl-wrap{padding:4px 0 8px;}
+
+/* 주의사항 박스 */
+.mronj-note{
+  margin-top:12px;padding:11px 15px;
+  background:var(--warn-l);border-left:4px solid var(--warn);
+  border-radius:0 10px 10px 0;
+  font-size:clamp(12px,1.4vw,13px);color:var(--warn);font-weight:600;line-height:1.65;
+}
+.rebound-note{
+  margin-top:8px;padding:11px 15px;
+  background:var(--danger-l);border-left:4px solid var(--danger);
+  border-radius:0 10px 10px 0;
+  font-size:clamp(12px,1.4vw,13px);color:var(--danger);font-weight:600;line-height:1.65;
+}
+
+/* ════════════════════════════════════════
+   Q&A 카드
+════════════════════════════════════════ */
+.qa-section{background:var(--bg);padding:clamp(50px,8vh,80px) clamp(20px,5vw,72px);}
+.qa-inner{max-width:900px;margin:0 auto;}
+.qa-hr{display:flex;align-items:center;gap:12px;margin-bottom:clamp(20px,3.5vh,32px);}
+.qa-hr-line{flex:1;height:1px;background:rgba(0,0,0,.08);}
+.qa-hr-text{font-size:clamp(13px,1.8vw,15px);font-weight:700;color:var(--text2);white-space:nowrap;}
+
+.qa-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(10px,1.8vw,16px);}
+.qa-flip{perspective:900px;height:clamp(148px,18vw,178px);cursor:pointer;}
+.qa-fi{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .52s cubic-bezier(.77,0,.175,1);}
+.qa-flip.flipped .qa-fi{transform:rotateY(180deg);}
+.qa-f,.qa-b{position:absolute;inset:0;backface-visibility:hidden;border-radius:12px;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:clamp(12px,2vw,18px);text-align:center;}
+.qa-f{background:var(--card);box-shadow:0 2px 12px rgba(0,0,0,.07);border:2px solid transparent;transition:border-color .2s;}
+.qa-flip:hover .qa-f{border-color:var(--teal-l);}
+.qa-f .qn{font-size:11px;font-weight:800;color:var(--teal);letter-spacing:.1em;margin-bottom:7px;}
+.qa-f .qt{font-size:clamp(12px,1.6vw,14px);font-weight:600;color:var(--text);line-height:1.4;}
+.qa-f .qh{margin-top:9px;font-size:10px;color:var(--text3);}
+.qa-b{transform:rotateY(180deg);}
+.qa-b.correct{background:var(--green-l);border:2px solid var(--green);}
+.qa-b.wrong  {background:var(--danger-l);border:2px solid var(--danger);}
+.qa-b.info   {background:var(--teal-l);  border:2px solid var(--teal);}
+.qa-b .ai{font-size:24px;margin-bottom:6px;}
+.qa-b .al{font-size:clamp(13px,1.8vw,15px);font-weight:800;margin-bottom:5px;}
+.qa-b.correct .al{color:var(--green);}
+.qa-b.wrong   .al{color:var(--danger);}
+.qa-b.info    .al{color:var(--teal-d);}
+.qa-b .ar{font-size:clamp(10px,1.3vw,12px);color:var(--text2);line-height:1.45;}
+
+/* ─── 반응형 ─── */
+@media(max-width:700px){
+  .grid2{grid-template-columns:1fr;}
+  .trimester-bar{flex-direction:column;}
+  .trimester.t2::before{top:-12px;}
+  .trimester.t1{opacity:1;transform:none;}
+  .trimester.t2{opacity:1;transform:none;}
+  .trimester.t3{opacity:1;transform:none;}
+  .scale-legend{grid-template-columns:1fr;}
+  .qa-grid{grid-template-columns:1fr 1fr;}
+}
+@media(max-width:420px){.qa-grid{grid-template-columns:1fr;}}
+
+/* ════ SHARED NAV ════ */
+:root{--nav-h:52px;}
+.snav{position:fixed;top:0;left:0;right:0;z-index:9999;height:var(--nav-h);
+  background:rgba(10,30,30,.96);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  border-bottom:1px solid rgba(127,216,216,.1);}
+.snav-inner{max-width:1280px;margin:0 auto;display:flex;align-items:center;
+  height:100%;padding:0 clamp(10px,2vw,20px);gap:8px;}
+.snav-logo{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:700;
+  color:rgba(255,255,255,.5);white-space:nowrap;flex-shrink:0;text-decoration:none;}
+.snav-dot{width:6px;height:6px;border-radius:50%;background:#7FD8D8;
+  box-shadow:0 0 6px #7FD8D8;animation:sdot 2s ease-in-out infinite;flex-shrink:0;}
+@keyframes sdot{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.4;transform:scale(.75);}}
+.snav-tabs{display:flex;align-items:center;gap:1px;flex:1;overflow-x:auto;
+  scrollbar-width:none;-webkit-overflow-scrolling:touch;}
+.snav-tabs::-webkit-scrollbar{display:none;}
+.stab{display:inline-flex;align-items:center;padding:5px 11px;border-radius:18px;
+  font-size:11.5px;font-weight:600;color:rgba(255,255,255,.38);
+  text-decoration:none;white-space:nowrap;transition:all .18s;flex-shrink:0;}
+.stab:hover{color:rgba(255,255,255,.75);background:rgba(255,255,255,.07);}
+.stab.active{color:#7FD8D8;background:rgba(127,216,216,.13);font-weight:700;}
+.snav-progress{position:absolute;bottom:0;left:0;height:2px;background:#7FD8D8;
+  transition:width .15s;box-shadow:0 0 5px #7FD8D8;}
+@media(max-width:520px){
+  .snav-logo .logo-text{display:none;}
+  .snav-logo::after{content:'JBUH';font-size:11px;font-weight:800;
+    color:rgba(127,216,216,.7);letter-spacing:.06em;}
+  .stab{font-size:11px;padding:4px 8px;}
+}
+
+/* ── 하단 prev/next 내비게이션 ── */
+.bottom-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: clamp(20px, 4vh, 36px) clamp(20px, 5vw, 60px);
+  background: var(--dark, #0a1e1e);
+  border-top: 1px solid rgba(127,216,216,.1);
+}
+
+.bnav-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 22px;
+  border-radius: 24px;
+  background: rgba(127,216,216,.08);
+  border: 1px solid rgba(127,216,216,.2);
+  color: #7FD8D8;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: all .18s;
+}
+
+.bnav-btn:hover {
+  background: rgba(127,216,216,.18);
+  color: #fff;
+}
+
+</style>
+<script src="https://cdn.jsdelivr.net/npm/twemoji@14.0.2/dist/twemoji.min.js" crossorigin="anonymous"></script>
+</head>
+<body style="padding-top:var(--nav-h,52px);">
+<nav class="snav" id="siteNav">
+  <div class="snav-inner">
+    <a class="snav-logo" href="p0_opening.html">
+      <span class="snav-dot"></span>
+      <span class="logo-text">전북대병원 · 구강악안면외과</span>
+    </a>
+    <div class="snav-tabs">
+      <a class="stab" href="p0_opening.html">오프닝</a>
+      <a class="stab" href="p1_class.html">매복 분류</a>
+      <a class="stab" href="p2_timing.html">발치 시기</a>
+      <a class="stab" href="p3_anesthesia.html">마취·통증</a>
+      <a class="stab active" href="p4_special.html">특수 환자</a>
+      <a class="stab" href="p5_complications.html">합병증</a>
+      <a class="stab" href="p6_recovery.html">회복</a>
+    </div>
+  </div>
+  <div class="snav-progress" id="snavProg"></div>
+</nav>
+<script>
+(function(){
+  var p=document.getElementById('snavProg');
+  window.addEventListener('scroll',function(){
+    if(p)p.style.width=(window.scrollY/(document.body.scrollHeight-window.innerHeight)*100)+'%';
+  },{passive:true});
+})();
+</script>
+
+<!-- ════════════════════════════════════════
+     섹션 도입부 배너
+════════════════════════════════════════ -->
+<div class="topic-banner">
+  <div class="topic-banner-inner">
+    <div class="topic-tag rv">⚕️ 특수 환자의 사랑니</div>
+    <h2 class="topic-title rv d1">임산부, 혈전약, 골다공증약<br><em>어떻게 다르게 접근하나요?</em></h2>
+    <p class="topic-desc rv d2">
+      특수 상황의 환자에게는 동일한 발치도 전혀 다른 고려가 필요합니다.
+      원칙과 근거를 정확히 알아야 안전한 결정을 내릴 수 있습니다.
+    </p>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════
+     1. 임산부
+════════════════════════════════════════ -->
+<section class="section-pad" style="background:var(--bg);">
+  <div class="inner">
+    <div class="eyebrow rv">임산부</div>
+    <h3 class="headline rv d1">임신 중에도 발치할 수 있습니다</h3>
+    <p class="lead rv d2">
+      시기에 따라 접근이 달라집니다. 약물 거부감으로 미루는 경우가 많지만,
+      임신 중 감염·통증 방치도 위험합니다. <strong>삼분기가 핵심입니다.</strong>
+    </p>
+    <div class="divider rv d3"></div>
+
+    <!-- 삼분기 타임라인 -->
+    <div class="trimester-bar rv d3" id="trimBar">
+      <div class="trimester t1">
+        <div class="t-badge">임신 1기</div>
+        <div class="t-weeks">~13주</div>
+        <div class="t-title">연기 권고</div>
+        <div class="t-msg">태아 기관 형성기<br>가급적 2기로 연기</div>
+      </div>
+      <div class="trimester t2">
+        <div class="t-badge">임신 2기</div>
+        <div class="t-weeks">14~27주</div>
+        <div class="t-title">발치 가능</div>
+        <div class="t-msg">상대적 안전구간<br>긴급 처치 시행 가능</div>
+      </div>
+      <div class="trimester t3">
+        <div class="t-badge">임신 3기</div>
+        <div class="t-weeks">28주~</div>
+        <div class="t-title">연기 권고</div>
+        <div class="t-msg">앙와위 저혈압 위험<br>조기 분만 주의</div>
+      </div>
+    </div>
+
+    <!-- 약제 표 (expand) -->
+    <div class="rv d4">
+      <button class="drug-expand-btn" id="drugBtn" onclick="toggleDrug()">
+        <span>💊 약제 안전성 — 삼분기별 상세</span>
+        <span class="arr" id="drugArr">▾</span>
+      </button>
+      <div class="drug-expand-body" id="drugBody">
+        <div style="padding:10px 14px 6px;font-size:12px;color:var(--text3);background:rgba(0,0,0,.02);border-bottom:1px solid rgba(0,0,0,.05);">
+          ※ FDA 임신 약물 등급(A/B/C)은 2015년 PLLR로 <strong>폐지</strong>되었습니다. 현재는 개별 약물 위험·편익 서술형 평가를 사용합니다.
+        </div>
+        <table class="drug-table">
+          <thead>
+            <tr>
+              <th>약제</th><th>1기</th><th>2기</th><th>3기</th>
+              <th style="font-weight:500;font-size:11px;color:var(--text2);">현재 근거</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>리도카인</td>
+              <td><span class="caution">⚠</span></td>
+              <td><span class="ok">✅</span></td>
+              <td><span class="caution">⚠</span></td>
+              <td style="font-size:12px;color:var(--text2);">동물·임상 근거 풍부, 치과 표준 선택제</td>
+            </tr>
+            <tr>
+              <td>에피네프린</td>
+              <td><span class="no">✕</span></td>
+              <td><span class="caution">최소량</span></td>
+              <td><span class="no">✕</span></td>
+              <td style="font-size:12px;color:var(--text2);">고농도 시 자궁 혈류 감소 가능. 1:100,000 이하 최소량</td>
+            </tr>
+            <tr>
+              <td>아세트아미노펜</td>
+              <td><span class="ok">✅</span></td>
+              <td><span class="ok">✅</span></td>
+              <td><span class="ok">✅</span></td>
+              <td style="font-size:12px;color:var(--text2);">1차 선택 진통제. 권장 용량 내 사용</td>
+            </tr>
+            <tr>
+              <td>NSAIDs</td>
+              <td><span class="no">✕</span></td>
+              <td><span class="caution">주의</span></td>
+              <td><span class="no">✕ 금기</span></td>
+              <td style="font-size:12px;color:var(--text2);">3기: 동맥관 조기 폐쇄 위험 (FDA 2020 경고)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════════
+     2. 항혈전제·항응고제
+════════════════════════════════════════ -->
+<section class="section-pad" style="background:#fff;">
+  <div class="inner">
+    <div class="eyebrow rv">항혈전제 · 항응고제</div>
+    <h3 class="headline rv d1">임의 중단이 더 위험합니다</h3>
+    <p class="lead rv d2">
+      발치 후 출혈은 국소 지혈로 대부분 조절 가능합니다.
+      반면 혈전약을 갑자기 끊으면 뇌졸중·심근경색의 위험이 생깁니다.
+      <strong>반드시 의사가 판단합니다.</strong>
+    </p>
+    <div class="divider rv d3"></div>
+
+    <div class="grid2">
+
+      <!-- 저울 SVG -->
+      <div class="rv-left">
+        <div class="scale-svg-wrap">
+          <svg viewBox="0 0 420 310" xmlns="http://www.w3.org/2000/svg">
+            <!-- 받침대 -->
+            <rect x="198" y="268" width="24" height="28" rx="4" fill="#374151"/>
+            <rect x="168" y="292" width="84" height="12" rx="6" fill="#374151"/>
+            <!-- 기둥 -->
+            <rect x="206" y="108" width="8" height="162" rx="4" fill="#374151"/>
+            <!-- 피벗 -->
+            <circle cx="210" cy="108" r="9" fill="#374151"/>
+            <!-- 저울대 (우측이 내려감) -->
+            <line x1="55" y1="88" x2="365" y2="126" stroke="#374151" stroke-width="5" stroke-linecap="round"/>
+            <!-- 왼쪽 줄+접시 (가벼움, 위로) -->
+            <line x1="55" y1="88" x2="42" y2="136" stroke="#374151" stroke-width="1.8"/>
+            <line x1="55" y1="88" x2="68" y2="136" stroke="#374151" stroke-width="1.8"/>
+            <ellipse cx="55" cy="144" rx="48" ry="11" fill="#D1FAE5" stroke="#1D8A62" stroke-width="2"/>
+            <!-- 왼쪽 접시 내용 -->
+            <text x="55" y="130" text-anchor="middle" font-size="22" font-family="sans-serif">💧</text>
+            <text x="55" y="163" text-anchor="middle" font-size="11" fill="#1D8A62" font-weight="700" font-family="sans-serif">발치 후 출혈</text>
+            <text x="55" y="177" text-anchor="middle" font-size="10" fill="#1D8A62" font-family="sans-serif">국소 지혈 가능</text>
+            <!-- 오른쪽 줄+접시 (무거움, 아래로) -->
+            <line x1="365" y1="126" x2="348" y2="172" stroke="#374151" stroke-width="1.8"/>
+            <line x1="365" y1="126" x2="382" y2="172" stroke="#374151" stroke-width="1.8"/>
+            <ellipse cx="365" cy="182" rx="54" ry="13" fill="#FDE8E8" stroke="#C84040" stroke-width="2"/>
+            <!-- 오른쪽 접시 내용 -->
+            <text x="365" y="166" text-anchor="middle" font-size="22" font-family="sans-serif">❤️‍🔥</text>
+            <text x="365" y="203" text-anchor="middle" font-size="11" fill="#C84040" font-weight="700" font-family="sans-serif">혈전색전증</text>
+            <text x="365" y="217" text-anchor="middle" font-size="10" fill="#C84040" font-family="sans-serif">뇌졸중·심근경색</text>
+            <!-- 무게 표시 -->
+            <text x="42"  y="68" text-anchor="middle" font-size="10" fill="#1D8A62" font-weight="700" font-family="sans-serif">상대적 경함</text>
+            <text x="378" y="52" text-anchor="middle" font-size="10" fill="#C84040" font-weight="700" font-family="sans-serif">상대적 중함</text>
+          </svg>
+        </div>
+        <div class="scale-legend">
+          <div class="sl-item bleed">
+            <h5>발치 후 출혈</h5>
+            <p>거즈 압박·봉합·콜라겐으로 대부분 조절 가능</p>
+          </div>
+          <div class="sl-item thromb">
+            <h5>혈전색전증</h5>
+            <p>뇌졸중·심근경색 — 생명을 위협하는 합병증</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 원칙 + 포인트 -->
+      <div class="rv-right" style="display:flex;flex-direction:column;gap:16px;">
+        <div class="principle-card">
+          <h4>⛔ 원칙 — 임의 중단 절대 금지</h4>
+          <ul class="point-list">
+            <li>단순 발치 시 대부분 <strong>유지 + 국소 지혈</strong>로 진행</li>
+            <li>응급·동요도 심한 경우도 유지하고 진행</li>
+            <li>처방의 협진 후 의사가 최종 판단</li>
+          </ul>
+        </div>
+        <div class="card">
+          <ul class="point-list">
+            <li><strong>와파린:</strong> INR 2~3 범위 확인 후 발치</li>
+            <li><strong>NOAC:</strong> 혈중 농도 낮은 시간대 조율, 처방의 협진</li>
+            <li><strong>아스피린·클로피도그렐:</strong> 단순 발치 시 대부분 유지 권고</li>
+          </ul>
+          <div class="inr-badge">⚖️ 와파린 기준: INR 2~3 범위 확인</div>
+        </div>
+        <div style="padding:13px 16px;background:rgba(45,95,166,.07);border-radius:12px;font-size:13px;color:var(--blue);font-style:italic;">
+          🗣️ "의사가 판단합니다" — 환자 임의 중단 시 혈전 위험. 반드시 처방의와 먼저 상의하세요.
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════════
+     3. MRONJ — 비스포스포네이트 + 데노수맙
+════════════════════════════════════════ -->
+<section class="section-pad" style="background:var(--bg);">
+  <div class="inner">
+    <div class="eyebrow rv">골다공증약 · MRONJ</div>
+    <h3 class="headline rv d1">투약 시기가 발치 시기를 결정합니다</h3>
+    <p class="lead rv d2">
+      비스포스포네이트와 데노수맙은 작용 방식이 달라 접근법도 다릅니다.
+      2025 한국 다학제 합의안 기반으로 타임라인을 정리합니다.
+    </p>
+    <div class="divider rv d3"></div>
+
+    <!-- 경구 BP -->
+    <div class="mronj-block rv d3">
+      <div class="mronj-label">
+        <span class="tl-tag blue">경구 비스포스포네이트</span>
+        알렌드로네이트 · 리세드로네이트 등
+      </div>
+      <div class="tl-wrap">
+        <div class="tl-scroll">
+          <div class="tl-row">
+            <div class="tl-seg tl-dosing"><div class="si">💊</div>복용 중</div>
+            <div class="tl-seg tl-holiday"><div class="si">⏸</div>휴약<br>2개월</div>
+            <div class="tl-seg tl-extract"><div class="si">🦷</div>발치</div>
+            <div class="tl-seg tl-heal">   <div class="si">🌱</div>치유<br>6~8주</div>
+            <div class="tl-seg tl-restart"><div class="si">💊</div>재투약</div>
+          </div>
+        </div>
+        <div class="tl-scroll-hint">← 좌우로 스크롤하세요</div>
+      </div>
+      <div class="mronj-note">
+        ⚠ 뼈에 장기 잔존 — 단기 휴약으로 효과 즉시 소실되지 않음<br>
+        ⚠ <strong>휴약기는 권고사항, 명확한 근거 부족 (AAOMS 2022)</strong> — 반드시 언급 필요
+      </div>
+    </div>
+
+    <!-- 데노수맙 -->
+    <div class="mronj-block rv d4">
+      <div class="mronj-label">
+        <span class="tl-tag red">데노수맙 (프롤리아)</span>
+        6개월 1회 피하주사
+      </div>
+      <div class="tl-wrap">
+        <div class="tl-scroll">
+          <div class="tl-row">
+            <div class="tl-seg tl-inject"><div class="si">💉</div><small>주사</small></div>
+            <div class="tl-seg tl-peak">
+              <div class="si">⛔</div>0~2개월<br><small>peak 약효<br>발치 피함</small>
+            </div>
+            <div class="tl-seg tl-optimal">
+              <div class="tl-inner-badge">★ 발치 최적</div>
+              <div class="si">✅</div>3~4개월<br><small>약효 하강<br>발치 권장</small>
+            </div>
+            <div class="tl-seg tl-heal"><div class="si">🌱</div>치유<br>6~8주</div>
+            <div class="tl-seg tl-next">
+              <div class="si">💉</div>다음 주사
+              <div class="tl-inner-warn">최대 9개월</div>
+            </div>
+          </div>
+        </div>
+        <div class="tl-scroll-hint">← 좌우로 스크롤하세요</div>
+      </div>
+      <div class="mronj-note">
+        ⚠ 뼈에 결합하지 않음 → 6개월 후 효과 가역적 소실 (BP와 다른 특성)
+      </div>
+      <div class="rebound-note">
+        ⚠ <strong>리바운드 골절 (Rebound Fracture)</strong> 주의 — 투여 지연 시 척추 골절 위험 급증<br>
+        표준 <strong>6개월</strong> 간격 준수 — 최대 9개월까지 (처방의 필수 협의)
+      </div>
+    </div>
+
+    <!-- MRONJ 발생률 참고 -->
+    <div class="card rv d5" style="background:linear-gradient(135deg,#f8f6f2,#f2efe9);border:1px solid rgba(0,0,0,.06);">
+      <div style="font-size:13px;font-weight:800;color:var(--text2);margin-bottom:10px;">📊 MRONJ 발생률 참고</div>
+      <div style="display:flex;gap:20px;flex-wrap:wrap;font-size:13px;">
+        <span><strong style="color:var(--blue);">경구 BP</strong> — 0~0.4%</span>
+        <span><strong style="color:var(--warn);">데노수맙 (골다공증)</strong> — 0.04~0.3%</span>
+        <span><strong style="color:var(--danger);">데노수맙 (암·고용량)</strong> — 0.2~6.7%</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════════
+     4. Q&A
+════════════════════════════════════════ -->
+<section class="qa-section">
+  <div class="qa-inner">
+    <div class="qa-hr rv">
+      <div class="qa-hr-text">클릭해서 정답 확인</div>
+      <div class="qa-hr-line"></div>
+    </div>
+    <div class="qa-grid">
+
+      <div class="qa-flip" onclick="this.classList.toggle('flipped')">
+        <div class="qa-fi">
+          <div class="qa-f"><div class="qn">Q11</div><div class="qt">임신 중인데 사랑니가 아파요. 어떡하나요?</div><div class="qh">👆 클릭</div></div>
+          <div class="qa-b info"><div class="ai">🤰</div><div class="al">2기라면 처치 가능</div><div class="ar">14~27주라면 응급 시 발치 가능. 리도카인 Cat.B 안전. 반드시 산부인과 협진</div></div>
+        </div>
+      </div>
+
+      <div class="qa-flip" onclick="this.classList.toggle('flipped')">
+        <div class="qa-fi">
+          <div class="qa-f"><div class="qn">Q12</div><div class="qt">고령 환자도 사랑니 발치가 가능한가요?</div><div class="qh">👆 클릭</div></div>
+          <div class="qa-b info"><div class="ai">👴</div><div class="al">가능하나 신중히</div><div class="ar">나이보다 전신 상태와 약물이 중요합니다. 골화 진행으로 난이도가 높을 수 있어 구강악안면외과 권장</div></div>
+        </div>
+      </div>
+
+      <div class="qa-flip" onclick="this.classList.toggle('flipped')">
+        <div class="qa-fi">
+          <div class="qa-f"><div class="qn">Q13</div><div class="qt">혈전약 먹는데 끊고 와야 하나요?</div><div class="qh">👆 클릭</div></div>
+          <div class="qa-b wrong"><div class="ai">✕</div><div class="al">절대 임의 중단 금지</div><div class="ar">뇌졸중·심근경색 위험. 국소 지혈로 대부분 조절 가능. 처방의와 상의 후 의사가 결정</div></div>
+        </div>
+      </div>
+
+      <div class="qa-flip" onclick="this.classList.toggle('flipped')">
+        <div class="qa-fi">
+          <div class="qa-f"><div class="qn">Q14</div><div class="qt">골다공증약 먹는데 발치해도 되나요?</div><div class="qh">👆 클릭</div></div>
+          <div class="qa-b info"><div class="ai">🦴</div><div class="al">시기 조율이 핵심</div><div class="ar">데노수맙은 3~4개월째가 최적. BP는 휴약 고려 (근거 부족 주의). MRONJ 위험 설명 필수</div></div>
+        </div>
+      </div>
+
+      <div class="qa-flip" onclick="this.classList.toggle('flipped')">
+        <div class="qa-fi">
+          <div class="qa-f"><div class="qn">Q15</div><div class="qt">와파린 먹는데 INR이 뭔가요?</div><div class="qh">👆 클릭</div></div>
+          <div class="qa-b info"><div class="ai">⚖️</div><div class="al">혈액 응고 지표</div><div class="ar">INR 2~3 범위는 발치 가능. 3 초과 시 추가 조치 필요. 당일 검사 확인 후 발치 진행</div></div>
+        </div>
+      </div>
+
+      <div class="qa-flip" onclick="this.classList.toggle('flipped')">
+        <div class="qa-fi">
+          <div class="qa-f" style="background:var(--teal-l);border-color:var(--teal);">
+            <div class="qn" style="color:var(--teal);">핵심</div>
+            <div class="qt" style="color:var(--teal-d);">특수 환자의 공통 원칙은?</div>
+            <div class="qh" style="color:var(--teal);">👆 클릭</div>
+          </div>
+          <div class="qa-b info"><div class="ai">💡</div><div class="al">협진 + 시기 조율</div><div class="ar">처방의·구강외과 협진 후 최적 시기 선택. 환자 임의 결정은 금물입니다.</div></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<script>
+/* ════════════════════════════════════════
+   Scroll Reveal — IntersectionObserver
+════════════════════════════════════════ */
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (!e.isIntersecting) return;
+    /* 삼분기 바 특수 처리 */
+    if (e.target.id === 'trimBar') {
+      e.target.classList.add('in');
+    }
+    e.target.classList.add('in');
+    obs.unobserve(e.target);
+  });
+}, { threshold: 0.14, rootMargin: '0px 0px -32px 0px' });
+
+document.querySelectorAll('.rv, .rv-left, .rv-right').forEach(el => obs.observe(el));
+
+/* 삼분기 바는 별도 observer (더 일찍 트리거) */
+const trimObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('in');
+      trimObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.2 });
+const tb = document.getElementById('trimBar');
+if (tb) trimObs.observe(tb);
+
+/* ════════════════════════════════════════
+   약제표 expand/collapse
+════════════════════════════════════════ */
+function toggleDrug() {
+  const btn  = document.getElementById('drugBtn');
+  const body = document.getElementById('drugBody');
+  const arr  = document.getElementById('drugArr');
+  const isOpen = btn.classList.contains('drug-expand-open');
+  btn.classList.toggle('drug-expand-open', !isOpen);
+  body.style.display = isOpen ? 'none' : 'block';
+  arr.style.transform = isOpen ? '' : 'rotate(180deg)';
+}
+</script>
+
+<div class="bottom-nav">
+  <a class="bnav-btn prev" href="p3_anesthesia.html">← 마취·통증</a>
+  <a class="bnav-btn next" href="p5_complications.html">합병증 →</a>
+</div>
+</body>
+</html>

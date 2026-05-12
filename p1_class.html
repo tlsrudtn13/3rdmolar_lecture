@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>매복 분류 | 사랑니 Q&A — 전북대병원</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Noto+Serif+KR:wght@700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --teal:#006B6B; --teal-l:#E0F0F0; --teal-d:#004F4F; --teal-vl:#7FD8D8;
+  --green:#1D8A62; --green-l:#D1FAE5;
+  --danger:#C84040; --danger-l:#FDE8E8;
+  --warn:#B45309; --warn-l:#FEF3C7;
+  --blue:#2D5FA6; --maroon:#7B2636;
+  --bg:#F5F3EE; --card:#fff; --text:#1A1916; --text2:#5C5A54; --text3:#9A9890;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body {
+  font-family: 'Noto Sans KR', sans-serif;
+  background: var(--bg);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column; /* 핵심: 위에서 아래로 배치되도록 수정 */
+  align-items: center;
+  padding: 0; /* 하단바가 화면에 꽉 차게 붙도록 기본 패딩 제거 */
+}
+.widget {
+  width: calc(100% - 32px); /* 좌우 여백 16px씩 확보 */
+  max-width: 1060px;
+  margin: 24px 0 40px 0; /* 상단 24px, 하단 40px 여백 추가 */
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 16px 64px rgba(0,0,0,.15);
+  background: var(--card);
+}.w-header{background:linear-gradient(135deg,var(--teal-d),var(--teal) 60%,#008f8f);padding:20px 28px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;}
+.w-header h2{font-family:'Noto Serif KR',serif;font-size:clamp(16px,3vw,22px);font-weight:900;color:#fff;}
+.w-header .sub{font-size:12px;color:rgba(255,255,255,.6);margin-top:3px;}
+.h-badge{background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.22);color:rgba(255,255,255,.85);font-size:12px;font-weight:700;padding:5px 14px;border-radius:20px;white-space:nowrap;}
+.w-body{display:grid;grid-template-columns:1fr 360px;min-height:560px;}
+/* 넓은 화면: 이미지 더 키움 */
+@media(min-width:1200px){.w-body{grid-template-columns:1fr 420px;}}
+@media(min-width:1600px){.w-body{grid-template-columns:1fr 480px;}}
+
+/* ── 뷰어 ── */
+.viewer-panel{background:#f7f5f0;padding:16px;position:sticky;top:52px;align-self:start;}
+.composite{position:relative;width:100%;aspect-ratio:1;max-height:calc(100vh - 160px);
+  border-radius:12px;overflow:hidden;background:#eae7e0;box-shadow:0 2px 16px rgba(0,0,0,.08) inset;}
+.bg-layer{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .42s ease;pointer-events:none;user-select:none;}
+.bg-layer.active{opacity:1;}
+
+/*
+  치아 레이어 구조:
+  .tooth-pos   → 중심점 위치(left/top), translate로 중앙정렬
+    .tooth-rot → 회전 (transform-origin = CONFIG.rotateOriginX/Y)
+      .tooth-blend → mix-blend-mode (흰배경 PNG일 때만)
+        img.tooth-img → filter: drop-shadow (치아 형태 따라감)
+*/
+.tooth-pos{position:absolute;z-index:10;transform:translate(-50%,-50%);transition:left .5s cubic-bezier(.25,1,.5,1),top .5s cubic-bezier(.25,1,.5,1);}
+.tooth-rot{transition:transform .55s cubic-bezier(.34,1.56,.64,1);/* transform-origin: JS로 설정 */}
+.tooth-blend{/* mix-blend-mode: JS로 설정 */}
+.tooth-img{display:block;/* width, filter: JS로 설정 */}
+
+.annot{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:20;overflow:visible;}
+.cls-badge{position:absolute;top:10px;left:10px;z-index:30;background:rgba(0,0,0,.52);color:#fff;font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;backdrop-filter:blur(4px);transition:all .3s;}
+
+/* ── 컨트롤 ── */
+.ctrl-panel{background:var(--bg);padding:16px 14px;display:flex;flex-direction:column;gap:10px;overflow-y:auto;max-height:calc(100vh - 120px);}
+.ctrl-box{background:var(--card);border-radius:12px;padding:13px 14px;box-shadow:0 1px 8px rgba(0,0,0,.06);}
+.ctrl-title{font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);margin-bottom:2px;}
+.ctrl-sub{font-size:11px;color:var(--text3);margin-bottom:8px;}
+.winter-btns{display:flex;flex-direction:column;gap:5px;}
+.w-btn{display:flex;justify-content:space-between;align-items:center;padding:9px 12px;border-radius:8px;border:2px solid transparent;background:var(--bg);font-family:inherit;font-size:12px;font-weight:600;color:var(--text2);cursor:pointer;text-align:left;transition:all .17s;}
+.w-btn:hover{background:var(--teal-l);}
+.w-btn.on{background:var(--teal-l);border-color:var(--teal);color:var(--teal-d);}
+.w-btn .pct{font-size:10px;padding:2px 7px;border-radius:10px;background:rgba(0,107,107,.1);color:var(--teal);font-weight:700;flex-shrink:0;}
+.w-btn.on .pct{background:var(--teal);color:#fff;}
+.pg-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;}
+.pg-btn{padding:9px 6px;border-radius:8px;border:2px solid transparent;background:var(--bg);font-family:inherit;font-size:12px;font-weight:700;color:var(--text2);cursor:pointer;text-align:center;line-height:1.35;transition:all .17s;}
+.pg-btn small{display:block;font-size:10px;font-weight:400;opacity:.65;margin-top:2px;}
+.pg-btn:hover{background:var(--teal-l);}
+.pg-btn.on{background:var(--teal-l);border-color:var(--teal);color:var(--teal-d);}
+.diff-bar-bg{background:#F3F4F6;border-radius:6px;height:10px;overflow:hidden;margin:8px 0 5px;}
+.diff-bar-fill{height:100%;border-radius:6px;transition:width .5s cubic-bezier(.34,1.56,.64,1),background .4s;}
+.diff-row{display:flex;justify-content:space-between;align-items:baseline;}
+.diff-name{font-size:15px;font-weight:800;}
+.diff-score{font-size:13px;font-weight:700;}
+.diff-sub{font-size:11px;color:var(--text3);margin-top:4px;}
+.info-combo{font-family:'Noto Serif KR',serif;font-size:13px;font-weight:900;color:var(--teal-d);margin-bottom:10px;line-height:1.45;}
+.info-note{display:flex;gap:7px;align-items:flex-start;font-size:12px;color:var(--text2);line-height:1.5;margin-bottom:4px;}
+.info-note::before{content:'→';color:var(--teal);font-weight:800;flex-shrink:0;}
+
+@media(max-width:720px){.w-body{grid-template-columns:1fr;}.ctrl-panel{max-height:none;}}
+
+/* ════ SHARED NAV ════ */
+:root{--nav-h:52px;}
+.snav{position:fixed;top:0;left:0;right:0;z-index:9999;height:var(--nav-h);
+  background:rgba(10,30,30,.96);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  border-bottom:1px solid rgba(127,216,216,.1);}
+.snav-inner{max-width:1280px;margin:0 auto;display:flex;align-items:center;
+  height:100%;padding:0 clamp(10px,2vw,20px);gap:8px;}
+.snav-logo{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:700;
+  color:rgba(255,255,255,.5);white-space:nowrap;flex-shrink:0;text-decoration:none;}
+.snav-dot{width:6px;height:6px;border-radius:50%;background:#7FD8D8;
+  box-shadow:0 0 6px #7FD8D8;animation:sdot 2s ease-in-out infinite;flex-shrink:0;}
+@keyframes sdot{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.4;transform:scale(.75);}}
+.snav-tabs{display:flex;align-items:center;gap:1px;flex:1;overflow-x:auto;
+  scrollbar-width:none;-webkit-overflow-scrolling:touch;}
+.snav-tabs::-webkit-scrollbar{display:none;}
+.stab{display:inline-flex;align-items:center;padding:5px 11px;border-radius:18px;
+  font-size:11.5px;font-weight:600;color:rgba(255,255,255,.38);
+  text-decoration:none;white-space:nowrap;transition:all .18s;flex-shrink:0;}
+.stab:hover{color:rgba(255,255,255,.75);background:rgba(255,255,255,.07);}
+.stab.active{color:#7FD8D8;background:rgba(127,216,216,.13);font-weight:700;}
+.snav-progress{position:absolute;bottom:0;left:0;height:2px;background:#7FD8D8;
+  transition:width .15s;box-shadow:0 0 5px #7FD8D8;}
+@media(max-width:520px){
+  .snav-logo .logo-text{display:none;}
+  .snav-logo::after{content:'JBUH';font-size:11px;font-weight:800;
+    color:rgba(127,216,216,.7);letter-spacing:.06em;}
+  .stab{font-size:11px;padding:4px 8px;}
+}
+
+/* ── 하단 prev/next 내비게이션 ── */
+.bottom-nav {
+  width: 100%; /* 화면 너비에 꽉 차게 */
+  margin-top: auto; /* 콘텐츠 길이가 짧아도 무조건 화면 맨 아래로 밀어냄 */
+  box-sizing: border-box; /* 패딩이 너비를 초과하지 않게 방지 */
+  
+  /* 기존 설정 유지 */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: clamp(20px, 4vh, 36px) clamp(20px, 5vw, 60px);
+  background: var(--dark, #0a1e1e);
+  border-top: 1px solid rgba(127,216,216,.1);
+}
+
+.bnav-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 22px;
+  border-radius: 24px;
+  background: rgba(127,216,216,.08);
+  border: 1px solid rgba(127,216,216,.2);
+  color: #7FD8D8;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: all .18s;
+}
+
+.bnav-btn:hover {
+  background: rgba(127,216,216,.18);
+  color: #fff;
+}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/twemoji@14.0.2/dist/twemoji.min.js" crossorigin="anonymous"></script>
+</head>
+<body style="padding-top:var(--nav-h,52px);">
+<nav class="snav" id="siteNav">
+  <div class="snav-inner">
+    <a class="snav-logo" href="p0_opening.html">
+      <span class="snav-dot"></span>
+      <span class="logo-text">전북대병원 · 구강악안면외과</span>
+    </a>
+    <div class="snav-tabs">
+      <a class="stab" href="p0_opening.html">오프닝</a>
+      <a class="stab active" href="p1_class.html">매복 분류</a>
+      <a class="stab" href="p2_timing.html">발치 시기</a>
+      <a class="stab" href="p3_anesthesia.html">마취·통증</a>
+      <a class="stab" href="p4_special.html">특수 환자</a>
+      <a class="stab" href="p5_complications.html">합병증</a>
+      <a class="stab" href="p6_recovery.html">회복</a>
+    </div>
+  </div>
+  <div class="snav-progress" id="snavProg"></div>
+</nav>
+<script>
+(function(){
+  var p=document.getElementById('snavProg');
+  window.addEventListener('scroll',function(){
+    if(p)p.style.width=(window.scrollY/(document.body.scrollHeight-window.innerHeight)*100)+'%';
+  },{passive:true});
+})();
+</script>
+<div class="widget">
+  <div class="w-header">
+    <div>
+      <h2>매복 사랑니 분류 — 인터랙티브</h2>
+      <div class="sub">Winter 분류 × Pell-Gregory 분류 | 실제 해부학 이미지 기반</div>
+    </div>
+    <div class="h-badge">🦷 버튼을 눌러 조합하세요</div>
+  </div>
+  <div class="w-body">
+    <div class="viewer-panel">
+      <div class="composite" id="composite">
+        <img class="bg-layer active" id="bg-I"   src="image/layer1_class1.png" alt="Class I">
+        <img class="bg-layer"        id="bg-II"  src="image/layer1_class2.png" alt="Class II">
+        <img class="bg-layer"        id="bg-III" src="image/layer1_class3.png" alt="Class III">
+
+        <div class="tooth-pos" id="toothPos">
+          <div class="tooth-rot" id="toothRot">
+            <div class="tooth-blend" id="toothBlend">
+              <img class="tooth-img" id="toothImg" src="image/layer2_tooth.png" alt="사랑니">
+            </div>
+          </div>
+        </div>
+
+        <svg class="annot" viewBox="0 0 100 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+          <line id="lineA" stroke="rgba(29,138,98,.55)"  stroke-width="0.38" stroke-dasharray="1.6,1.2"/>
+          <line id="lineB" stroke="rgba(200,64,64,.50)"  stroke-width="0.38" stroke-dasharray="1.6,1.2"/>
+          <text id="lblA" font-size="4.2" fill="rgba(29,138,98,.9)"  font-weight="700" font-family="sans-serif" dominant-baseline="middle">A</text>
+          <text id="lblB" font-size="4.2" fill="rgba(180,83,9,.9)"   font-weight="700" font-family="sans-serif" dominant-baseline="middle">B</text>
+          <text id="lblC" font-size="4.2" fill="rgba(200,64,64,.9)"  font-weight="700" font-family="sans-serif" dominant-baseline="middle">C</text>
+          <g id="dynSvg"></g>
+        </svg>
+
+        <div class="cls-badge" id="clsBadge"></div>
+      </div>
+    </div>
+
+    <div class="ctrl-panel" id="ctrlPanel">
+      <div class="ctrl-box">
+        <div class="ctrl-title">Winter 분류 — 경사 방향</div>
+        <div class="ctrl-sub">치관의 기울기</div>
+        <div class="winter-btns">
+          <button class="w-btn on" data-w="vertical">  <span>↑ 수직 (Vertical)</span>       <span class="pct">~38%</span>    </button>
+          <button class="w-btn"    data-w="mesio">     <span>↖ 근심경사 (Mesioangular)</span> <span class="pct">~43% 최다</span></button>
+          <button class="w-btn"    data-w="horizontal"><span>← 수평 (Horizontal)</span>      <span class="pct">~3–12%</span>  </button>
+          <button class="w-btn"    data-w="disto">     <span>↗ 원심경사 (Distoangular)</span> <span class="pct">~6–9%</span>  </button>
+        </div>
+      </div>
+      <div class="ctrl-box">
+        <div class="ctrl-title">Pell-Gregory — 하악지 공간</div>
+        <div class="ctrl-sub">사랑니와 하악지(Ramus) 위치 관계</div>
+        <div class="pg-grid">
+          <button class="pg-btn on" data-c="I">  Class I  <small>공간 충분</small></button>
+          <button class="pg-btn"    data-c="II"> Class II  <small>공간 부분</small></button>
+          <button class="pg-btn"    data-c="III">Class III <small>하악지 매복</small></button>
+        </div>
+      </div>
+      <div class="ctrl-box">
+        <div class="ctrl-title">Pell-Gregory — 매복 깊이</div>
+        <div class="ctrl-sub">M3 최고점의 수직 위치</div>
+        <div class="pg-grid">
+          <button class="pg-btn on" data-d="A">Depth A<small>교합면 이상</small></button>
+          <button class="pg-btn"    data-d="B">Depth B<small>교합↔치경</small></button>
+          <button class="pg-btn"    data-d="C">Depth C<small>치경선 이하</small></button>
+        </div>
+      </div>
+      <details class="ctrl-box" id="configPanel" style="cursor:pointer;">
+        <summary style="font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);list-style:none;display:flex;justify-content:space-between;align-items:center;">
+          ⚙️ 이미지 크기 조정 <span style="font-size:10px;color:var(--teal);">▼</span>
+        </summary>
+        <div style="margin-top:10px;display:flex;flex-direction:column;gap:8px;">
+          <label style="font-size:11px;color:var(--text2);">치아 크기 (%)
+            <input type="range" id="cfg-toothWidth" min="30" max="90" step="2" value="60"
+              style="width:100%;margin-top:4px;" oninput="CONFIG.toothWidth=+this.value;document.getElementById('cfg-tw-val').textContent=this.value+'%';applyToothMode();update();">
+            <span id="cfg-tw-val" style="font-size:11px;font-weight:700;color:var(--teal);">60%</span>
+          </label>
+          <label style="font-size:11px;color:var(--text2);">발광 크기 (px)
+            <input type="range" id="cfg-glowSize" min="0" max="40" step="1" value="15"
+              style="width:100%;margin-top:4px;" oninput="CONFIG.glowSize=+this.value;document.getElementById('cfg-gs-val').textContent=this.value+'px';applyToothMode();update();">
+            <span id="cfg-gs-val" style="font-size:11px;font-weight:700;color:var(--teal);">15px</span>
+          </label>
+          <label style="font-size:11px;color:var(--text2);">회전 원점 X (%)
+            <input type="range" id="cfg-rotX" min="0" max="100" step="1" value="30"
+              style="width:100%;margin-top:4px;" oninput="CONFIG.rotateOriginX=+this.value;document.getElementById('cfg-rx-val').textContent=this.value+'%';update();">
+            <span id="cfg-rx-val" style="font-size:11px;font-weight:700;color:var(--teal);">30%</span>
+          </label>
+          <label style="font-size:11px;color:var(--text2);">회전 원점 Y (%)
+            <input type="range" id="cfg-rotY" min="0" max="100" step="1" value="50"
+              style="width:100%;margin-top:4px;" oninput="CONFIG.rotateOriginY=+this.value;document.getElementById('cfg-ry-val').textContent=this.value+'%';update();">
+            <span id="cfg-ry-val" style="font-size:11px;font-weight:700;color:var(--teal);">50%</span>
+          </label>
+        </div>
+      </details>
+      <div class="ctrl-box">
+        <div class="ctrl-title">난이도 예측 지수</div>
+        <div class="diff-bar-bg"><div class="diff-bar-fill" id="dBar"></div></div>
+        <div class="diff-row"><div class="diff-name" id="dName"></div><div class="diff-score" id="dScore"></div></div>
+        <div class="diff-sub" id="dSub"></div>
+      </div>
+      
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+
+/* ╔═══════════════════════════════════════════════════════════════════╗
+   ║  ★★★  수정 영역 — 여기만 바꾸면 됩니다  ★★★                    ║
+   ╚═══════════════════════════════════════════════════════════════════╝
+
+   파일 경로 매핑 (image/ 폴더에 아래 이름으로 저장)
+   ─────────────────────────────────────────────────
+   image/layer1_class1.png  ← 레이어1_-_하악지_공간_충분_A_.png   (PG Class I)
+   image/layer1_class2.png  ← 레이어1_-_하악지_공간_중간_B_.png   (PG Class II)
+   image/layer1_class3.png  ← 레이어1_-_하악지_공간_부족_C_.png   (PG Class III)
+   image/layer2_tooth.png   ← 사용할 치아 PNG (아래 bgMode 참고)
+*/
+const CONFIG = {
+
+  /* ┌─────────────────────────────────────────────────────────┐
+     │  치아 이미지 파일 설정                                    │
+     └─────────────────────────────────────────────────────────┘
+     bgMode 선택:
+       'transparent' → 배경이 없는 진짜 투명 PNG (alpha 채널)
+                       발광이 치아 윤곽을 따라감 ← 이 모드를 권장
+                       사용 파일: 레이어2_-_매복_사랑니.png
+       'white'       → 흰 배경 PNG
+                       mix-blend-mode:multiply 로 흰색 제거
+                       발광은 사각형으로 나옴 (한계)
+                       사용 파일: 레이어2_-_매복_사랑니_크기변환.png
+       'checkered'   → 격자 배경이 픽셀로 구워진 PNG
+                       밝기+대비 처리 후 multiply 적용 (근사치)                */
+  bgMode: 'transparent',
+
+  /* ┌─────────────────────────────────────────────────────────┐
+     │  치아 크기 & 발광                                        │
+     └─────────────────────────────────────────────────────────┘ */
+  toothWidth:  60,   /* 컨테이너 너비 대비 % — 숫자 크면 치아 커짐     */
+  glowSize:    15,   /* 발광 반경 (px) — 클수록 퍼짐                   */
+  glowOpacity: 0.85, /* 발광 불투명도 0~1                               */
+
+  /* ┌─────────────────────────────────────────────────────────┐
+     │  회전축 (transform-origin)                               │
+     └─────────────────────────────────────────────────────────┘
+     치아 이미지를 기준으로 한 % 위치:
+       (0%, 0%)   = 이미지 좌상단
+       (50%, 0%)  = 이미지 상단 중앙 (치관 끝)
+       (50%, 50%) = 이미지 정중앙
+       (50%, 58%) = CEJ(치경선) 부근 → 임상적으로 자연스러운 기본값
+       (50%,100%) = 이미지 하단 (치근 끝)                             */
+  rotateOriginX: 30, /* % — 좌우 위치  */
+  rotateOriginY: 50, /* % — 상하 위치  */
+
+  /* ┌─────────────────────────────────────────────────────────┐
+     │  Class별 치아 슬롯 중심 위치                              │
+     └─────────────────────────────────────────────────────────┘
+     배경 이미지마다 하악골 크기가 다르므로 별도로 설정.
+     x: 좌우 % (클수록 오른쪽)
+     y: 상하 % (클수록 아래, Depth 보정값이 추가로 더해짐)            */
+  slot: {
+    I:   { x: 55, y: 60 },
+    II:  { x: 55, y: 60 },
+    III: { x: 53, y: 62 },
+  },
+
+  /* ┌─────────────────────────────────────────────────────────┐
+     │  Depth별 Y 추가 이동 (%, 양수 = 아래)                    │
+     └─────────────────────────────────────────────────────────┘ */
+  depthDY: { A: -2, B: 4, C: 10 },
+
+  /* ┌─────────────────────────────────────────────────────────┐
+     │  Winter 회전각 (deg)                                     │
+     └─────────────────────────────────────────────────────────┘
+     음수 = 반시계(근심/좌측)  |  양수 = 시계(원심/우측)              */
+  winterAngle: {
+    vertical:    0,
+    mesio:     -30,
+    horizontal: -82,
+    disto:      35,
+  },
+
+  /* ┌─────────────────────────────────────────────────────────┐
+     │  Winter별 X 추가 이동 (%, 음수 = 왼쪽)                   │
+     └─────────────────────────────────────────────────────────┘
+     수평 시 치관이 좌측으로 많이 이동하므로 X 보정 필요             */
+  winterDX: {
+    vertical:   0,
+    mesio:     3,
+    horizontal: 4,
+    disto:      2.5,
+  },
+
+  /* ┌─────────────────────────────────────────────────────────┐
+     │  SVG Depth 기준선 위치 (SVG viewBox 0~100 기준 %)        │
+     └─────────────────────────────────────────────────────────┘
+     배경 이미지의 실제 교합면·치경선 높이에 맞게 조정.
+     xFrom~xTo: 기준선이 표시될 X 범위 (사랑니 영역만 표시)          */
+  depthLine: {
+    yA:    45,   /* Depth A 기준선 — 교합면(occlusal plane) 높이       */
+    yB:    55,   /* Depth B 기준선 — 치경선(CEJ) 높이                  */
+    xFrom: 60,   /* 기준선 시작 X                                       */
+    xTo:   93,   /* 기준선 끝 X                                         */
+    lblX:  94.5, /* A/B/C 라벨 X 위치                                   */
+  },
+
+};
+/* ╔═══════════════════════════════════════════════════════════════════╗
+   ║  수정 영역 끝 — 이하 로직은 손대지 않아도 됩니다                  ║
+   ╚═══════════════════════════════════════════════════════════════════╝ */
+
+
+/* ── 상태 ── */
+const S = { w: 'vertical', c: 'I', d: 'A' };
+
+/* ── Depth 기준선 초기화 ── */
+function initDepthLines() {
+  const { yA, yB, xFrom, xTo, lblX } = CONFIG.depthLine;
+  const setLine = (id, y) => {
+    const el = document.getElementById(id);
+    el.setAttribute('x1', xFrom); el.setAttribute('y1', y);
+    el.setAttribute('x2', xTo);   el.setAttribute('y2', y);
+  };
+  setLine('lineA', yA);
+  setLine('lineB', yB);
+
+  const midY = (yA + yB) / 2;
+  const setLbl = (id, y) => {
+    const el = document.getElementById(id);
+    el.setAttribute('x', lblX); el.setAttribute('y', y);
+  };
+  setLbl('lblA', yA - 3);
+  setLbl('lblB', midY);
+  setLbl('lblC', yB + 3);
+}
+
+/* ── 치아 렌더링 모드 적용 ── */
+function applyToothMode() {
+  const blend = document.getElementById('toothBlend');
+  const img   = document.getElementById('toothImg');
+  const g     = CONFIG.glowSize;
+  const o     = CONFIG.glowOpacity;
+  const glow  = `drop-shadow(0 0 ${g}px rgba(0,107,107,${o})) `
+              + `drop-shadow(0 0 ${Math.round(g/2.5)}px rgba(0,107,107,${(o*.6).toFixed(2)}))`;
+
+  /* 치아 크기 */
+  img.style.width = CONFIG.toothWidth + '%';
+
+  if (CONFIG.bgMode === 'white') {
+    /*
+      흰 배경 PNG:
+      blend wrapper 에 multiply → 흰색 제거
+      img 에 filter → 하지만 흰 배경이라 drop-shadow가 사각형으로 나옴(한계)
+      → 발광 대신 subtle outline 처리
+    */
+    blend.style.mixBlendMode = 'multiply';
+    img.style.filter = 'none';
+    /* 사각 shadow 대신 wrapper에 box-shadow로 근사 처리 */
+    blend.style.filter = `drop-shadow(0 0 ${g}px rgba(0,107,107,${o}))`;
+
+  } else if (CONFIG.bgMode === 'checkered') {
+    /*
+      격자 배경 PNG:
+      밝기 높여 회색 격자 → 흰색 근사, 그 후 multiply
+    */
+    blend.style.mixBlendMode = 'multiply';
+    img.style.filter = `brightness(1.8) contrast(1.3) ${glow}`;
+
+  } else {
+    /*
+      'transparent' (권장):
+      진짜 alpha 투명 PNG → blend 없이 그대로, filter만 적용
+      drop-shadow 가 치아 윤곽을 따라감
+    */
+    blend.style.mixBlendMode = 'normal';
+    blend.style.filter = 'none';
+    img.style.filter = glow;
+  }
+}
+
+/* ── SVG 회전 호 ──*/
+function makeArc(cx, cy, r, deg) {
+  const a   = Math.abs(deg) * Math.PI / 180;
+  const dir = deg < 0 ? -1 : 1;
+  const ex  = cx + r * Math.sin(a) * dir;
+  const ey  = cy - r * Math.cos(a);
+  const lg  = Math.abs(deg) > 90 ? 1 : 0;
+  const sw  = deg < 0 ? 0 : 1; 
+  return `M ${cx},${cy - r} A ${r},${r} 0 ${lg},${sw} ${ex.toFixed(1)},${ey.toFixed(1)}`;
+}
+ 
+/*
+function updateDynSvg(angle, tx, ty) {
+  let h = '';
+  if (angle !== 0) {
+    const r  = 9;
+    const lx = tx + (angle > 0 ? r + 1.8 : -(r + 1.8));
+    const ly = ty - r - 1;
+    h += `<path d="${makeArc(tx, ty, r, angle)}"
+                fill="none" stroke="rgba(127,216,216,.5)"
+                stroke-width="0.45" stroke-dasharray="1,0.8"/>
+          <text x="${lx.toFixed(1)}" y="${ly.toFixed(1)}"
+                font-size="3.6" fill="rgba(127,216,216,.85)"
+                font-weight="700" font-family="sans-serif"
+                text-anchor="${angle > 0 ? 'start' : 'end'}"
+                dominant-baseline="middle">${Math.abs(angle)}°</text>`;
+  }
+  document.getElementById('dynSvg').innerHTML = h;
+}
+*/
+
+/* ── 난이도 ── */
+const SCORE = {
+  w: { vertical:1, mesio:2, horizontal:3, disto:4 },
+  c: { I:1, II:2, III:3 },
+  d: { A:1, B:2, C:3 },
+};
+function getDiff() {
+  const sc = SCORE.w[S.w] + SCORE.c[S.c] + SCORE.d[S.d];
+  if (sc <= 4) return { label:'발치 용이',    sub:'일반 치과에서도 처치 가능',        color:'#1D8A62', pct:24  };
+  if (sc <= 6) return { label:'중등도',        sub:'숙련 술자 · 구강외과 권고',        color:'#B45309', pct:52  };
+  if (sc <= 8) return { label:'어려움',        sub:'구강악안면외과 전문의 시행 권장',  color:'#C84040', pct:78  };
+  return             { label:'매우 어려움',    sub:'CBCT 분석 후 세밀한 계획 필수',    color:'#7B2636', pct:100 };
+}
+
+/* ── 임상 정보 ──*/
+const WINFO = {
+  vertical:   { icon:'↑', name:'수직',    notes:['정상 맹출 방향 — 접근 용이','인접치 손상 위험 가장 낮음','맹출 가능성 있으면 경과 관찰 고려'] },
+  mesio:      { icon:'↖', name:'근심경사', notes:['가장 흔한 형태 (~43%)','M2 치근흡수·치주낭 형성 위험','원심측 골삭제 후 견인 발치'] },
+  horizontal: { icon:'←', name:'수평',    notes:['M2 치근을 직접 압박 — 치근흡수 위험 높음','근심경사에 비해 발생 빈도 낮음','Coronectomy(치관절제술) 적극 고려'] },
+  disto:      { icon:'↗', name:'원심경사', notes:['접근 방향 가장 어려운 유형','하악지 방향 골삭제 많이 필요','설신경(lingual n.) 손상 주의'] },
+}; 
+
+const CINFO = { I:'하악지 전방 충분한 공간', II:'하악지와 부분 겹침 — 골삭제 필요', III:'하악지 내 완전 매복 — CBCT 필수' };
+const DINFO = { A:'교합면 수준 이상 — 술식 접근 용이', B:'교합면~치경선 사이 — 부분 골삭제', C:'치경선 이하 깊은 매복 — IAN 근접 주의' };
+
+/* ── 메인 업데이트 ── */
+function update() {
+  const slot  = CONFIG.slot[S.c];
+  const angle = CONFIG.winterAngle[S.w];
+  const dx    = CONFIG.winterDX[S.w];
+  const dy    = CONFIG.depthDY[S.d];
+  const tx    = slot.x + dx;
+  const ty    = slot.y + dy;
+
+  /* 치아 위치 */
+  const pos = document.getElementById('toothPos');
+  pos.style.left = `${tx}%`;
+  pos.style.top  = `${ty}%`;
+
+  /* 회전축 + 회전각 */
+  const rot = document.getElementById('toothRot');
+  rot.style.transformOrigin = `${CONFIG.rotateOriginX}% ${CONFIG.rotateOriginY}%`;
+  rot.style.transform       = `rotate(${angle}deg)`;
+
+  /* 배경 전환 */
+  document.querySelectorAll('.bg-layer').forEach(el => el.classList.remove('active'));
+  document.getElementById(`bg-${S.c}`).classList.add('active');
+
+  /* SVG 
+  updateDynSvg(angle, tx, ty); */
+
+  /* 분류 배지 */
+  document.getElementById('clsBadge').textContent =
+    `${WINFO[S.w].icon} ${WINFO[S.w].name}  ·  Class ${S.c}  ·  Depth ${S.d}`;
+
+  /* 난이도 */
+  const diff  = getDiff();
+  const score = SCORE.w[S.w] + SCORE.c[S.c] + SCORE.d[S.d];
+  const bar   = document.getElementById('dBar');
+  bar.style.width      = `${diff.pct}%`;
+  bar.style.background = diff.color;
+  const dn = document.getElementById('dName');  dn.textContent = diff.label;       dn.style.color = diff.color;
+  const ds = document.getElementById('dScore'); ds.textContent = `${score} / 10`;  ds.style.color = diff.color;
+  document.getElementById('dSub').textContent = diff.sub;
+
+  /* 임상 정보 */
+  const wi = WINFO[S.w];
+  document.getElementById('iCombo').textContent = `${wi.icon} ${wi.name}  +  Class ${S.c}  +  Depth ${S.d}`;
+  document.getElementById('iNotes').innerHTML = [
+    ...wi.notes.map(n => `<div class="info-note">${n}</div>`),
+    `<div class="info-note" style="color:var(--blue)">${CINFO[S.c]}</div>`,
+    `<div class="info-note" style="color:var(--teal)">${DINFO[S.d]}</div>`,
+  ].join('');
+}
+
+/* ── 버튼 이벤트 ── */
+document.querySelectorAll('[data-w]').forEach(b => b.addEventListener('click', () => {
+  S.w = b.dataset.w;
+  document.querySelectorAll('[data-w]').forEach(x => x.classList.remove('on'));
+  b.classList.add('on'); update();
+}));
+document.querySelectorAll('[data-c]').forEach(b => b.addEventListener('click', () => {
+  S.c = b.dataset.c;
+  document.querySelectorAll('[data-c]').forEach(x => x.classList.remove('on'));
+  b.classList.add('on'); update();
+}));
+document.querySelectorAll('[data-d]').forEach(b => b.addEventListener('click', () => {
+  S.d = b.dataset.d;
+  document.querySelectorAll('[data-d]').forEach(x => x.classList.remove('on'));
+  b.classList.add('on'); update();
+}));
+
+/* ── 초기 실행 ── */
+initDepthLines();
+applyToothMode();
+update();
+</script>
+
+<div class="bottom-nav">
+  <a class="bnav-btn prev" href="p0_opening.html">← 오프닝</a>
+  <a class="bnav-btn next" href="p2_timing.html">발치 시기 →</a>
+</div>
+</body>
+</html>
